@@ -1,0 +1,803 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>10 分钟从 Java 到 Groovy - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="1. 安装安装 Groovy 本身非常简单。对于 Wi...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">10 分钟从 Java 到 Groovy</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/groovy_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">10 分钟从 Java 到 Groovy</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 23, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/04/23/Groovy/" class="leancloud" data-flag-title="10 分钟从 Java 到 Groovy"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>17897</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h1><p><a target="_blank" rel="noopener" href="https://groovy.apache.org/download.html">安装</a> Groovy 本身非常简单。对于 Windows 端的用户，将 SDK Bundle 压缩包解压到磁盘的任意路径下，然后像配置 Java 一样去配置 Groovy 的 GROOVY_PATH 和 PATH 变量，Groovy 就算安装完成了。至于 IDE 的选择，笔者仍然选择使用 IDEA IntelliJ，去 plugins 那里搜一搜 Groovy 的插件，然后安装即可。</p>
+<p>重点来了。笔者选择安装的版本是 GDK 3.0.8 ( 官方说这是最新的稳定发行版本)，它最高支持到 JDK 1.8 ，在更高的版本运行 Groovy 会报错[^1]。这不是我们因为操作疏忽引发的错误，这主要和 JDK 本身的变动有关系。如果要在高版本的 JDK  下运行 Groovy 脚本，则需要在项目中将缺失的依赖项补充上 ( 假设正在 Maven 项目中使用它 )：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.xml.bind<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jaxb-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.3.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.glassfish.jaxb<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jaxb-runtime<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.3.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果你需要使用 Java 和 Groovy 混合开发一些项目，那么 Maven 应该同时配置一个编译插件以及保证 Groovy 能够正常编译的最小依赖包 ( 下方的 groovy-all )。详情参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/75976213">这篇知乎链接</a>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.codehaus.groovy<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>groovy-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.3<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>pom<span class="hljs-tag">&lt;/<span class="hljs-name">type</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="2-Hello！初来乍到"><a href="#2-Hello！初来乍到" class="headerlink" title="2. Hello！初来乍到"></a>2. Hello！初来乍到</h1><p>首先，很难用 “编译型还是解释型” 来区分 Groovy 和 Java，因为两者都需要 <code>javac</code> or <code>groovyc</code> 将源码翻译成二进制码，然后交给 JVM 解释执行。这样看的话，Java 和 Groovy 应该都算 “编译兼解释型” 语言。两者的主要区别是：Java 是典型的静态语言 ( 所有的数据都在编译期间就被确定 )，而 Groovy 可以做到 “动态分发”，同时也支持静态编译。</p>
+<p>下面的细节有助于我们快速从 Java 过渡 Groovy。</p>
+<h2 id="2-1-Groovy-as-Script"><a href="#2-1-Groovy-as-Script" class="headerlink" title="2.1 Groovy as  Script"></a>2.1 Groovy as  Script</h2><p>得益于 Groovy 的简练语法（其实几乎只要是个新颖的编程语言就要比 Java 简洁得多，因此 “简洁” 其实不应该再算是 Groovy 的 Feature）和动态特性，使得 Groovy 可以轻松地和系统进程进行交互：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 用 groovy 去执行 &quot;groovy -v&quot;.</span><br>println(<span class="hljs-string">&quot;groovy -v&quot;</span>.execute().text)<br></code></pre></td></tr></table></figure>
+
+<p><code>execute()</code> 方法可以将这个字符串视作是一个<strong>命令</strong>交给系统去执行，<code>.text</code> 可以获取该命令在系统下的执行结果。下面演示了在 Linux 和 Windows 系统当中，如何通过 <code>.groovy</code> 脚本实现 “浏览当前目录（即执行者 <code>.groovy</code> 所在的那个目录下）的内容”：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// Linux 系统</span><br>println(<span class="hljs-string">&quot;ls -l&quot;</span>)<br><br><span class="hljs-comment">// Windows 系统</span><br>println(<span class="hljs-string">&quot;cmd /C dir&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>注意，<code>ls</code> 是 Linux 系统中可以直接运行的程序，但是 <code>dir</code> 在 Widows 系统中仅仅是 <code>cmd</code> 命令行解释器当中定义的一条命令，所以在这里补充了额外的前缀 <code>cmd /C</code>。一段 Groovy 代码还可以即时调用另一个文件存储的 Groovy 代码。比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy">evaluate(<span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;C:\\Users\\i\\IdeaProjects\\GroovyHello\\src\\HelloWorld.groovy&quot;</span>))<br><span class="hljs-comment">// 在另一个 ./HelloWorld.groovy 脚本中，我们在那个文件里仅使用了一句 print &#x27;hello World! -by groovy&#x27; 令其输出一段话。</span><br></code></pre></td></tr></table></figure>
+
+<p>因此，Groovy 被称之为是 “JVM 上的脚本语言”，这名副其实。</p>
+<h2 id="2-2-编写-Groovy-逻辑的两种风格"><a href="#2-2-编写-Groovy-逻辑的两种风格" class="headerlink" title="2.2 编写 Groovy 逻辑的两种风格"></a>2.2 编写 Groovy 逻辑的两种风格</h2><p>在 <code>.groovy</code> 文件内，可以不声明任何类而<strong>直接在文件顶级层次编写代码逻辑 (笔者刚才就是这样做的)<strong>。不过这样的话，就不能在文件的顶级层次再声明一个</strong>和文件同名的类</strong>，否则编译器会给出  <code>there is a synthetic class generated for script code</code> 的错误。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 假定这段代码出现在 Obj.groovy 源文件中 </span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Obj</span>&#123;</span><br>    <span class="hljs-comment">//...</span><br>&#125;<br><br><span class="hljs-comment">// 这个方法调用和类声明一样都在文件的 &#x27;顶级&#x27; 位置。</span><br><span class="hljs-comment">// We don&#x27;t need &#x27;System.out.println(...)&#x27; anymore.</span><br>print(<span class="hljs-string">&#x27;hello groovy&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>从编译角度来看这可以理解，因为 <code>.groovy</code> 文件被编译成 <code>.class</code> 文件并执行时，编译器实际上会为其生成一个合成类，而正是这一步导致了冲突发生：我们刚定义的类名和它重复了。</p>
+<p>实际上，如果 <code>.groovy</code> 文件内部出现了和文件同名的类，则意味着这个 <code>.groovy</code> 文件会被视作是一段 “用 Groovy 方言编写的 Java 代码”，一般它也就不再作为脚本使用，而是变成一个 “普通的类” ( IDEA 称它是一个 Groovy Class) 。这么做的一个直接后果是，我们不能够在文件的顶级层次直接编写代码逻辑。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 这段代码出现在 Obj.groovy 源文件中。</span><br><span class="hljs-comment">// 它相当于是 .java 文件中的 public class 定义.</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Obj</span>&#123;</span><br>    <span class="hljs-comment">// 就像在写 Java 代码一样!</span><br>    <span class="hljs-comment">// 在 Groovy 中，public 关键字其实是多余的，默认情况下所有的声明就是 public。</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> main(String[] args)&#123;<br>         <span class="hljs-comment">// 在 Groovy 中，字符串还可以使用 &quot;&quot;,&#x27;&#x27;,&quot;&quot;&quot; &quot;&quot;&quot;,&#x27;&#x27;&#x27; &#x27;&#x27;&#x27;,包裹，具体区别见后文。</span><br>		print(<span class="hljs-string">&#x27;hello groovy&#x27;</span>)<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// 它相当于是 .java 文件中的非 public class 定义.</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OtherObj</span>&#123;</span>&#125;<br><br><span class="hljs-comment">// 代码不能再出现在文件的 &#x27;顶层&#x27; 位置，因为我们在 Java 开发时就不是这样做的。</span><br>print (<span class="hljs-string">&#x27;oops&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-异常处理"><a href="#2-3-异常处理" class="headerlink" title="2.3 异常处理"></a>2.3 异常处理</h2><p>Java 总是要我们在第一时间处理受检异常，否则傲娇的 <code>javac</code> 编译器就拒绝执行。比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> FileNotFoundException </span>&#123;<br>        File file = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;src/HelloWorld.groovy&quot;</span>);<br>        <span class="hljs-comment">// FileInputStream 抛出受检异常，因此调用它的函数要么继续 throws 到上级 (当然，主程序 throws 异常没什么意义)，</span><br>        <span class="hljs-comment">// 要么就通过 try-catch 内部解决掉它。</span><br>        FileInputStream fileInputStream = <span class="hljs-keyword">new</span> FileInputStream(file);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而 Groovy 对异常处理的写法更为宽松：如果没有在该代码块内通过 try-catch 处理异常，那么该异常就会自动地向上级抛出，且无需在函数声明中使用 <code>throws</code> 主动定义它们。下面是 Groovy 代码：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 即使没有声明 throws，也没有定义 try-catch, groovyc 仍然会正常执行。</span><br>File file = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&#x27;HelloWorld.groovy&#x27;</span>)<br>FileInputStream fileInputStream = <span class="hljs-keyword">new</span> FileInputStream(file)<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-简洁的-“非空则调用”-语法"><a href="#2-4-简洁的-“非空则调用”-语法" class="headerlink" title="2.4 简洁的 “非空则调用” 语法"></a>2.4 简洁的 “非空则调用” 语法</h2><p>为了避免调用某个空指针的方法，在 Java 代码中，我们通常要包裹一层 if 语句块：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy">String maybeNull = <span class="hljs-string">&quot;I&#x27;m Java&quot;</span>;<br><span class="hljs-keyword">if</span>(maybeNull != <span class="hljs-literal">null</span>)&#123;System.out.println(nullString.length());&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这一长串逻辑在 Groovy 当中可以直接使用一个 <code>?.</code> 操作符解决：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy">String maybeNull = <span class="hljs-string">&#x27;I\&#x27;m groovy&#x27;</span><br>print(maybeNull?.length())<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-5-GString"><a href="#2-5-GString" class="headerlink" title="2.5 GString"></a>2.5 GString</h2><p>在 Groovy 中，短字符串可以使用 <code>&#39;&#39;</code> 或者 <code>&quot;&quot;</code> 表示，而需要跨行的长字符串则通常使用 <code>&#39;&#39;&#39; &#39;&#39;&#39;</code> 或者 <code>&quot;&quot;&quot; &quot;&quot;&quot;</code> 。被双引号包括的字符串又被称为 GString，和原生的 String 相比，它支持在字符串内部使用 <code>$&#123;&#125;</code> 做占位符 ( 类似 <code>printf </code>)，避免了手工的 String 字符串拼接。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy">name = <span class="hljs-string">&#x27;Wangfang&#x27;</span><br>age = <span class="hljs-string">&#x27;18&#x27;</span><br><br><span class="hljs-comment">// 占位符拼接的用法</span><br>print(<span class="hljs-string">&quot;my name is $&#123;name&#125;,my age is $&#123;age&#125;.&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-6-精简的-JavaBean"><a href="#2-6-精简的-JavaBean" class="headerlink" title="2.6 精简的 JavaBean"></a>2.6 精简的 JavaBean</h2><p>在 Groovy 当中，编译器总是自动在底层为属性生成对应的 Set 和 Get 方法：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student_</span> &#123;</span><br>    String name<br>    Integer age<br>    <br>    Student_(String name,Integer age)&#123;<br>        <span class="hljs-built_in">this</span>.name = name<br>        <span class="hljs-built_in">this</span>.age = age<br>    &#125;<br>&#125;<br><br>Student_ s = <span class="hljs-keyword">new</span> Student_()<br><span class="hljs-comment">// 这个 getXXX 方法是由编译器生成的。</span><br>s.getName()<br></code></pre></td></tr></table></figure>
+
+<p>如果希望某个属性在对象被构造之后就不可变，则需使用 <code>final</code> 关键字，编译器将不会主动地为其生成 Set 方法 ( 意味着该属性是只读的 ) 。另外，属性可以不主动声明类型，此时原本的类型被 <code>def</code> 关键字替代。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student_</span>&#123;</span><br>	<span class="hljs-keyword">final</span> name<br>	<span class="hljs-keyword">def</span> age<br>	Student_(name,age)&#123;<br>		<span class="hljs-built_in">this</span>.name = name <br>		<span class="hljs-built_in">this</span>.age = age<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于未主动声明类型的属性，其本质上属于 Object 对象，这不利于对该属性的后续操作。想要解决这个问题，不妨在构造器中留下一些线索，以便于编译器能够 “推导” 出目标类型 ( Groovy 总是通过变量的赋值来推断这个变量的实际类型 )。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student_</span>&#123;</span>    <br>    <span class="hljs-keyword">final</span> name<br>    <span class="hljs-keyword">def</span> age<br><br>    <span class="hljs-comment">// 使得 name 和 age 属性的实际类型可以被推导 </span><br>    Student_(String name, Integer age)&#123;<br>        <span class="hljs-built_in">this</span>.name = name<br>        <span class="hljs-built_in">this</span>.age = age<br>    &#125;<br>&#125;<br><br>s = <span class="hljs-keyword">new</span> Student_(<span class="hljs-string">&#x27;Wang Fang&#x27;</span>,<span class="hljs-number">23</span>)<br></code></pre></td></tr></table></figure>
+
+<p>如果一个属性被声明为了 <code>private</code>，则编译器不会再自动地为该属性声明 Get 和 Set 方法。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student_</span>&#123;</span>    <br>    <span class="hljs-keyword">final</span> name<br>    <span class="hljs-keyword">private</span> age<br><br>    <span class="hljs-comment">// 使得 name 和 age 属性的实际类型可以被推导 </span><br>    Student_(String name, Integer age)&#123;<br>        <span class="hljs-built_in">this</span>.name = name<br>        <span class="hljs-built_in">this</span>.age = age<br>    &#125;<br>&#125;<br><br>s = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">&#x27;Wang Fang&#x27;</span>,<span class="hljs-number">23</span>)<br><br><span class="hljs-comment">//报错</span><br>s.getName()<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-7-或许无需手动创建构造器"><a href="#2-7-或许无需手动创建构造器" class="headerlink" title="2.7 或许无需手动创建构造器"></a>2.7 或许无需手动创建构造器</h2><p>对于上述的 Student_ 类而言，它可能需要有 4 个构造器：无参构造器，仅附带 name 属性的构造器，仅附带 age 属性的构造器，完整的构造器。Groovy 可以让我们仅通过一个 Map 实现灵活的对象创建，并且不需要再手动地补充构造器写法：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student_</span>&#123;</span><br>    String name<br>    Integer age<br>&#125;<br><br><span class="hljs-comment">// 没有实现 Student_(name,age) 构造器，但是可以直接使用</span><br>stu1 = <span class="hljs-keyword">new</span> Student_(<span class="hljs-attr">name:</span> <span class="hljs-string">&quot;Wang Fang&quot;</span>,<span class="hljs-attr">age:</span> <span class="hljs-number">12</span>)<br><br><span class="hljs-comment">// 同样，我们也没有手动实现 Student_(name) 构造器。</span><br>stu2 = <span class="hljs-keyword">new</span> Student_(<span class="hljs-attr">name:</span><span class="hljs-string">&quot;Wang Fang&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>在些参数列表中，我们传入的其实是一整个 Map。里面的每一个 <code>k:v</code> 都表示了一个键值对。<code>k</code> 对应了这个类当中每个属性名，而 <code>v</code> 则为这些属性赋值。但是，我们不能这样做：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy">stu1 = <span class="hljs-keyword">new</span> Student_(<span class="hljs-string">&quot;Wang Fang&quot;</span>,<span class="hljs-number">12</span>)<br>stu2 = <span class="hljs-keyword">new</span> Student_(<span class="hljs-string">&quot;Wang Fang&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>除非手动地补充上对应的构造函数。</p>
+<h2 id="2-8-方法中的可选形参"><a href="#2-8-方法中的可选形参" class="headerlink" title="2.8 方法中的可选形参"></a>2.8 方法中的可选形参</h2><p>Java 不支持可选形参，在调用方法时，每个参数必须严格赋值。而 Groovy 则有所不同：在方法 ( 或函数 ) 参数列表内，可以提前为<strong>最后一个</strong>参数设定默认值，那么在调用该方法时，最后一个参数可以被省略。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> add(Integer arg,Integer implicit = <span class="hljs-number">10</span>)&#123;arg + implicit&#125;<br><br><span class="hljs-comment">// 11</span><br>print(add(<span class="hljs-number">1</span>))<br><span class="hljs-comment">// 3 </span><br>print(add(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+
+<p>这个例子还展现了其它细节：至少，Groovy 的方法 ( 函数 ) 不要求显示地添加 <code>return</code> 关键字，它总是默认返回函数体内最后一个调用的结果值。然后，这个函数的返回值类型是显然可以推断的，因此这里也可使用 <code>def</code> 关键字替换掉函数的返回值声明。</p>
+<h2 id="2-9-多重赋值"><a href="#2-9-多重赋值" class="headerlink" title="2.9 多重赋值"></a>2.9 多重赋值</h2><p>如果方法 ( 函数 ) 返回的是一个数组，那么 Groovy 支持使用多个变量接收数组内的元素内容。比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> swap(x, y) &#123; <span class="hljs-keyword">return</span> [y, x] &#125;<br><br>Integer a, b<br>a = <span class="hljs-number">10</span><br>b = <span class="hljs-number">50</span><br><br><span class="hljs-comment">// 通过多重赋值实现了两数交换</span><br>(a, b) = swap(a, b)<br>print(<span class="hljs-string">&quot;a=$a,b=$b&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>利用这个特点，Groovy 的方法 (函数) 可以返回多个值。其它支持这么做的编程语言还有 Go，Scala ( 通过包装成元组来实现 ) 等。当接收变量的个数和实际的返回值个数不匹配时，Groovy 会这样做：</p>
+<ol>
+<li>如果接收的变量更多，那么会将没有赋值的变量赋为 null 。</li>
+<li>如果返回值更多，那么多余的返回值会被丢弃。</li>
+</ol>
+<p>当然，Groovy 也的确提供了元组，这个写法对于一些 Scala 程序员绝对不陌生：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs groovy">Tuple2&lt;Integer,Integer&gt; swap(Integer a,Integer b)&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Tuple2&lt;Integer,Integer&gt;(b,a)<br>&#125;<br><br>a = <span class="hljs-number">10</span><br>b = <span class="hljs-number">20</span><br><br>(a, b) = swap(a, b)<br>print(<span class="hljs-string">&quot;a=$&#123;a&#125;,b=$&#123;b&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-10-接口实现"><a href="#2-10-接口实现" class="headerlink" title="2.10 接口实现"></a>2.10 接口实现</h2><p>假定有这样一个单方法接口：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Calculator</span>&lt;<span class="hljs-title">T</span>&gt;&#123;</span><br>    T add(T a,T b)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Java 可能要这样实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">Calculator&lt;Integer&gt; calculator = <span class="hljs-keyword">new</span> Calculator&lt;Integer&gt;() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">add</span><span class="hljs-params">(Integer a, Integer b)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> a + b;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>在 Java 8 之后，匿名实现的写法终于变得更简练了亿些，但遗憾的是，Lambda 表达式只能用于单方法接口。</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">Calculator&lt;Integer&gt; calculator = <span class="hljs-function"><span class="hljs-params">(a, b)</span> -&gt;</span> a + b;<br></code></pre></td></tr></table></figure>
+
+<p>Groovy 给出了与众不同的解决思路：首先给出 Lambda 表达式的语法块，这个语法块被 <code>&#123;&#125;</code> 包裹，在 Groovy 中它被称之为闭包；然后通过 <code>as</code> 关键字将这个闭包声明为是对某一接口的实现[^2]。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 多亏类型推导的存在，我们不需要把 Calculator&lt;Integer&gt; 重新抄写一遍 .....</span><br><span class="hljs-keyword">def</span> a = &#123;a,b -&gt;<span class="hljs-keyword">return</span> a+b&#125; <span class="hljs-keyword">as</span> Calculator&lt;Integer&gt;<br></code></pre></td></tr></table></figure>
+
+<p>如果要实现多方法接口，那么就将多个闭包装入到一个 Map 当中，使用 <code>k</code> 来标注每个闭包实现的是哪个方法：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Calculator</span>&lt;<span class="hljs-title">T</span>&gt; &#123;</span><br>    T add(T a, T b)<br>    T sub(T a, T b)<br>&#125;<br><br><span class="hljs-keyword">def</span> cal = [<br>        <span class="hljs-symbol">add:</span> &#123; a, b -&gt; a + b &#125;,<br>        <span class="hljs-symbol">sub:</span> &#123; a, b -&gt; a - b &#125;<br>] <span class="hljs-keyword">as</span> Calculator&lt;Integer&gt;<br><br><span class="hljs-keyword">def</span> c = cal.sub(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>)<br>print(c)<br></code></pre></td></tr></table></figure>
+
+<p>Groovy 从未强制实现一个接口的所有方法：如果某些方法确实用不到，那就没有必要将对应的闭包实现放入 Map 中。值得注意的是，如果调用了没有实现的接口方法，那么程序就会抛出亲切的 <code>NullPointerException</code> 异常。</p>
+<h2 id="2-11-布尔求值"><a href="#2-11-布尔求值" class="headerlink" title="2.11 布尔求值"></a>2.11 布尔求值</h2><p>在 If 语句的条件部分，Java 强制要求传入一个计算好的布尔值，否则就报错。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span><br><span class="hljs-comment">// :)     =&gt; if(a != 0)...</span><br><span class="hljs-comment">// :(     =&gt; if(a)...</span><br></code></pre></td></tr></table></figure>
+
+<p>Groovy 的处理则更加优雅一些，当传入的值不是纯粹的布尔值时，Groovy 会基于传入的类型进行一些合理的推断，而不是直接报错，参见下方的表格：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>何时为真</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Boolean</td>
+<td>值是 true</td>
+</tr>
+<tr>
+<td>Collection</td>
+<td>集合本身不是 null，且内部有元素</td>
+</tr>
+<tr>
+<td>Character</td>
+<td>值不为 0</td>
+</tr>
+<tr>
+<td>CharSequence</td>
+<td>长度大于 0</td>
+</tr>
+<tr>
+<td>Enumeration</td>
+<td>Has More Enumerations 为 True</td>
+</tr>
+<tr>
+<td>Iterator</td>
+<td>hasNext() 为 True</td>
+</tr>
+<tr>
+<td>Number</td>
+<td>Double 值不为 0</td>
+</tr>
+<tr>
+<td>Map</td>
+<td>映射本身不是 null，且映射内部不为空</td>
+</tr>
+<tr>
+<td>Matcher</td>
+<td>至少有一个匹配</td>
+</tr>
+<tr>
+<td>Object[]</td>
+<td>长度大于 0</td>
+</tr>
+<tr>
+<td>其它类型</td>
+<td>引用不为 null</td>
+</tr>
+</tbody></table>
+<p>在大部分情况下，直接向 if 条件部分传入一个值都是为了判断它是否为空。如果要基于该值是否为空来决定是否执行一系列动作，可以考虑使用前文提到的 <code>?.</code> 操作符简化代码。</p>
+<h2 id="2-12-运算符重载"><a href="#2-12-运算符重载" class="headerlink" title="2.12 运算符重载"></a>2.12 运算符重载</h2><p>Groovy 预留了一些方法名称，这些方法意味着对操作符进行重载[^3]：</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a + b</td>
+<td>a.plus(b)</td>
+</tr>
+<tr>
+<td>a – b</td>
+<td>a.minus(b)</td>
+</tr>
+<tr>
+<td>a * b</td>
+<td>a.multiply(b)</td>
+</tr>
+<tr>
+<td>a ** b</td>
+<td>a.power(b)</td>
+</tr>
+<tr>
+<td>a / b</td>
+<td>a.div(b)</td>
+</tr>
+<tr>
+<td>a % b</td>
+<td>a.mod(b)</td>
+</tr>
+<tr>
+<td>a | b</td>
+<td>a.or(b)</td>
+</tr>
+<tr>
+<td>a &amp; b</td>
+<td>a.and(b)</td>
+</tr>
+<tr>
+<td>a ^ b</td>
+<td>a.xor(b)</td>
+</tr>
+<tr>
+<td>a++ or ++a</td>
+<td>a.next()</td>
+</tr>
+<tr>
+<td>a– or –a</td>
+<td>a.previous()</td>
+</tr>
+<tr>
+<td>a[b]</td>
+<td>a.getAt(b)</td>
+</tr>
+<tr>
+<td>a[b] = c</td>
+<td>a.putAt(b, c)</td>
+</tr>
+<tr>
+<td>a &lt;&lt; b</td>
+<td>a.leftShift(b)</td>
+</tr>
+<tr>
+<td>a &gt;&gt; b</td>
+<td>a.rightShift(b)</td>
+</tr>
+<tr>
+<td>switch(a) { case(b) : }</td>
+<td>b.isCase(a)</td>
+</tr>
+<tr>
+<td>~a</td>
+<td>a.bitwiseNegate()</td>
+</tr>
+<tr>
+<td>-a</td>
+<td>a.negative()</td>
+</tr>
+<tr>
+<td>+a</td>
+<td>a.positive()</td>
+</tr>
+</tbody></table>
+<p>而这些操作符在遇到 null 时不会抛出空指针异常：</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a == b</td>
+<td>a.equals(b) or a.compareTo(b) == 0 **</td>
+</tr>
+<tr>
+<td>a != b</td>
+<td>! a.equals(b)</td>
+</tr>
+<tr>
+<td>a &lt;=&gt; b</td>
+<td>a.compareTo(b)</td>
+</tr>
+<tr>
+<td>a &gt; b</td>
+<td>a.compareTo(b) &gt; 0</td>
+</tr>
+<tr>
+<td>a &gt;= b</td>
+<td>a.compareTo(b) &gt;= 0</td>
+</tr>
+<tr>
+<td>a &lt; b</td>
+<td>a.compareTo(b) &lt; 0</td>
+</tr>
+<tr>
+<td>a &lt;= b</td>
+<td>a.compareTo(b) &lt;= 0</td>
+</tr>
+</tbody></table>
+<p>举个例子：在程序中定义复数类，然后定义两个复制之和是实部和虚部的分别加和：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ComplexNumber</span> &#123;</span><br>    Integer real<br>    Integer imaginary<br><br>    <span class="hljs-comment">//plus 方法对应 + 操作符</span><br>    <span class="hljs-keyword">def</span> plus(ComplexNumber other) &#123;<br>        <span class="hljs-keyword">new</span> ComplexNumber(<span class="hljs-attr">real:</span> <span class="hljs-built_in">this</span>.real + other.real,<span class="hljs-attr">imaginary:</span> <span class="hljs-built_in">this</span>.imaginary+other.imaginary)<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    String toString() &#123; <span class="hljs-string">&quot;$&#123;real&#125; + $&#123;imaginary&#125;i&quot;</span>&#125;<br>&#125;<br><br><span class="hljs-comment">// 注意，这个写法相当于 println(...)</span><br><span class="hljs-comment">// 内部相当于是调用了 new ComplexNumber(balabala).plus(new ComplexNumber(balabala))</span><br>println <span class="hljs-keyword">new</span> ComplexNumber(<span class="hljs-attr">real:</span><span class="hljs-number">3</span>,<span class="hljs-attr">imaginary:</span>  <span class="hljs-number">2</span>) + <span class="hljs-keyword">new</span> ComplexNumber(<span class="hljs-attr">real:</span><span class="hljs-number">3</span>,<span class="hljs-attr">imaginary:</span><span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>但相比 Scala 而言，笔者认为这种方式有点奇怪 …… 因为当我们需要这么做时，总是得翻阅一下上面的表格，然后去比对哪个操作符对应哪个方法，除非把这张表格背下来 ( 可以，但没必要 )。不过不管怎么样，有总比没有强。</p>
+<h2 id="2-13-for-循环"><a href="#2-13-for-循环" class="headerlink" title="2.13 for 循环"></a>2.13 for 循环</h2><p>下面是一段 Java 代码演示的 for 循环，i 从 0 开始，直到 3 ( 不包括 3)  为止：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i&lt;<span class="hljs-number">3</span> ; i++)&#123;System.out.println(<span class="hljs-string">&quot;java loop&quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 Groovy 中， 0 ~ 3 的左闭右开区间可以使用 <code>0..2</code> 来表示：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">0.</span><span class="hljs-number">.2</span>)&#123;println <span class="hljs-string">&quot;groovy loop&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>in</code> 通常用于遍历 “模糊类型” 的数组。如果遍历的是确定类型的数组，还可以这样写：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy">String[] strings = [<span class="hljs-string">&#x27;java&#x27;</span>,<span class="hljs-string">&#x27;scala&#x27;</span>,<span class="hljs-string">&#x27;groovy&#x27;</span>,<span class="hljs-string">&#x27;go&#x27;</span>]<br><br><span class="hljs-comment">//  s 必须指明是 String 类型。</span><br><span class="hljs-comment">//  : 替换了之前的 in 关键字。</span><br><span class="hljs-keyword">for</span>(String <span class="hljs-attr">s :</span> strings)&#123;<br>    print(s.length())<br>&#125;<br><br><span class="hljs-comment">//  等价写法</span><br><span class="hljs-keyword">for</span> (s <span class="hljs-keyword">in</span> strings)&#123;<br>    print s.length()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>..</code> 可以被视作是一个特殊的二元符号，在循环语句之外也可以单独使用它来创建一个步长为 1 的序列。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 你可以将 .. 视作是 Integer 的一个双目运算符号，其中 n..m 会返回 [n,n+1,n+2,...m] 的序列。</span><br><span class="hljs-comment">// seq 是 IntRange 类型。</span><br><span class="hljs-keyword">def</span> seq = <span class="hljs-number">0.</span><span class="hljs-number">.10</span><br><br><span class="hljs-comment">// 11</span><br>print seq.size()<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-14-关于导入"><a href="#2-14-关于导入" class="headerlink" title="2.14 关于导入"></a>2.14 关于导入</h2><p>Groovy 通常的导入方式和 Java 如出一辙，并且<strong>不强制</strong>所有的 <code>import</code> 出现在文件的最上方。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">import</span> java.lang.Math<br>print Math.random()<br></code></pre></td></tr></table></figure>
+
+<p>除此之外，Groovy 支持 <code>import static</code> 导入某一个类的静态方法，这样我们可以在当前命名空间当中将该静态方法直接作为一个函数来调用。如果担心命名重复，可以使用 <code>as</code> 关键字将该静态方法重新命名。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 静态导入 Math 类的静态 random 方法</span><br><span class="hljs-comment">// as 关键字可以顺便将导入的静态方法起一个别名，通常用于简化或者避免命名冲突的目的。</span><br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> math.random <span class="hljs-keyword">as</span> rdm<br>print rdm()<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-15-一切即闭包"><a href="#2-15-一切即闭包" class="headerlink" title="2.15 一切即闭包"></a>2.15 一切即闭包</h2><p>Groovy 特地将 <code>[]</code> 留给了数组的声明：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy">String[] str = [<span class="hljs-string">&#x27;java&#x27;</span>,<span class="hljs-string">&#x27;groovy&#x27;</span>]<br></code></pre></td></tr></table></figure>
+
+<p>而一切 <code>&#123;&#125;</code> 代码块在 Groovy 会被视作一个<strong>闭包</strong>，闭包对于 Groovy 来说，是一个具体的 <code>Closure&lt;T&gt;</code> 类型[^4]。( 有关 Groovy 闭包的内容笔者后续会单独说明 ) 在 Java 中，我们可以使用 <code>&#123;&#125;</code> 表示一段有独立作用域的子代码块：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java">&#123;<br>    System.out.println(<span class="hljs-string">&quot;block1&quot;</span>);<br>&#125;<br><br>&#123;<br>    System.out.println(<span class="hljs-string">&quot;block2&quot;</span>);<br>&#125;<br><br><span class="hljs-comment">// ()-&gt;void 函数也可以被理解成是子代码块。</span><br>Runnable runnable = () -&gt; &#123;<br>    System.out.println(<span class="hljs-string">&quot;block3&quot;</span>);<br>&#125;;<br><br>runnable.run();<br></code></pre></td></tr></table></figure>
+
+<p>但在 Groovy 当中，一段 <code>&#123;&#125;</code> 扩起来的闭包不能单独声明出现，除非是写成赋值的形式：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 不能通过编译</span><br>&#123;print <span class="hljs-string">&quot;hello&quot;</span>&#125;<br><br><span class="hljs-comment">// 编译通过，这种赋值明确地表示 &#123;&#125; 是一个闭包。</span><br><span class="hljs-keyword">def</span> c = &#123;print <span class="hljs-string">&quot;hello&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-15-1-避免闭包和匿名类的冲突"><a href="#2-15-1-避免闭包和匿名类的冲突" class="headerlink" title="2.15.1 避免闭包和匿名类的冲突"></a>2.15.1 避免闭包和匿名类的冲突</h3><p>如果一个函数 / 方法接收闭包作为参数，那么从语法上可以将这些闭包附着在函数调用的尾部。形象点说，一个 <code>method(&#123;...&#125;,&#123;...&#125;)</code> 语句块可以改写成 <code>method() &#123;...&#125;&#123;...&#125;</code> 的形式 ( 这么做有利于设计内部 DSL 语法，想想我们为什么能够在 Groovy 写出诸如 <code>print &quot;hello&quot;</code> 的句式？) ：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> aspect(before, after) &#123;<br>    before()<br>    print(<span class="hljs-string">&quot;method&quot;</span>)<br>    after()<br>&#125;<br><br><span class="hljs-comment">// 正常的调用方式</span><br>aspect(&#123;print <span class="hljs-string">&quot;before doing...&quot;</span>&#125;,&#123;print <span class="hljs-string">&quot;after doing...&quot;</span>&#125;)<br><br><br><span class="hljs-comment">// 将闭包迁移到调用尾部，aspect() 的小括号 () 可写可不写。</span><br>aspect() &#123;<br>    print(<span class="hljs-string">&quot;before doing...&quot;</span>)<br>&#125; &#123;<br>    print(<span class="hljs-string">&quot;after doing...&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>有时，一个类的构造函数也会需要接收一个闭包，那么在这种场合可能会引发歧义：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Aspect</span>&#123;</span><br>        <span class="hljs-comment">// Closure 是 Groovy 中表示闭包的类型。它实际上还有一个泛型，该泛型指代的是该闭包的返回值。</span><br>        Aspect(Closure before)&#123;<br>            before()<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>按照开头的调用风格，它可以被写成这样：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 这个写法的原意是将闭包写到构造函数的后面。</span><br><span class="hljs-keyword">def</span> a  = <span class="hljs-keyword">new</span> Aspect()&#123;<br>	print <span class="hljs-string">&quot;create a aspect...&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但对于一个 Java 程序员而言，这种写法看起来却像是在创建一个匿名对象 —— 甚至 Groovy 也会不知所措。在这种情况下，必须严格使用 <code>()</code> 的语法避免歧义发生。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> a = <span class="hljs-keyword">new</span> Aspect(&#123;print <span class="hljs-string">&quot;create a aspect...&quot;</span>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-15-2-避免闭包和实例初始化器的冲突"><a href="#2-15-2-避免闭包和实例初始化器的冲突" class="headerlink" title="2.15.2 避免闭包和实例初始化器的冲突"></a>2.15.2 避免闭包和实例初始化器的冲突</h3><p>在某些类的定义中，我们需要使用一段 <code>&#123;&#125;</code> 扩起来的代码块作为<strong>实例初始化器</strong>：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Apple</span>&#123;</span><br><br>    String from = <span class="hljs-string">&quot;China&quot;</span><br><br>    <span class="hljs-comment">// 我们不认为它是闭包，而是实例初始化器</span><br>    &#123;<br>        print(<span class="hljs-string">&quot;这段代码先于 Apple 的构造函数去执行&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然而 Groovy 却会把字符串 <code>&quot;China&quot;</code> 和它认为的 “闭包” <code>&#123;...&#125;</code> 视作是一个整体，而导致运行时出错。解决办法有两种：要么将实例初始化器移动到内部声明的最上方，要么就显示地使用 <code>;</code> 分号将两者分隔开：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 解决方法1，推荐</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Apple</span>&#123;</span><br><br>    &#123;<br>        print(<span class="hljs-string">&quot;&quot;</span>)<br>    &#125;<br>    <br>    String from = <span class="hljs-string">&quot;China&quot;</span><br>&#125;<br><br><span class="hljs-comment">// 解决方法 2，不太推荐，因为这种写法容易让人混淆实例初始化器和普通闭包的声明。</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Apple</span>&#123;</span><br><br>    String from = <span class="hljs-string">&quot;China&quot;</span>;<br><br>    &#123;<br>        print(<span class="hljs-string">&quot;&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-16-强力注解"><a href="#2-16-强力注解" class="headerlink" title="2.16 强力注解"></a>2.16 强力注解</h2><p>这里或许有一些官方提供的注解帮助快速开发，它们绝大部分都是来自于 <code>groovy.lang</code> 包，这意味着不需要通过 <code>import</code> 关键字额外地导入外部依赖：</p>
+<h3 id="2-16-1-Canonical-替代-toString"><a href="#2-16-1-Canonical-替代-toString" class="headerlink" title="2.16.1 @Canonical 替代 toString"></a>2.16.1 @Canonical 替代 toString</h3><p>假如希望打印一个类信息，又不想自己生成 <code>toString()</code> 方法，则可以使用 <code>@Canonical</code> 注解。该注解有额外的 <code>excludes</code> 选项：允许我们忽略一些属性。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-meta">@Canonical</span><br><span class="hljs-comment">// 如果不想打印 id 和 score，可以：</span><br><span class="hljs-comment">// @Canonical(excludes=&quot;id,score&quot;)</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span> &#123;</span><br>    Integer id<br>    String name<br>    Integer age<br>    String major<br>    Integer score<br>&#125;<br><br><span class="hljs-comment">// 如果没有此注解，打印的则是 Student@Hashcode</span><br><span class="hljs-comment">// 如果有注解，打印的则是 Student(1,&quot;Wang Fang&quot;,20,&quot;CS&quot;,&quot;score&quot;)</span><br>print <span class="hljs-keyword">new</span> Student(<span class="hljs-attr">id:</span> <span class="hljs-number">1</span>,<span class="hljs-attr">name:</span><span class="hljs-string">&quot;Wang Fang&quot;</span>,<span class="hljs-attr">age:</span> <span class="hljs-number">20</span>,<span class="hljs-attr">major:</span> <span class="hljs-string">&quot;CS&quot;</span>,<span class="hljs-attr">score:</span> <span class="hljs-number">90.0</span>d)<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-16-2-Delegate-实现委托"><a href="#2-16-2-Delegate-实现委托" class="headerlink" title="2.16.2 @Delegate 实现委托"></a>2.16.2 @Delegate 实现委托</h3><p>使用 <code>@Delegate</code> 注解，在 Groovy 中实现方法委托非常容易。委托是继承以外的另一种代码复用的思路。在下面的代码块中，Manager 通过注解将 <code>work()</code> 方法委托给了内部的 worker 属性：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Worker</span>&#123;</span><br>    <span class="hljs-keyword">void</span> work()&#123;<br>        print(<span class="hljs-string">&quot;worker is working exactly.&quot;</span>)<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// Manager 获得了 Worker 的公开方法，尽管 worker 属性本身是 private.</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Manager</span>&#123;</span><br>    <span class="hljs-meta">@Delegate</span> <span class="hljs-keyword">private</span> Worker worker = <span class="hljs-keyword">new</span> Worker()<br>&#125;<br><br><span class="hljs-comment">// 检查 Manager 实例有没有 work 方法，没有就去委托 worker 执行此方法。</span><br><span class="hljs-keyword">new</span> Manager().work()<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-16-3-Immutable-不可变对象"><a href="#2-16-3-Immutable-不可变对象" class="headerlink" title="2.16.3 @Immutable 不可变对象*"></a>2.16.3 @Immutable 不可变对象*</h3><p>不可变的对象天生就是线程安全的。想要创建一个不可变对象，需要限制它的类属性全部是 <code>final</code> ，一旦属性被初始化之后就不可以再被改变。<code>@Immutable</code> 注解可以提供一个便捷的解决方案：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-meta">@Immutable</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student_</span>&#123;</span><br>    String id<br>    String name<br>&#125;<br><br><span class="hljs-keyword">def</span> s = <span class="hljs-keyword">new</span> Student_(<span class="hljs-attr">id:</span><span class="hljs-string">&quot;0001&quot;</span>,<span class="hljs-attr">name:</span><span class="hljs-string">&quot;Wang Fang&quot;</span>)<br><br>print s<br></code></pre></td></tr></table></figure>
+
+<p>和其它注解不同，它来自 <code>groovy.transform</code> 包。笔者在使用该注解的时候曾遇到一些奇怪的问题，IDEA 似乎不能很好的识别该注解，并进一步引发代码无法粘贴，错误地弹出警告，代码提示消失等 Bug。</p>
+<h3 id="2-16-4-Lazy-延迟加载类成员"><a href="#2-16-4-Lazy-延迟加载类成员" class="headerlink" title="2.16.4 @Lazy 延迟加载类成员"></a>2.16.4 @Lazy 延迟加载类成员</h3><p>懒加载是大部分新兴语言都支持的特性。在 Groovy 中，它通过注解来实现，<strong>注意，该注解只能用于类成员</strong>。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connection</span>&#123;</span><br>    <br>    <span class="hljs-comment">// 加载 Connection 需要 1 秒的时间</span><br>    Connection()&#123;<br>        Thread.sleep(<span class="hljs-number">1000</span>)<br>        print <span class="hljs-string">&quot;Connection 实例初始化完毕&quot;</span><br>    &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pool</span>&#123;</span><br>    <br>    <span class="hljs-comment">// 由于代码没有调用 conn ，因此实际上 new Connection() 并没有真正执行</span><br>    <span class="hljs-meta">@Lazy</span> <span class="hljs-keyword">def</span> conn = <span class="hljs-keyword">new</span> Connection()<br>    Pool()&#123;<br>        print <span class="hljs-string">&quot;Pool 实例初始化完毕&quot;</span><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">def</span> pool = <span class="hljs-keyword">new</span> Pool();<br></code></pre></td></tr></table></figure>
+
+<p>对于懒加载的成员只有在第一次被调用时才会被初始化，并且 Groovy 内部通过 voaltitle 关键字保证这个创建的过程是线程安全的。</p>
+<h3 id="2-16-5-Newify-注解"><a href="#2-16-5-Newify-注解" class="headerlink" title="2.16.5 @Newify 注解"></a>2.16.5 @Newify 注解</h3><p>该注解的功能有点类似于 Scala 语言当中的 apply 方法，允许我们在创建新对象的时候忽略掉 <code>new</code> 关键字 ( 这个特性也有助于设计 DSL )。该注解可用在类声明和方法声明，也可以用在单独的变量赋值语句上：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span>&#123;</span><br>    String id<br>    String name<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Teacher</span>&#123;</span><br>    String id<br>    String name<br>&#125;<br><br><span class="hljs-meta">@Newify</span>(Student)<br><span class="hljs-keyword">def</span> getStudent()&#123;<br>    <span class="hljs-comment">// 在函数内部创建 Student 时，可以省略掉 new 关键字。</span><br>    Student(<span class="hljs-attr">id:</span><span class="hljs-string">&quot;0001&quot;</span>,<span class="hljs-attr">name:</span> <span class="hljs-string">&quot;Wang Fang&quot;</span>)<br>&#125;<br><br><span class="hljs-comment">// 多个类型使用数组的形式排列。</span><br><span class="hljs-meta">@Newify</span>([Student,Teacher])<br><span class="hljs-keyword">static</span> <span class="hljs-keyword">def</span> getStudentAndTeacher()&#123;<br>    [Student(<span class="hljs-attr">id:</span><span class="hljs-string">&quot;0001&quot;</span>,<span class="hljs-attr">name:</span><span class="hljs-string">&quot;Wang Fang&quot;</span>),Teacher(<span class="hljs-attr">id:</span> <span class="hljs-string">&quot;0002&quot;</span>,<span class="hljs-attr">name:</span><span class="hljs-string">&quot;Cheng Yu&quot;</span>)]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-16-6-Singleton-单例模式"><a href="#2-16-6-Singleton-单例模式" class="headerlink" title="2.16.6 @Singleton 单例模式"></a>2.16.6 @Singleton 单例模式</h3><p>在 Groovy 中，仅凭 <code>@Singleton</code> 注解就可以实现一个线程安全，并且简洁的单例模式。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 懒加载的单例模式，lazy 项是可选的。</span><br><span class="hljs-meta">@Singleton</span>(lazy = <span class="hljs-literal">true</span>)<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TheUnique</span>&#123;</span><br>    &#123;<br>        println <span class="hljs-string">&quot;created only once&quot;</span><br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 通过 .instance 调用这个单例对象。</span><br>TheUnique.instance<br></code></pre></td></tr></table></figure>
+
+<p>单例模式可以选择懒汉式加载，仅需在注解的 <code>lazy</code> 选项中设置为 <code>true</code> 即可。</p>
+<h2 id="2-17-注意-Groovy-的-符号"><a href="#2-17-注意-Groovy-的-符号" class="headerlink" title="2.17 注意 Groovy 的 == 符号"></a>2.17 注意 Groovy 的 == 符号</h2><p>在 Java 中，<code>==</code> 可以比较两个基本数据类型的值，或者比较两个引用类型的 HashCode。而 <code>.equals()</code> 方法如何比较则取决于开发者制定的规则：在什么都不做的情况下，<code>.equals</code> 方法和 <code>==</code> 等价。</p>
+<p>对于一些常用类型，Java 已经制定好了 <code>.equals()</code> 方法的比较规则。就 String 而言，它的 <code>.equals()</code> 实现首先就是通过 <code>==</code> 符号判断两个字符串的引用是否相同，然后判断两个字符串的长度是否相同，最后再按位判断每个位置的字符是否相同。</p>
+<p>而在 Groovy 当中，这两者的混乱程度有所加剧：Groovy 的 <code>==</code> <strong>相当于</strong>是 Java 的 <code>.equals()</code> 方法或者是 <code>compareTo()</code> 方法 (见运算符重载的那个表格)，而 Java 原始的 <code>==</code> 语义在 Groovy 中变成了 <code>is()</code> 方法。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs groovy">str1 = <span class="hljs-string">&quot;111&quot;</span><br>str2 = <span class="hljs-string">&quot;222&quot;</span><br><br><span class="hljs-comment">// 相当于是 Java 语义中的 str1 == str2</span><br>str1.is(str2)<br><br><span class="hljs-comment">// 相当于是 Java 语义中的 str1.equals(str2)</span><br>str1 == str2<br></code></pre></td></tr></table></figure>
+
+<p>如果比较的类实现了 <code>Compareble</code> 接口，那么 <code>==</code> 的语义优先会选择 <code>compareTo()</code> 方法而非 <code>equals()</code> 方法。</p>
+<h1 id="3-参考链接"><a href="#3-参考链接" class="headerlink" title="3. 参考链接"></a>3. 参考链接</h1><p>[^0]:  Groovy 程序设计 [美]Venkat Subramaniam 著<br>[^1]: <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41886200/article/details/90443560">Groovy 在更高 JDK 版本使用的方法</a><br>[^2]: <a target="_blank" rel="noopener" href="https://www.orcode.com/question/728715_k914e4.html">Groovy ‘as’ 用于实现2+接口的关键字</a><br>[^3]: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/rollenholt/archive/2013/10/02/3349047.html">Groovy：运算符重载</a><br>[^4]: 想要提前了解闭包，可以参考这篇文章：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/abf755035d67">Groovy 闭包 - 简书 (jianshu.com)</a></p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/04/23/Groovy/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;04&#x2F;23&#x2F;Groovy&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;04&#x2F;23&#x2F;Groovy&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2021/04/23/Git%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%86%8C/">Git 实用小册<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85"><span class="toc-text">1. 安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Hello%EF%BC%81%E5%88%9D%E6%9D%A5%E4%B9%8D%E5%88%B0"><span class="toc-text">2. Hello！初来乍到</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Groovy-as-Script"><span class="toc-text">2.1 Groovy as  Script</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E7%BC%96%E5%86%99-Groovy-%E9%80%BB%E8%BE%91%E7%9A%84%E4%B8%A4%E7%A7%8D%E9%A3%8E%E6%A0%BC"><span class="toc-text">2.2 编写 Groovy 逻辑的两种风格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-text">2.3 异常处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E7%AE%80%E6%B4%81%E7%9A%84-%E2%80%9C%E9%9D%9E%E7%A9%BA%E5%88%99%E8%B0%83%E7%94%A8%E2%80%9D-%E8%AF%AD%E6%B3%95"><span class="toc-text">2.4 简洁的 “非空则调用” 语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-GString"><span class="toc-text">2.5 GString</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-%E7%B2%BE%E7%AE%80%E7%9A%84-JavaBean"><span class="toc-text">2.6 精简的 JavaBean</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-%E6%88%96%E8%AE%B8%E6%97%A0%E9%9C%80%E6%89%8B%E5%8A%A8%E5%88%9B%E5%BB%BA%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-text">2.7 或许无需手动创建构造器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E5%8F%AF%E9%80%89%E5%BD%A2%E5%8F%82"><span class="toc-text">2.8 方法中的可选形参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-%E5%A4%9A%E9%87%8D%E8%B5%8B%E5%80%BC"><span class="toc-text">2.9 多重赋值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-10-%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0"><span class="toc-text">2.10 接口实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-11-%E5%B8%83%E5%B0%94%E6%B1%82%E5%80%BC"><span class="toc-text">2.11 布尔求值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-12-%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD"><span class="toc-text">2.12 运算符重载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-13-for-%E5%BE%AA%E7%8E%AF"><span class="toc-text">2.13 for 循环</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-14-%E5%85%B3%E4%BA%8E%E5%AF%BC%E5%85%A5"><span class="toc-text">2.14 关于导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-15-%E4%B8%80%E5%88%87%E5%8D%B3%E9%97%AD%E5%8C%85"><span class="toc-text">2.15 一切即闭包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-15-1-%E9%81%BF%E5%85%8D%E9%97%AD%E5%8C%85%E5%92%8C%E5%8C%BF%E5%90%8D%E7%B1%BB%E7%9A%84%E5%86%B2%E7%AA%81"><span class="toc-text">2.15.1 避免闭包和匿名类的冲突</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-15-2-%E9%81%BF%E5%85%8D%E9%97%AD%E5%8C%85%E5%92%8C%E5%AE%9E%E4%BE%8B%E5%88%9D%E5%A7%8B%E5%8C%96%E5%99%A8%E7%9A%84%E5%86%B2%E7%AA%81"><span class="toc-text">2.15.2 避免闭包和实例初始化器的冲突</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-16-%E5%BC%BA%E5%8A%9B%E6%B3%A8%E8%A7%A3"><span class="toc-text">2.16 强力注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-16-1-Canonical-%E6%9B%BF%E4%BB%A3-toString"><span class="toc-text">2.16.1 @Canonical 替代 toString</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-16-2-Delegate-%E5%AE%9E%E7%8E%B0%E5%A7%94%E6%89%98"><span class="toc-text">2.16.2 @Delegate 实现委托</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-16-3-Immutable-%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%AF%B9%E8%B1%A1"><span class="toc-text">2.16.3 @Immutable 不可变对象*</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-16-4-Lazy-%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%E7%B1%BB%E6%88%90%E5%91%98"><span class="toc-text">2.16.4 @Lazy 延迟加载类成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-16-5-Newify-%E6%B3%A8%E8%A7%A3"><span class="toc-text">2.16.5 @Newify 注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-16-6-Singleton-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="toc-text">2.16.6 @Singleton 单例模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-17-%E6%B3%A8%E6%84%8F-Groovy-%E7%9A%84-%E7%AC%A6%E5%8F%B7"><span class="toc-text">2.17 注意 Groovy 的 &#x3D;&#x3D; 符号</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-text">3. 参考链接</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
