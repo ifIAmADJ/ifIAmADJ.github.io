@@ -1,0 +1,685 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Go: (三)函数与方法 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="“函数” ( Function ) 特指那些未与任何结...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Go: (三)函数与方法</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/go_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Go: (三)函数与方法</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>March 17, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/03/17/Go-%E4%B8%89-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95/" class="leancloud" data-flag-title="Go: (三)函数与方法"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>25532</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>“函数” ( Function ) 特指那些未与任何结构体关联的 <code>func</code> 。而和特定类相关的函数将称之为方法 ( Method ) 。Go 语言是多范式的，这取决于你如何使用它。</p>
+<h1 id="第五章-函数"><a href="#第五章-函数" class="headerlink" title="第五章 函数"></a>第五章 函数</h1><h2 id="5-1-函数声明"><a href="#5-1-函数声明" class="headerlink" title="5.1 函数声明"></a>5.1 函数声明</h2><p>对于 Go 语言而言，完整的函数声明至少要包含：名字，形参列表，函数体。当函数不通过 <code>return</code> 关键字返回任何值时，声明部分可以将返回列表省略。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs swift"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">name</span>(params<span class="hljs-operator">-</span>list)</span> [result<span class="hljs-operator">-</span>list] &#123;<br>	<span class="hljs-operator">...</span><br>	[<span class="hljs-keyword">return</span> <span class="hljs-operator">&lt;</span>value<span class="hljs-operator">&gt;</span>]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一个不返回值的函数，它的作用应当体现在<strong>副作用</strong>上 ( 这包括通过指针修改了某个地址上的值，甚至说是修改了远程的数据库数据 )。既不返回值，又不具备副作用的函数是没有任何意义的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个函数的作用体现在了其副作用上：通过 fmt 向屏幕输出了 &quot;hello,go&quot;。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Print(<span class="hljs-string">&quot;hello,go&quot;</span>)<br>&#125;<br><br><span class="hljs-comment">// 这个函数的作用只体现在返回值上，它是一个纯函数。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add</span><span class="hljs-params">(a <span class="hljs-keyword">int</span>,b <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(result <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	result = a + b<br>	<span class="hljs-keyword">return</span> result<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>当形参列表的某些<strong>连续个形参是同一种类型时</strong>，可以参考以下的简写方式：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add</span><span class="hljs-params">(a,b <span class="hljs-keyword">int</span>,c,d <span class="hljs-keyword">float64</span>)</span></span>&#123;&#125;<br><span class="hljs-comment">// 等价于</span><br><span class="hljs-comment">// func(a int,b int,c float64,d float64)&#123;...&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>a</code> 和 <code>b</code> 都是 <code>int</code> 类型，而 <code>c</code> 和 <code>d</code> 则均为 <code>float64</code> 类型。</p>
+<p>Go 语言将函数视作是一等公民，这意味着函数可以被当作值在任意一处传递。函数的<strong>形参列表</strong>和<strong>返回值</strong>构成了<strong>函数签名</strong>，它将用于规范函数的类型。<strong>函数签名和变量名，返回值的命名都没有关系。</strong></p>
+<p>通过格式化输出 <code>fmt.Printf(&quot;%T&quot;,func)</code> 可以查看任意一个函数的函数签名：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go">fmt.Printf(<span class="hljs-string">&quot;%T&quot;</span>,greet)<br><span class="hljs-comment">// 输出 func()</span><br>fmt.Printf(<span class="hljs-string">&quot;%T&quot;</span>,add)<br><span class="hljs-comment">// 输出 func(int,int) int</span><br></code></pre></td></tr></table></figure>
+
+<p>函数可以递归。经典的例子就是递归方式遍历树结构，因为树结构本身的定义就是递归的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">seek</span><span class="hljs-params">(t *Tree)</span></span>&#123;<br>	<span class="hljs-keyword">if</span> t != <span class="hljs-literal">nil</span> &#123;fmt.Print(t.data,<span class="hljs-string">&quot; &quot;</span>)&#125; <span class="hljs-keyword">else</span> &#123;<span class="hljs-keyword">return</span>&#125;<br>	<span class="hljs-keyword">if</span> t.left != <span class="hljs-literal">nil</span> &#123;seek(t.left)&#125;<br>	<span class="hljs-keyword">if</span> t.right != <span class="hljs-literal">nil</span> &#123;seek(t.right)&#125;<br>&#125;<br><br><span class="hljs-keyword">type</span> Tree <span class="hljs-keyword">struct</span> &#123;<br>	data <span class="hljs-keyword">int8</span><br>	left *Tree<br>	right *Tree<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果选择了用递归解决问题，那么它最好是<strong>尾递归</strong>的，因为这可以避免在深度递归时的栈溢出问题。</p>
+<h2 id="5-2-函数返回多个值"><a href="#5-2-函数返回多个值" class="headerlink" title="5.2 函数返回多个值"></a>5.2 函数返回多个值</h2><p>这一点和其它语言不大相同。下面用一个简单的 “除法” 函数举个例子，它的结果有商和余数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 函数签名 func(int,int) (int,int)</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">div</span> <span class="hljs-params">(a,b <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(result,rem <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	result = a / b<br>	rem = a - b * result<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里存在两个形参列表，第一个是 “入参”，而第二个则是 “出参”。这是一个具名的 “出参” 列表，因此在函数体内可以通过 <code>=</code> 形式为返回值赋值，然后仅使用一个 <code>return</code> 关键字将 “出参” 列表返回 ( 该写法在 Go 语言中称之为 “裸返回” ) 。外界接受到的将是 “出参” 列表中赋好值的 <code>result</code> 和 <code>rem</code>  变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">result, rem := div(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+<p>“出参” 列表的局部变量可以是匿名的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">div</span><span class="hljs-params">(a,b <span class="hljs-keyword">int</span>)</span><span class="hljs-params">(<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>)</span></span>&#123;<br>	result := a/b<br>	<span class="hljs-keyword">return</span> result,result * b<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果是这样的写法，那么在程序的结尾处，<code>return</code> 后面需要按照声明的类型顺序排列好返回值。</p>
+<p>某个函数 <code>f</code> 的返回值可以是通过调用另一个 “出参” 列表相同的函数 <code>g</code> 获得的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 函数 f 和 g 具有相同的返回值列表。因此可以直接返回 g() 的调用结果。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f</span><span class="hljs-params">()</span><span class="hljs-params">(r1,r2 <span class="hljs-keyword">int</span>)</span></span>&#123;<br>	<span class="hljs-keyword">return</span> g() <br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">g</span><span class="hljs-params">()</span><span class="hljs-params">(r1,r2 <span class="hljs-keyword">int</span>)</span></span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>再或者，如果函数 <code>f</code> 的 “出参” 列表和函数 <code>g</code> 的 “入参” 列表一致，那么可以直接将函数 <code>f</code> 作为形参传递到函数 <code>g</code> 中去。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 函数 f 的出参和 g 的入参相对应，因此函数 f 可以直接作为函数 g 的形参。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">f</span><span class="hljs-params">()</span><span class="hljs-params">(r1,r2 <span class="hljs-keyword">int</span>)</span></span>&#123;<br>	<span class="hljs-keyword">return</span> r1,r2<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">g</span><span class="hljs-params">(r1,r2 <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<span class="hljs-keyword">return</span> r1 + r2&#125;<br><span class="hljs-comment">// 可以在主函数中这样调用：</span><br>b g(f())<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-3-变长函数"><a href="#5-3-变长函数" class="headerlink" title="5.3 变长函数"></a>5.3 变长函数</h2><p>变长函数指某个函数的<strong>最后一个参数是可变长度的</strong>，这在其它语言中也十分常见。在 Go 语言中，它这样表示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">moreInt8s</span> <span class="hljs-params">(aInt <span class="hljs-keyword">int8</span>,int8s ...<span class="hljs-keyword">int8</span>)</span></span>&#123;<br>	<span class="hljs-comment">//....</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>int8...</code> 表示 <code>int8s</code> 参数可能表示一个多个 <code>int8</code> 类型的值。在函数内部，这个变长的参数将<strong>被视作</strong>一个切片被处理，因此可以使用 <code>for</code> 循环去遍历它：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">moreInt8s</span><span class="hljs-params">(int8s ...<span class="hljs-keyword">int8</span>)</span></span>&#123;<br>	fmt.Printf(<span class="hljs-string">&quot;%v&quot;</span>,int8s)<br>	<span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> int8s &#123; fmt.Println(v)&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>尽管如此，它和下面的函数 <code>someInt8s</code> 仍然被视作是两类函数，因为它们的函数签名并不相同。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	<span class="hljs-comment">//func([]int8)</span><br>	fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>,someInt8s)<br>	<br>	<span class="hljs-comment">//func(...int8)</span><br>	fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>,moreInt8s)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">moreInt8s</span><span class="hljs-params">(int8s ...<span class="hljs-keyword">int8</span>)</span></span>&#123;<br>	fmt.Printf(<span class="hljs-string">&quot;%v&quot;</span>,int8s)<br>	<span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> int8s &#123; fmt.Println(v)&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">someInt8s</span><span class="hljs-params">(int8s []<span class="hljs-keyword">int8</span>)</span></span>&#123;<br>	fmt.Printf(<span class="hljs-string">&quot;%v&quot;</span>,int8s)<br>	<span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> int8s &#123; fmt.Println(v)&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>因此不可以直接将一个切片传递到变长函数内：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">ints := []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>&#125;<br>moreInt8s(ints)<br></code></pre></td></tr></table></figure>
+
+<p>但是有一个语法糖可以解决这个需求：将传入的切片后边加上 <code>...</code> 表示将这个切片视作是变长参数传递到函数内部。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">ints := []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>&#125;<br>moreInt8s(ints...)<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-4-函数即变量"><a href="#5-4-函数即变量" class="headerlink" title="5.4 函数即变量"></a>5.4 函数即变量</h2><p>函数可以作为变量而被直接声明。下面的代码块创建了一个匿名函数 ( 或者称表达式 ) ，它被赋值给了变量 <code>f</code> 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个函数将数值 x2。</span><br><span class="hljs-keyword">var</span> f = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i <span class="hljs-keyword">int8</span>)</span> <span class="hljs-title">int8</span></span> &#123;<span class="hljs-keyword">return</span> <span class="hljs-number">2</span>*i&#125;<br><br><span class="hljs-comment">// 4.</span><br>fmt.Println(f(<span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+
+<p>匿名函数的声明方式是：首先给定一个<strong>函数签名</strong>，然后跟上一个由 <code>&#123;&#125;</code> 括起来的语句块，语句块内的 <code>return</code> 内容取决于函数签名。<strong>注意，如果匿名函数要进行递归，形式上必须先将这个匿名函数赋值给变量，然后通过调用这个变量来实现递归。</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> factorial <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-keyword">int8</span>)</span> <span class="hljs-title">int8</span></span><br><br><span class="hljs-comment">// 通过匿名函数实现的阶乘函数</span><br>factorial = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(n <span class="hljs-keyword">int8</span>)</span> <span class="hljs-title">int8</span></span> &#123;<br>   <span class="hljs-keyword">if</span> n &gt;= <span class="hljs-number">1</span> &#123;<br>      <span class="hljs-keyword">return</span> n * factorial(n<span class="hljs-number">-1</span>)<br>   &#125;<span class="hljs-keyword">else</span>&#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-number">1</span><br>   &#125;<br>&#125;<br><br>fmt.Print(factorial(<span class="hljs-number">5</span>))<br></code></pre></td></tr></table></figure>
+
+<p>任何一个将函数视作一等公民的编程语言都很容易实现高阶函数，或者是一个被柯里化的函数。比如说下面的 <code>foreach</code> 算子 ( 一个最简单的 Monad )  接收另一个函数 <code>to</code> 对 <code>[]int8</code> 进行转换操作：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// foreach 是一个高阶函数，它接收另一个函数 to 对 ints 切片做变换。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">foreach</span><span class="hljs-params">(ints *[]<span class="hljs-keyword">int8</span>,to <span class="hljs-keyword">func</span>(<span class="hljs-keyword">int8</span>)</span> <span class="hljs-title">int8</span>)</span>&#123;<br>	<span class="hljs-keyword">for</span> i,v := <span class="hljs-keyword">range</span> *ints&#123;<br>		(*ints)[i] = to(v)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>再比如说，通过函数柯里化在 Go 语言内实现了 “伪” <code>while</code> 循环。这里将条件语句抽象成了 <code>func() bool</code> 函数，而内部的循环体语句块抽象成了 <code>func ()</code> 函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">While</span><span class="hljs-params">(condition <span class="hljs-keyword">func</span>()</span> <span class="hljs-title">bool</span>) <span class="hljs-title">func</span><span class="hljs-params">(block <span class="hljs-keyword">func</span>()</span>)</span>&#123;<br>	<br>	<span class="hljs-comment">// 外部的 While 函数相当于内部函数 _while_ 的闭包。</span><br>	<span class="hljs-keyword">var</span> _while_  <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-keyword">func</span>()</span>)</span><br><br>	<span class="hljs-comment">// 1. 这是一个没有任何返回值的尾递归函数，因此它可以被调用任意的深度。</span><br>	<span class="hljs-comment">// 2. 对于这个匿名函数而言，condition() 是一个自由变量，因为它不受 _while() 的控制。</span><br>	_while_ = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b <span class="hljs-keyword">func</span>()</span>)</span> &#123;<br>		<span class="hljs-keyword">if</span> condition() &#123;b();_while_(b)&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> _while_<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用它的方式是这样的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/*</span><br><span class="hljs-comment">	想象它是这样的语句：</span><br><span class="hljs-comment">	while(flag &lt; 100)&#123;</span><br><span class="hljs-comment"> 		flag ++</span><br><span class="hljs-comment">		fmt.Print(...)</span><br><span class="hljs-comment">	&#125;</span><br><span class="hljs-comment">	flag 在 while(...) 语句的作用域外，while 内部通过副作用修改 flag 的值。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">var</span> flag = <span class="hljs-number">1</span><br>While(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">bool</span></span> &#123;<br>    <span class="hljs-keyword">return</span> flag &lt; <span class="hljs-number">100</span><br>&#125;)(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    flag++<br>    fmt.Printf(<span class="hljs-string">&quot;loop :[%v/100]\n&quot;</span>,flag)<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-5-延迟调用函数-defer"><a href="#5-5-延迟调用函数-defer" class="headerlink" title="5.5 延迟调用函数 defer"></a>5.5 延迟调用函数 defer</h2><p>这里引入一个新的关键字 <code>defer</code>。跟在 <code>defer</code> 关键字后面的函数调用会在外界执行并返回 ( 无论是正常 <code>return</code> 还是因为异常情况而宕机 ) 之后才会被<strong>执行</strong>。这里举一个简单的例子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">testDefer</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-keyword">defer</span> fmt.Println(<span class="hljs-string">&quot;after&quot;</span>)<br>	fmt.Println(<span class="hljs-string">&quot;before&quot;</span>)<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>按照一般的顺序执行逻辑，<code>after</code> 应该先于 <code>before</code> 被打印到控制台。但是 <code>defer</code> 声明使得打印 <code>after</code> 的输出语句推迟到 <code>testDefer()</code> <strong>返回之后才执行</strong>，实际上控制台的打印顺序将是：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><span class="hljs-keyword">before</span><br><span class="hljs-keyword">after</span><br></code></pre></td></tr></table></figure>
+
+<p>下面通过一个示例来介绍什么场合下适合使用它：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">openFile</span><span class="hljs-params">()</span></span>&#123;<br>	open, err := os.Open(<span class="hljs-string">&quot;C:\\Users\\i\\go\\src\\awesomeProject\\vars\\a.go&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(err.Error())<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	fmt.Printf(open.Name())<br>	<span class="hljs-comment">// 假定 Close() 是一定执行成功的。</span><br>	_ = open.Close()<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段程序会因 <code>err</code> 出现两种 <code>return</code> 行为：在正常打开文件的情况下，程序将打印出文件名，释放资源并退出；否则。打印错误信息而直接退出。这并不是一段严谨的代码，因为当程序出现错误时，它不会执行到 <code>_ = open.Close()</code>。这样会到导致 <code>open</code> 指向的文件地址就不能够被回收重用 ( 内存泄漏 ) 。</p>
+<p>使这段逻辑更健壮的做法是：在判 <code>err</code> 非空的语句块内补充上 <code>Close()</code> 语句。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">openFile</span><span class="hljs-params">()</span></span>&#123;<br>	open, err := os.Open(<span class="hljs-string">&quot;C:\\Users\\i\\go\\src\\awesomeProject\\vars\\a.go&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(err.Error())<br>		_ = open.Close()<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	fmt.Printf(open.Name())<br>	_ = open.Close()<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>进一步，很容易联想到：在逻辑更加复杂的函数当中，为了及时地释放资源，我们必须手动在所有会使程序短路退出的语句块内都补充 <code>Close()</code> 函数。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">if</span> con1() &#123;<br>    <span class="hljs-comment">//...</span><br>    _ = open.Close()<br>    <span class="hljs-keyword">return</span><br>&#125;<span class="hljs-keyword">else</span> &#123;<br>    <br>    _ = open.Close()<br>    <span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-keyword">if</span> con2() &#123;<br>    _ = open.Close()<br>    <span class="hljs-keyword">return</span><br>&#125;<br><br>....<br></code></pre></td></tr></table></figure>
+
+<p>而 <code>defer</code> 则保证了某个函数调用只会在被 <code>return</code> 之后执行 ( 不管是在何处 <code>return</code> ，哪怕是因为因为宕机 )，现在 <code>Close()</code> 函数只需要写一次。从逻辑上来看，它的功能类似于一个 “<code>finally</code> “ 语句块，或者将其理解成创建了类似 AOP 的 <code>after(..)</code> 切面也可以。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">openFile</span><span class="hljs-params">()</span></span>&#123;<br>	open, err := os.Open(<span class="hljs-string">&quot;C:\\Users\\i\\go\\src\\awesomeProject\\vars\\a.go&quot;</span>)<br>	<span class="hljs-comment">// 无后顾之忧, 因为它总是在 openFile() 返回之后执行.</span><br>    <span class="hljs-comment">// defer 后面只能跟进函数调用，这意味着该写法下 open.Close() 的返回值被忽略了。</span><br>	<span class="hljs-keyword">defer</span> open.Close()<br>	<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(err.Error())<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	fmt.Printf(open.Name())<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>defer</code> 在需要成对操作的场合会很有用：比如某个连接的握手和断开，资源的打开和关闭，同步锁的加锁和放锁。利用它可以有效保证某些资源总是在函数运行之后就会被释放，而和具体的逻辑无关。</p>
+<p><strong>延迟调用函数可以接收返回值列表并操作，比如修改它的值</strong> ( 但这并不是 <code>defer</code> 本身的特性，这实际上是通过函数闭包达到的效果 ) 。除此之外，<code>defer</code> 后面可以直接跟进一个对匿名函数的<strong>调用</strong>，但是写法上要注意一点，匿名函数声明之后一定要主动带上 <code>()</code> 括起来的参数列表，表示 “声明且调用” 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 示例1，接收返回值</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add</span> <span class="hljs-params">(a <span class="hljs-keyword">int</span>, b <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(result <span class="hljs-keyword">int</span>)</span></span>&#123;<br>	<span class="hljs-comment">// 利用 defer 实现日志记录操作：</span><br>	<span class="hljs-keyword">defer</span> log.Printf(<span class="hljs-string">&quot;the reuslt is %v&quot;</span>,result)<br>	result = a + b<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-comment">// 示例2，在得到 add2 的返回值之后更改它，以此改变调用该函数得到的最终结果。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add2</span><span class="hljs-params">(a,b <span class="hljs-keyword">int8</span>)</span> <span class="hljs-params">(result <span class="hljs-keyword">int8</span>)</span></span> &#123;<br><br>	result = a+b<br>	<br>	<span class="hljs-comment">// 这里延迟调用的是一个匿名函数，可以利用它去承载一个语句块，</span><br>    <span class="hljs-comment">// 因为一段语句块可以被抽象成无入参且无返回值的 func() 。</span><br>    <span class="hljs-comment">// 后面必须要再加上一个() 来表示这是一个函数的 (延迟) 调用。</span><br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		result += <span class="hljs-number">1</span><br>	&#125;()<br>	<br>    <span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-5-1-多个-defer-调用会倒序执行"><a href="#5-5-1-多个-defer-调用会倒序执行" class="headerlink" title="5.5.1 多个 defer 调用会倒序执行"></a>5.5.1 多个 defer 调用会倒序执行</h3><p>一个函数内部可以有任意多个 <code>defer</code> 延迟调用，它们在函数 <code>return</code> 之后按照声明的<strong>倒序</strong>执行，可以想象成：每一个 <code>defer</code> 调用都是将一个延迟调用的函数压入了一个栈内存储，函数 <code>reuturn</code> 之后的 “善后” 工作，是通过从这个栈中不断 <code>pop</code> 并执行的。</p>
+<p>这是出于 “先打开的资源后关闭 “ 的角度考量的。举个例子来说，我们生活中正常开机并工作的顺序是这样的：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coq">(<span class="hljs-number">1</span>) <span class="hljs-keyword">Open</span> PC =&gt; (<span class="hljs-number">2</span>) <span class="hljs-keyword">Open</span> OS =&gt; (<span class="hljs-number">3</span>) Start Coding<br></code></pre></td></tr></table></figure>
+
+<p>等到下班时，是 “先关电脑后保存文件”，还是 “先保存文件再关电脑” 呢？显然答案是后者。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lisp">(<span class="hljs-number">3</span>) Shut Down PC &lt;= (<span class="hljs-number">2</span>) Shut Down OS &lt;= (<span class="hljs-number">1</span>) Commit Code<br></code></pre></td></tr></table></figure>
+
+<p>另一方面，程序员习惯于 “在局部代码块内关闭最近使用过的资源”，因此代码结构更倾向于这个样子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 一段伪代码</span><br>&#123;<br>	os = pc.Open()<br>	<span class="hljs-keyword">defer</span> pc.Close()<br>	<br>	<span class="hljs-keyword">if</span> os != <span class="hljs-literal">nil</span> &#123;<br>		app = os.open()	<br>         <span class="hljs-keyword">defer</span> os.Close()<br>		<br>        <span class="hljs-keyword">if</span> app != <span class="hljs-literal">nil</span> &#123;<br>            app.Coding()									<br>            <span class="hljs-keyword">defer</span> app.Git()<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从声明的层次顺序来看，<code>pc.Close()</code> 是最 “前面的”。假使程序按照 <code>defer</code> 声明的顺序逐个关闭资源，那么显然依赖于 <code>pc</code> 的 <code>os.Close()</code> 和 <code>app.Git()</code> 都会因为 <code>pc.Close()</code> 提前执行而导致出现 “空指针异常” 。因此 Go 干脆将 <code>defer</code> 设计成 FILO 的栈结构，让程序员保持习惯的同时，让资源也能够被正确地按顺序关闭。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 程序总是输出 123 而非 321.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">testDefer</span><span class="hljs-params">()</span></span> &#123;<br>	a, b, c := <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span><br>	<span class="hljs-keyword">if</span> a == <span class="hljs-number">1</span> &#123;<br>		<span class="hljs-keyword">defer</span> fmt.Printf(<span class="hljs-string">&quot;3&quot;</span>)<br>		<span class="hljs-keyword">if</span> b == <span class="hljs-number">2</span> &#123;<br>			<span class="hljs-keyword">defer</span> fmt.Printf(<span class="hljs-string">&quot;2&quot;</span>)<br>			<span class="hljs-keyword">if</span> c == <span class="hljs-number">3</span> &#123;<br>				<span class="hljs-keyword">defer</span> fmt.Printf(<span class="hljs-string">&quot;1&quot;</span>)<br>			&#125;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-5-2-defer-延迟调用函数的赋参时机"><a href="#5-5-2-defer-延迟调用函数的赋参时机" class="headerlink" title="5.5.2 defer 延迟调用函数的赋参时机"></a>5.5.2 defer 延迟调用函数的赋参时机</h3><p>我们传统印象中的 “函数调用” 就是 “传参并执行” 的连续操作，但是对于 <code>defer</code> 声明的延迟函数调用而言，这个过程被分开了：传参过程早在程序执行到 <code>defer</code> 声明时就已经完成，<strong>只有执行函数体的过程被推迟了</strong>。</p>
+<p>这是一个简单的验证：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">testDefer</span><span class="hljs-params">()</span></span> &#123;<br>   a := <span class="hljs-number">1</span><br>   <span class="hljs-comment">// a 在程序执行到这条 defer 声明时就被赋值给了 fmt.Print(..) 函数，显然此刻的 a == 1 ，传入函数的形参值也是 1。</span><br>   <span class="hljs-keyword">defer</span> fmt.Print(a)<br><br>   <span class="hljs-comment">// 因此，后续的代码块无论对 a 做何修改，最终控制台打印的结果仍然是 1 .</span><br>   a += <span class="hljs-number">10</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面的例子巧妙地利用了这个特性，通过计算 <code>defer</code> 延迟调用函数从 “被赋值” 到 “被执行” 的这段时间差 (delta time) 来测量另一个函数的执行耗时。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个例子中用到了 Go 的官方库 time：</span><br><span class="hljs-comment">// time.Time 		=&gt; time 包中通用的，表示 &quot;时间&quot; 的类型。</span><br><span class="hljs-comment">// time.Since(..)	=&gt; 计算从现在到过去某一个时间的时间差。</span><br><span class="hljs-comment">// time.Now()		=&gt; 生成当前时间。</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">trace</span><span class="hljs-params">(before time.Time)</span></span>&#123;<br>	log.Printf(<span class="hljs-string">&quot;takes time:%s&quot;</span>,time.Since(before))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>想要使用它测试某个函数的执行时间，只要在此函数的开头部分通过 <code>defer</code> “设下埋点” 就可以了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">openFile</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-keyword">defer</span> trace(time.Now())<br>	<span class="hljs-comment">//..openFile() 的逻辑</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面的例子则是更 “花哨” 的版本，因为它是配合函数闭包来使用的 <code>defer</code> 延迟调用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个函数用于测试并记录某个程序的运行时间</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">trace</span><span class="hljs-params">()</span> <span class="hljs-params">(deltaTime <span class="hljs-keyword">func</span>()</span>)</span> &#123;<br>    <span class="hljs-comment">// time 是官方库，Now() 函数可以获取当前时间</span><br>	start := time.Now()<br>	<span class="hljs-comment">// Since(...) 函数可以获取当前时间到传入时间的这段时间差。</span><br>    deltaTime = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;log.Printf(<span class="hljs-string">&quot;takes time:%s&quot;</span>,time.Since(start))&#125;<br>    <span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这相当于将真正希望推迟执行的函数 ( 暂且称之为 “目标函数” ) 以及依赖的参变量提取到了另一个高阶函数内，实现了 “打包” 的效果 ( 它确实就叫 “闭包” )。这样，<code>defer</code> 只需要简单地调用这个高阶函数就可以直接完成一系列复杂的初始化步骤，然后拿到目标函数<strong>等待被延迟调用</strong>。</p>
+<p>使用它测试某个函数的执行时间，写法是这样的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">defer</span> trace()()<br></code></pre></td></tr></table></figure>
+
+<p>这里有两层 <code>()</code> 小括号的原因是：在这里期望延迟调用的是 <code>trace()</code> 函数返回的 <code>deltaTime()</code> ，而不是 <code>trace()</code> 函数本身。</p>
+<p>当传入的参数需要一系列更加复杂的计算时，显然不太可能只通过一行 <code>defer</code> 声明将复杂工作全部完成 ，此时需要将这一系列操作打包到一个匿名函数调用，或者是直接使用具名的高阶函数。</p>
+<p>下面的例子演示了如何利用 <code>defer</code> 做一个环绕型通知：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> AOP()()<br>	log.Printf(<span class="hljs-string">&quot;hello&quot;</span>)<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">AOP</span><span class="hljs-params">()</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>&#123;<br><br>	<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>		log.Printf(<span class="hljs-string">&quot;before ...&quot;</span>)<br>	&#125;()<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>		log.Printf(<span class="hljs-string">&quot;after ...&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>程序的运行结果将是：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">2021</span>/<span class="hljs-number">03</span>/<span class="hljs-number">07</span> <span class="hljs-number">16</span>:<span class="hljs-number">56</span>:<span class="hljs-number">59</span> before ...<br><span class="hljs-attribute">2021</span>/<span class="hljs-number">03</span>/<span class="hljs-number">07</span> <span class="hljs-number">16</span>:<span class="hljs-number">56</span>:<span class="hljs-number">59</span> hello<br><span class="hljs-attribute">2021</span>/<span class="hljs-number">03</span>/<span class="hljs-number">07</span> <span class="hljs-number">16</span>:<span class="hljs-number">56</span>:<span class="hljs-number">59</span> after ...<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-6-循环内的匿名函数共享迭代遍历地址"><a href="#5-6-循环内的匿名函数共享迭代遍历地址" class="headerlink" title="5.6 循环内的匿名函数共享迭代遍历地址"></a>5.6 循环内的匿名函数共享迭代遍历地址</h2><blockquote>
+<p>原版的 《 Go 程序设计语言》 函数章节的 警告：捕获迭代变量 段落使用了较为复杂的案例做陈述，这里笔者做了简化。</p>
+</blockquote>
+<p>通过循环语句创建出的多个匿名函数，它们将共享迭代变量 ( 如下面代码块的 <code>i</code> 和 <code>v</code> ) 的地址。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个循环将创建出 三个匿名函数副本，它们将共享循环变量 i,v 的地址。</span><br><span class="hljs-comment">// 在有些情况下，这会导致一些预料之外的错误。</span><br><span class="hljs-keyword">for</span> i,v := <span class="hljs-keyword">range</span> []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125; &#123;<br>    <span class="hljs-comment">// 注意，这个表达式声明后面带上了参数列表()，表示声明并且调用。</span><br>   <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>      fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>,i,v)<br>   &#125;()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行代码，看起来没有任何问题：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> and the value <span class="hljs-keyword">is</span> <span class="hljs-number">1</span><br><span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-number">1</span> and the value <span class="hljs-keyword">is</span> <span class="hljs-number">2</span><br><span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2</span> and the value <span class="hljs-keyword">is</span> <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>现在换个做法：每创建出一个匿名函数，不立刻执行它，而是先将其暂存到一个 <code>[]func()</code> 切片内，等到循环结束之后再统一运行。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> jobs []<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span><br><br><span class="hljs-keyword">for</span> i,v := <span class="hljs-keyword">range</span> []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125; &#123;<br><br>    job := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>        fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>,i,v)<br>    &#125;<br>    jobs = <span class="hljs-built_in">append</span>(jobs,job)<br>&#125;<br><br><span class="hljs-keyword">for</span> _,job := <span class="hljs-keyword">range</span> jobs &#123;<br>    job()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>问题出现了。程序打印的是：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2</span> and the value <span class="hljs-keyword">is</span> <span class="hljs-number">3</span><br><span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2</span> and the value <span class="hljs-keyword">is</span> <span class="hljs-number">3</span><br><span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-number">2</span> and the value <span class="hljs-keyword">is</span> <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
+<p>如果笔者用顺序结构复现上述代码的逻辑，它是这样的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">forBlock</span><span class="hljs-params">(Range []<span class="hljs-keyword">int8</span>)</span></span> &#123;<br><br>    <span class="hljs-comment">// 模拟 for 的迭代变量 //</span><br>    <span class="hljs-keyword">var</span> i <span class="hljs-keyword">int8</span> = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">var</span> v <span class="hljs-keyword">int8</span> = <span class="hljs-number">0</span><br><br>    <span class="hljs-comment">// 第一次迭代</span><br>    v = Range[i]<br>    expr1 := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>, i, v)<br>    &#125;<br><br>    <span class="hljs-comment">// 第二次迭代</span><br>    i++<br>    v = Range[i]<br>    expr2 := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>, i, v)<br>    &#125;<br><br>    <span class="hljs-comment">// 第三次迭代</span><br>    i++<br>    v = Range[i]<br>    expr3 := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>, i, v)<br>    &#125;<br><br>    <span class="hljs-comment">// 模拟从刚才的 jobs 当中读取每一个 job() 执行</span><br>    expr1()<br>    expr2()<br>    expr3()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以这么理解，在刚才的 for 循环中，三个匿名函数其实全部处于一个闭包下 ( 在这里你可以理解为它们都在一个大的 <code>forBlock</code> 函数内部 ) ，它们内部的自由变量 <code>i</code> 和 <code>v</code> 其实是全部指向了最开始声明的那两个 <code>i</code> 和 <code>v</code> 变量。</p>
+<p>那为什么在本节的最开始，程序是按既定的规则输出的？原因就在于之前的匿名函数是 “边声明边调用的”。这样，即便是 <code>i</code> 和 <code>v</code> 被改动了，它也不会影响到已经执行完毕的结果。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">forBlock</span><span class="hljs-params">(Range []<span class="hljs-keyword">int8</span>)</span></span> &#123;<br><br>   <span class="hljs-comment">// 模拟 for 的迭代变量 //</span><br>   <span class="hljs-keyword">var</span> i <span class="hljs-keyword">int8</span> = <span class="hljs-number">0</span><br>   <span class="hljs-keyword">var</span> v <span class="hljs-keyword">int8</span> = <span class="hljs-number">0</span><br><br>   <span class="hljs-comment">// 第一次迭代,这个匿名函数已经创建被执行完了，后续 i,v 的更改和它无关。</span><br>   v = Range[i]<br>   <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>      fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>, i, v)<br>   &#125;()<br><br>   <span class="hljs-comment">// 第二次迭代</span><br>   i++<br>   v = Range[i]<br>   <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>      fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>, i, v)<br>   &#125;()<br><br>   <span class="hljs-comment">// 第三次迭代</span><br>   i++<br>   v = Range[i]<br>   <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>      fmt.Printf(<span class="hljs-string">&quot;index is %v and the value is %v\n&quot;</span>, i, v)<br>   &#125;()<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-7-错误处理"><a href="#5-7-错误处理" class="headerlink" title="5.7 错误处理"></a>5.7 错误处理</h2><p>我们在之前已经见识过 Go 标准库如何利用函数返回多值的特性来实现 “抛出异常”：通常前者是期望的计算结果，后者则是实现了 <code>Error</code> 接口的返回值。比如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">file,err := os.Open(<span class="hljs-string">&quot;/usr/share/music.mp3&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>Go 没有像其它语言一样设计类似 <code>try</code> … <code>catch</code> … <code>fianlly</code> 的异常捕捉语句块，而是将异常视作是一个普通的值，我们因此只要简单地使用一个 <code>if</code> 语句块来捕获异常：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 在 Go 语言中，通用的处理异常的办法。</span><br><span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>	log.Fatal(<span class="hljs-string">&quot;something was wrong!&quot;</span>)<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于捕获到的 <code>Error</code> 异常有两种处理策略，除了像上述代码块直接通过 <code>return</code> 退出程序以外，在面对一些 “因临时的不可抗力导致的异常” 时，如请求的资源正在被加锁，或因当时的网络状态差导致请求网络资源失败等情况，更合理的做法是选择有限地重试，直到超出重试次数或等待时间为止，而不应该是立刻退出程序。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">get</span><span class="hljs-params">()</span> *<span class="hljs-title">http</span>.<span class="hljs-title">Response</span></span> &#123;<br>   <span class="hljs-comment">// 设置超时等待时间</span><br>   limitTime :=  <span class="hljs-number">1</span> * time.Minute<br>   ddl := time.Now().Add(limitTime)<br>   <br>   <span class="hljs-comment">// 如果失败，则该程序通过退避策略不断重试。</span><br>   <span class="hljs-keyword">for</span> tries:=<span class="hljs-number">0</span>;time.Now().Before(ddl);tries++&#123;<br>      resp,err := http.Get(<span class="hljs-string">&quot;http://www.baidu.com&quot;</span>)<br>      <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>         <br>         <span class="hljs-comment">// 每失败一次，就退避更长时间重试。</span><br>         time.Sleep(time.Second &lt;&lt; tries)<br>         <span class="hljs-keyword">continue</span><br>      &#125;<br>      <span class="hljs-keyword">return</span> resp<br>   &#125;<br>   <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-8-宕机"><a href="#5-8-宕机" class="headerlink" title="5.8 宕机"></a>5.8 宕机</h2><p>Go 语言的类型系统会捕获异常错误，但是有些错误只能在运行期间进行检查，比如数组是否进行了越界访问，或者引用了一个空指针。这些错误是严重的内部错误，因此它们会导致程序宕机。</p>
+<p>一旦发生宕机，程序就相当是立刻 <code>return</code> 返回， <code>defer</code> 声明的调用会开始执行，并且在最后留下异常退出的日志消息。和抛出一个 <code>Error</code> 异常不同，宕机时输出的日志包含了完整的栈跟踪消息，我们通常可以借助它来排查代码出错的原因。</p>
+<p>并不是所有的宕机都是程序运行时的内部错误，比如可以主动通过 <code>panic(...)</code> 函数的方式来触发一个宕机，该函数可以接收任何值。发生宕机通常是意味着 “遇到了比 <code>Error</code> 还棘手的麻烦”—— 只有出现<strong>一些逻辑上不应该出现的，或者是预料之外的错误</strong>时才应该使用它。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go">str := <span class="hljs-string">&quot;go1&quot;</span><br><span class="hljs-keyword">switch</span> str &#123;<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;go&quot;</span>:<br>    	fmt.Print(<span class="hljs-string">&quot;hello,go&quot;</span>)<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;java&quot;</span>:<br>    	fmt.Print(<span class="hljs-string">&quot;hello,java&quot;</span>)<br>    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;c&quot;</span>:<br>    	fmt.Print(<span class="hljs-string">&quot;hello,c&quot;</span>)<br>    <span class="hljs-keyword">default</span>:<br>         <span class="hljs-comment">// 其实这个异常是可通过判断检查的，因此使用 Error 更合适一些。</span><br>    	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;value of str should be one of : (go,java,c)&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>发生宕机不一定会导致程序立刻退出，因为程序仍然可以在执行 <code>defer</code> 延迟调用函数时进行一步 “自救” —— 在延迟调用函数内可以通过调用 <code>recover()</code> 令程序回到正常状态。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	unsafe()<br>	<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;主函数正常执行并退出&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">unsafe</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		err := <span class="hljs-built_in">recover</span>()<br>		log.Printf(<span class="hljs-string">&quot;unsafe 在执行时曾发生了一个严重的错误。%v\n&quot;</span>,err)<br>		bytes := [<span class="hljs-number">4096</span>]<span class="hljs-keyword">byte</span>&#123;&#125;<br>		runtime.Stack(bytes[:],<span class="hljs-literal">false</span>)<br>		s := <span class="hljs-keyword">string</span>(bytes[:])<br>		<span class="hljs-built_in">print</span>(s)<br>	&#125;()<br>	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;错误信息&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>recover()</code> 函数还能够接受到 <code>panic(...)</code> 留下的错误信息并返回 ( 如果外部函数是正常执行并返回的，则该返回值为 <code>nil</code>) ，以便于程序员为分析代码错误留下线索。除此之外，本例通过 <code>runtime.Stack(...)</code> 函数主动向控制台输出了栈跟踪信息。</p>
+<p>直接使用 <code>recover(...)</code> 的场合其实并不多，因为发生宕机意味着程序大概率将不能正常继续运行。</p>
+<p>假设下面的函数用于检查用户名。文件内部定义了三个空结构体来表示错误类型 “字符过长”，”包含特殊字符”，”首字符非大写” ，它们均会导致宕机。延迟调用函数能够处理 “首字母非大写” 的情况并使程序恢复到正常状态。但如果是前两种情形，则延迟调用函数会重新进入宕机状态。</p>
+<p>不过，这个例子虽然展现出了宕机和恢复的工作机制，但是违背了宕机不应该用于 “预期的错误” 的准则。更合理的做法是将 “可预料的错误” 当作 <code>Error</code> 来处理或者是抛出。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">checkName</span><span class="hljs-params">(name <span class="hljs-keyword">string</span>)</span></span> &#123;<br><br>   <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>      maybeErr := <span class="hljs-built_in">recover</span>()<br>      <span class="hljs-keyword">switch</span> maybeErr &#123;<br>      <span class="hljs-keyword">case</span> firstCharNotUpperException&#123;&#125;:<br><br>         lowerRune := []<span class="hljs-keyword">rune</span>(name)[<span class="hljs-number">0</span>]<br>         upperRune := unicode.ToUpper(lowerRune)<br>         strings.Replace(name, <span class="hljs-keyword">string</span>(lowerRune), <span class="hljs-keyword">string</span>(upperRune), <span class="hljs-number">1</span>)<br>         fmt.Print(<span class="hljs-string">&quot;按照要求，首字母被转换为了大写。&quot;</span>)<br>      <span class="hljs-keyword">default</span>:<br>         <span class="hljs-built_in">panic</span>(maybeErr)<br>      &#125;<br><br>   &#125;()<br><br>   <span class="hljs-comment">// 如果下面任何一个表达式匹配成功都会导致程序退出。</span><br>   <span class="hljs-keyword">switch</span> &#123;<br><br>   <span class="hljs-keyword">case</span> utf8.RuneCount([]<span class="hljs-keyword">byte</span>(name)) &gt; <span class="hljs-number">6</span>:<br>      <span class="hljs-built_in">panic</span>(toLongCharacterError&#123;&#125;)<br><br>   <span class="hljs-keyword">case</span> strings.ContainsAny(name, <span class="hljs-string">&quot;&lt;&gt;!?&amp;&quot;</span>):<br>      <span class="hljs-built_in">panic</span>(invalidCharacterError&#123;&#125;)<br><br>   <span class="hljs-keyword">case</span> unicode.IsUpper([]<span class="hljs-keyword">rune</span>(name)[<span class="hljs-number">0</span>]):<br>      <span class="hljs-built_in">panic</span>(firstCharNotUpperException&#123;&#125;)<br><br>   <span class="hljs-keyword">default</span>:<br>      fmt.Print(<span class="hljs-string">&quot;验证通过，上传数据库&quot;</span>)<br>   &#125;<br><br>&#125;<br><br><span class="hljs-keyword">type</span> toLongCharacterError <span class="hljs-keyword">struct</span>&#123;&#125;<br><span class="hljs-keyword">type</span> invalidCharacterError <span class="hljs-keyword">struct</span>&#123;&#125;<br><span class="hljs-keyword">type</span> firstCharNotUpperException <span class="hljs-keyword">struct</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="第六章-方法"><a href="#第六章-方法" class="headerlink" title="第六章 方法"></a>第六章 方法</h1><h2 id="6-1-方法声明"><a href="#6-1-方法声明" class="headerlink" title="6.1 方法声明"></a>6.1 方法声明</h2><p>方法声明和函数声明类似，但是在前面增加了参数。下面的代码块演示了 <code>Position</code> 类型的声明，以及针对该类型的测距方法 <code>distance(...)</code> ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p Position)</span> <span class="hljs-title">distance</span><span class="hljs-params">(q Position)</span></span>&#123;<br><br>	y := math.Abs(<span class="hljs-keyword">float64</span>(p.Y - q.Y))<br>	x := math.Abs(<span class="hljs-keyword">float64</span>(p.X - q.X))<br><br>	sqrt := math.Sqrt(x*x + y*y)<br>	fmt.Printf(<span class="hljs-string">&quot;%g&quot;</span>,sqrt)<br>	<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    p := Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;<br>	q := Position&#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;<br><br>    <span class="hljs-comment">//(this).op(that)</span><br>	p.distance(q)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种写法相当于是将 <code>distance(...)</code> 函数绑定到了 <code>p</code> 所属的类型上 ，称 <code>p</code> 是这个函数的<strong>接收者</strong>。值 <code>p</code> 语义上接近其它语言中的 “<code>this</code>“ 或者是 <code>&quot;self&quot;</code>，它代表了任意一个属于 <code>Position</code> 类的对象，而值 <code>q</code> 语义上是被操作数  “<code>that</code>“ 。</p>
+<p>上述代码块的 <code>p.distance</code> 被称为是 <strong>选择子</strong>，可以简单理解成是 “调用了 <code>p</code> 对象的 <code>distance</code> 方法” 。<strong>方法名和字段名共享一个命名空间</strong>，这意味着 <code>Position</code> 类不能再包含名为 <code>Distance</code> 的字段；同样，也不能再声明一个名为 <code>X</code> 或 <code>Y</code> 的方法，否则编译器就会提示错误。</p>
+<p>通过 <code>type</code> 定义的 “类型别称” 也可以绑定方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Paragraph []<span class="hljs-keyword">string</span><br><br><span class="hljs-comment">// 这个方法适用于 Paragraph 类型，但是不适用于 []string 类型。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p Paragraph)</span> <span class="hljs-title">read</span><span class="hljs-params">()</span></span>&#123;<br>   <span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> p &#123;<br>      fmt.Println(v)<br>   &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <br>	paragraph := Paragraph&#123;<br>		<span class="hljs-string">&quot;hello world&quot;</span>,<br>		<span class="hljs-string">&quot;hello go&quot;</span>,<br>		<span class="hljs-string">&quot;hello scala&quot;</span>,<br>		<span class="hljs-string">&quot;hello java&quot;</span>,<br>	&#125;<br><br>	paragraph.read()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-2-接收者可以为指针"><a href="#6-2-接收者可以为指针" class="headerlink" title="6.2 接收者可以为指针"></a>6.2 接收者可以为指针</h2><p>当一个结构体的数据量比较庞大时，最好使用指针，因为这样可以免去值复制的过程。下面的代码块是 <code>distance(..)</code> 方法的指针接收者版本。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Position <span class="hljs-keyword">struct</span>&#123;X,Y <span class="hljs-keyword">int16</span>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Position)</span> <span class="hljs-title">distance_</span><span class="hljs-params">(q *Position)</span></span>&#123;<br><br>    <span class="hljs-comment">// 重点: (*p).X 可以直接写成 p.X。</span><br>    <span class="hljs-comment">// 这个语法糖带来的影响我们会在 接口 章节继续探讨。</span><br>	y := math.Abs(<span class="hljs-keyword">float64</span>(p.Y - q.Y))<br>	x := math.Abs(<span class="hljs-keyword">float64</span>(p.X - q.X))<br><br>	sqrt := math.Sqrt(x*x + y*y)<br>	fmt.Printf(<span class="hljs-string">&quot;%g&quot;</span>,sqrt)<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接收者的类型要么是一个命名类型，要么就是指向一个命名类型的指针，比如 <code>Position</code> 和 <code>*Position</code>。注意，如果一个 “类型别称” 指向一个指针，那它就不能充当接收者，下面演示了这个反例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> PointOfPosition *Position<br><br><span class="hljs-comment">// 编译不通过。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p PointOfPosition)</span> <span class="hljs-title">distance</span><span class="hljs-params">(q PointOfPosition)</span></span>&#123;<br>	<span class="hljs-comment">//....</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>当接收者为指针时，应格外注意调用该方法时的写法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 如果该变量本身是字面量，则需要使用 &amp; 号传地址。</span><br>p := Position&#123;<span class="hljs-number">1</span>, <span class="hljs-number">3</span>&#125;<br>q := Position&#123;<span class="hljs-number">2</span>,<span class="hljs-number">4</span>&#125;<br>(&amp;p).distance_(&amp;q)<br><br><br><span class="hljs-comment">// 如果该变量本身是指针，则可以省去 * 号。</span><br>l := &amp;Position&#123;<span class="hljs-number">2</span>,<span class="hljs-number">5</span>&#125;<br>k := &amp;Position&#123;<span class="hljs-number">4</span>,<span class="hljs-number">6</span>&#125;<br><br><span class="hljs-comment">// 等效于 (*l).distance_(k)</span><br>l.distance_(k)<br></code></pre></td></tr></table></figure>
+
+<p>但是，<strong>如果想要通过调用方法来修改接收者自身成员的内容，此时的接收者必须为地址</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// import ...</span><br><span class="hljs-comment">// 在主函数中测试运行的结果</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><br>	position := Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;<br><br>	<span class="hljs-comment">// 没影响</span><br>	position.goLeft()<br>    fmt.Print(position)<br><br>	<span class="hljs-comment">// 有影响</span><br>	position.goRight()<br>	fmt.Print(position)<br><br>&#125;<br><br><span class="hljs-keyword">type</span> Position <span class="hljs-keyword">struct</span> &#123;<br>	X,Y <span class="hljs-keyword">int</span><br>&#125;<br><br><span class="hljs-comment">// 注意，这个接收者是指针，这个修改会影响到接收者。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Position)</span> <span class="hljs-title">goRight</span><span class="hljs-params">()</span></span>  &#123;<br>   p.X += <span class="hljs-number">1</span><br>&#125;<br><br><span class="hljs-comment">// 这个接收者是命名类型，因此接收者接收的仍然只是一个值副本，换句话说，</span><br><span class="hljs-comment">// 执行这个方法不会影响到原接收者本身。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p Position)</span> <span class="hljs-title">goLeft</span><span class="hljs-params">()</span></span>&#123;<br>   p.X -= <span class="hljs-number">1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-2-1-警惕接收者为-nil-的情况"><a href="#6-2-1-警惕接收者为-nil-的情况" class="headerlink" title="6.2.1 警惕接收者为 nil 的情况"></a>6.2.1 警惕接收者为 nil 的情况</h3><p>当方法的接收者是一个指针时，最好在方法体内加入判空的逻辑保证程序足够健壮。以上述的 <code>distance_(...)</code> 函数为例，如果用户无意间这样做了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> p *Position <br>q := &amp;Position&#123;<span class="hljs-number">4</span>,<span class="hljs-number">6</span>&#125;<br><br><span class="hljs-comment">// p =&gt; nil</span><br>(p).distance_(q)<br></code></pre></td></tr></table></figure>
+
+<p>访问 <code>nil</code> 指针的成员会导致宕机：</p>
+<p><code>panic: runtime error: invalid memory address or nil pointer dereference</code></p>
+<p>最体面的解决方式是，当判断接收者为 <code>nil </code> 时，给出一个警告或返回 <code>Error</code>，避免访问空指针的成员。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Position)</span> <span class="hljs-title">distance_</span><span class="hljs-params">(q *Position)</span></span>&#123;<br><br>	<span class="hljs-keyword">if</span> p == <span class="hljs-literal">nil</span> &#123;<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;warning: value p is a nil pointer.&quot;</span>);<span class="hljs-keyword">return</span>&#125;<br>	y := math.Abs(<span class="hljs-keyword">float64</span>(p.Y - q.Y))<br>	x := math.Abs(<span class="hljs-keyword">float64</span>(p.X - q.X))<br><br>	sqrt := math.Sqrt(x*x + y*y)<br>	fmt.Printf(<span class="hljs-string">&quot;%g&quot;</span>,sqrt)<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但有些情况下，接收者为 <code>nil</code> 仍然是有意义的。比如下面的例子定义了一个 <code>ListInt</code> 链表类型，它内部有统计长度的 <code>length()</code> 方法。该方法允许接收者 <code>p</code> 是一个 <code>nil</code> ，这将表明 “统计一个空链表的长度”，显然此时的返回值是 <code>0</code> 。</p>
+<p>这里的 <code>ListInt</code> 是一个递归定义，因此 ( 包括后续的 ) 相关方法也尽可能采取尾递归的方式实现。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> ListInt <span class="hljs-keyword">struct</span> &#123;<br>	v    <span class="hljs-keyword">int16</span><br>	tail *ListInt<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *ListInt)</span> <span class="hljs-title">length</span><span class="hljs-params">()</span> <span class="hljs-title">int16</span></span> &#123;<br><br>	<span class="hljs-keyword">var</span> loop <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*ListInt, <span class="hljs-keyword">int16</span>)</span> <span class="hljs-title">int16</span></span><br><br>	loop = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(l *ListInt, acc <span class="hljs-keyword">int16</span>)</span> <span class="hljs-title">int16</span></span> &#123;<br>		<span class="hljs-keyword">switch</span> &#123;<br>		<span class="hljs-keyword">case</span> l == <span class="hljs-literal">nil</span>: &#123;<span class="hljs-keyword">return</span> acc&#125;<br>		<span class="hljs-keyword">default</span>: <span class="hljs-keyword">return</span> loop(l.tail,acc+<span class="hljs-number">1</span>)<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> loop(l, <span class="hljs-number">0</span>)<br>&#125;<br><br><span class="hljs-comment">// 为了方便测试，这里给出其它的操作方法：</span><br><span class="hljs-comment">// append 方法接收一个元素，并返回被更改后的列表。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *ListInt)</span> <span class="hljs-title">append</span><span class="hljs-params">(x <span class="hljs-keyword">int16</span>)</span> *<span class="hljs-title">ListInt</span></span> &#123;<br><br>	<span class="hljs-keyword">if</span> l == <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> &amp;ListInt&#123;x, <span class="hljs-literal">nil</span>&#125;<br>	&#125;<br><br>	p := l<br>	q := l<br>	<span class="hljs-keyword">for</span> p.tail != <span class="hljs-literal">nil</span> &#123;<br>		p = p.tail<br>	&#125;<br><br>	p.tail = &amp;ListInt&#123;x, <span class="hljs-literal">nil</span>&#125;<br>	<span class="hljs-keyword">return</span> q<br>&#125;<br><br><span class="hljs-comment">// appends 是 append 方法的变长参数版本，允许一次性添加多个元素，内部通过递归实现。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *ListInt)</span> <span class="hljs-title">appends</span><span class="hljs-params">(xs ...<span class="hljs-keyword">int16</span>)</span> *<span class="hljs-title">ListInt</span></span> &#123;<br><br>	<span class="hljs-keyword">var</span> loop <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(l *ListInt, xxs ...<span class="hljs-keyword">int16</span>)</span> *<span class="hljs-title">ListInt</span></span><br>	loop = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(l *ListInt, xxs ...<span class="hljs-keyword">int16</span>)</span> *<span class="hljs-title">ListInt</span></span> &#123;<br>		<span class="hljs-keyword">switch</span> &#123;<br>		<span class="hljs-keyword">case</span> <span class="hljs-built_in">len</span>(xxs) == <span class="hljs-number">0</span>:<br>			<span class="hljs-keyword">return</span> l<br>		<span class="hljs-keyword">default</span>:<br>			l = l.<span class="hljs-built_in">append</span>(xs[<span class="hljs-number">0</span>])<br>			xs = xs[<span class="hljs-number">1</span>:]<br>			<span class="hljs-keyword">return</span> loop(l, xs...)<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> loop(l, xs...)<br>&#125;<br><br><span class="hljs-comment">// toString 方法将列表转换成 &quot;1,2,3,4...&quot; 形式的字符串，以便查看内容。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *ListInt)</span> <span class="hljs-title">toString</span><span class="hljs-params">(sep <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">string</span></span> &#123;<br><br>	<span class="hljs-keyword">var</span> loop <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*ListInt, <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">string</span></span><br><br>	loop = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(l *ListInt, buf <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">string</span></span> &#123;<br>		<span class="hljs-keyword">switch</span> l &#123;<br>		<span class="hljs-keyword">case</span> <span class="hljs-literal">nil</span>:<br>			<span class="hljs-keyword">return</span> buf<br>		<span class="hljs-keyword">default</span>:<br>			<span class="hljs-keyword">return</span> loop(l.tail, buf+sep+strconv.Itoa(<span class="hljs-keyword">int</span>(l.v)))<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> strings.Replace(loop(l, <span class="hljs-string">&quot;&quot;</span>), sep, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-number">1</span>)<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-2-2-无法更改指针接收者的引用"><a href="#6-2-2-无法更改指针接收者的引用" class="headerlink" title="6.2.2 无法更改指针接收者的引用"></a>6.2.2 无法更改指针接收者的引用</h3><p>方法内对<strong>指针接收者的引用本身</strong>做任何 “重定向” 操作都不会产生任何作用。比如说下面的 <code>clear()</code> 方法试图将接受者重新指向一个 <code>nil</code> 来达到将非空列表 “清除” 的目的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *ListInt)</span> <span class="hljs-title">clear</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">/*</span><br><span class="hljs-comment">	IDE 的警告：</span><br><span class="hljs-comment">	Assignment to method receiver propagates only to callees but not to callers</span><br><span class="hljs-comment">	Inspection info: Reports assignment to method receiver.</span><br><span class="hljs-comment">	When assigning a value to the method receiver it won&#x27;t be reflected outside of the method itself.</span><br><span class="hljs-comment">	Values will be reflected in subsequent calls from the same method.</span><br><span class="hljs-comment">	*/</span><br>	l = <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然而，通过实际运行代码证明，这个 <code>clear()</code> 并没有生效。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">head := ListInt&#123;<span class="hljs-number">0</span>, <span class="hljs-literal">nil</span>&#125;<br>head.appends(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>)<br><br>head.clear()<br><br><span class="hljs-comment">// 长度非 0，说明 clear() 方法没起效果。</span><br><span class="hljs-built_in">println</span>(head.length())<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-3-通过结构体内嵌组合类型"><a href="#6-3-通过结构体内嵌组合类型" class="headerlink" title="6.3 通过结构体内嵌组合类型"></a>6.3 通过结构体内嵌组合类型</h2><p>相比 Java “is-a” 的 OOP 视角 ( 在这里主要是继承，多态 )，Go 则更倾向于使用 “has-a” 的逻辑去表达。在下面的示例中，有三个类型以及相关方法 <code>Item</code>，<code>Position</code> 和 <code>Atlas</code> 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Atlas <span class="hljs-keyword">struct</span> &#123;<br>	<span class="hljs-comment">// 相当于 Atlas 本身具备了 Name, X, Y 成员。</span><br>	Item<br>	Position<br>&#125;<br><br><span class="hljs-keyword">type</span> Item <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Position <span class="hljs-keyword">struct</span> &#123;<br>	X,Y <span class="hljs-keyword">int</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(a *Atlas)</span> <span class="hljs-title">PinPoint</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;Position(%v) has a (%v)&quot;</span>, a.Position, a.Name)<br>&#125;<br><br><span class="hljs-comment">// Distance 方法的指针版本，接收者和参数都是指针。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Position)</span> <span class="hljs-title">DistanceP</span><span class="hljs-params">(q *Position)</span> <span class="hljs-params">(d <span class="hljs-keyword">float64</span>)</span></span> &#123;<br>	sqrt := math.Sqrt<br>	abs := math.Abs<br>	p2 := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x <span class="hljs-keyword">float64</span>)</span> <span class="hljs-title">float64</span></span> &#123;<br>		<span class="hljs-keyword">return</span> math.Pow(x, <span class="hljs-number">2</span>)<br>	&#125;<br><br>	x1 := p2(abs(<span class="hljs-keyword">float64</span>(p.X - q.X)))<br>	y1 := p2(abs(<span class="hljs-keyword">float64</span>(p.Y - q.Y)))<br><br>	d = sqrt(x1 + y1)<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-comment">// Distance 方法的值传递版本。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p Position)</span> <span class="hljs-title">DistanceV</span><span class="hljs-params">(q Position)</span> <span class="hljs-params">(d <span class="hljs-keyword">float64</span>)</span></span>&#123;<br>	sqrt := math.Sqrt<br>	abs := math.Abs<br>	p2 := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x <span class="hljs-keyword">float64</span>)</span> <span class="hljs-title">float64</span></span> &#123;<br>		<span class="hljs-keyword">return</span> math.Pow(x, <span class="hljs-number">2</span>)<br>	&#125;<br><br>	x1 := p2(abs(<span class="hljs-keyword">float64</span>(p.X - q.X)))<br>	y1 := p2(abs(<span class="hljs-keyword">float64</span>(p.Y - q.Y)))<br><br>	d = sqrt(x1 + y1)<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i *Item)</span> <span class="hljs-title">Info</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> &#123;<br>	<span class="hljs-keyword">return</span> fmt.Sprintf(<span class="hljs-string">&quot;the name of this item: %s&quot;</span>, i.Name)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>Atlas </code> 相当于组合了 <code>Item</code> 和 <code>Position</code> ，或者说 <code>Item</code> 和 <code>Position</code> 被纳入到 <code>Atlas</code> 类型中。这样做的结果是，<code>Atlas</code> 获得了这两个类型的方法和成员：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go">atlas := Atlas&#123;<br>    Item:     Item&#123;<span class="hljs-string">&quot;Apple&quot;</span>&#125;,<br>    Position: Position&#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;,<br>&#125;<br><br><span class="hljs-comment">// 实际上是，atlas.Position.Distance(...)</span><br>fmt.Println(atlas.Distance(&amp;Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;))<br><br><span class="hljs-comment">// 实际上是，atlas.Item.Name(...)</span><br>fmt.Println(atlas.Name)<br></code></pre></td></tr></table></figure>
+
+<p>不过值得注意的是，无论是对于 <code>Distance</code> 方法和 <code>Name</code> 方法，它们的接收者类型始终不变。Go 编译器相当于做了一步适配工作：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Atlas)</span> <span class="hljs-title">Distance</span><span class="hljs-params">(q *Position)</span> <span class="hljs-title">float64</span></span> &#123;<br>	p.Position.Distance(q)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-4-方法变量"><a href="#6-4-方法变量" class="headerlink" title="6.4 方法变量"></a>6.4 方法变量</h2><p>在上述代码中，选择子 <code>atlas.Distance</code> 可以像匿名函数一样赋值给一个变量，这个变量称之为方法变量。<strong>它本质上是一个已经指派好接收者的函数</strong>。再或者可以理解成：<code>atlas</code> 是当前 <code>Distance</code> 函数的 “闭包”，这个函数依赖的自由变量是 <code>atlas</code> 的成员。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go">atlas := Atlas&#123;<br>    Item:     Item&#123;<span class="hljs-string">&quot;Apple&quot;</span>&#125;,<br>    Position: Position&#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;,<br>&#125;<br><br>distanceFromA := atlas.Distance<br><span class="hljs-comment">// 是否有点函数柯里化的既视感？</span><br>fmt.Println(distanceFromA(&amp;Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;))<br></code></pre></td></tr></table></figure>
+
+<p>由此可以进一步理解，方法是一种自带闭包的特殊函数，只是保存状态的职责交给了对象，而不再是另一个高阶函数。在 Go 语言中，方法类型和去掉接收者的函数类型完全一致。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go">atlas := Atlas&#123;<br>    Item:     Item&#123;<span class="hljs-string">&quot;Apple&quot;</span>&#125;,<br>    Position: Position&#123;<span class="hljs-number">0</span>, <span class="hljs-number">0</span>&#125;,<br>&#125;<br><br>distanceFromA := atlas.Distance<br><br><span class="hljs-comment">//func(*main.Position) float64，和去掉接收者之后的函数类型一致。</span><br>fmt.Printf(<span class="hljs-string">&quot;%T&quot;</span>,distanceFromA)<br></code></pre></td></tr></table></figure>
+
+<p>一方面，如果想以 “面向对象” 的角度实现柯里化，又或者是想简化调用的表达式，方法变量会变得特别有用。另外一方面，如果想用一个符号 ( 变量 ) 来表达多个同种类型的方法，它也可以派上用场。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Calculator <span class="hljs-keyword">struct</span> &#123;<br>	a,b <span class="hljs-keyword">int</span><br>	ifAdd <span class="hljs-keyword">bool</span><br>&#125;<br><br><span class="hljs-comment">// 方法的类型仍然是 func() int</span><br><span class="hljs-comment">// 这个方法将两个成员 a，b 相加。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c Calculator)</span> <span class="hljs-title">add</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">return</span> c.a + c.b<br>&#125;<br><br><span class="hljs-comment">// 方法的类型仍然是 func() int</span><br><span class="hljs-comment">// 这个方法将两个成员 a，b 相减。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c Calculator)</span> <span class="hljs-title">sub</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">return</span> c.a - c.b<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c Calculator)</span> <span class="hljs-title">do</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-comment">// func() int 在此处代表了 Calculator 的一个可能的方法。</span><br>	<span class="hljs-comment">// 其实，抛出语境来看，op 可以是函数变量，也可以是方法变量，这取决于你如何为它赋值。</span><br>	<span class="hljs-keyword">var</span> op <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span><br>	<span class="hljs-keyword">if</span> c.ifAdd &#123;<br>		<span class="hljs-comment">// c.add 是一个方法变量。</span><br>		op = c.add<br>	&#125;<span class="hljs-keyword">else</span> &#123;<br>		op = c.sub<br>	&#125;<br>	<span class="hljs-keyword">return</span> op()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果选择子的 <code>.</code> 操作符前面不是某个具体变量，而是命名类型 ( 或对应的指针类型 )，则它是一个<strong>方法表达式</strong>，如：<code>Atlas.DistanceV</code>，<code>(*Atlas).DistanceP</code>。想要调用一个方法表达式，需要同时传入接收者和参数列表。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 选择子的 . 符号前面是命名类型(以及指针)，而非某个具体的变量。</span><br><span class="hljs-comment">// 因此，distanceByPointer 和 distanceByValue 被称作是方法表达式。</span><br><span class="hljs-comment">// distanceByPointer 要求接收者是 Atlas 类型，而后者要求 *Atlas 类型。这取决于方法中定义的接收者是值还是指针地址。</span><br>distanceByPointer := Atlas.DistanceV<br>distanceByValue := (*Atlas).DistanceP<br><br><span class="hljs-comment">// 使用方式发生了变化，使用方法表达式需要首先传入接收者，然后再传入后续的参数列表。</span><br><span class="hljs-built_in">println</span>(distanceByPointer(atlas, Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;))<br><span class="hljs-built_in">println</span>(distanceByValue(&amp;atlas, &amp;Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;))<br></code></pre></td></tr></table></figure>
+
+<p>Go 对方法表达式的参数列表做了以下处理：将接收者的值或者是地址 ( 这取决于方法表达式的写法 ) 头插到原方法的参数列表的首个位置。从表面上看，方法表达式 <code>distance</code>  变成了一个普通的函数，因为这种写法隐去了 <code>.</code> 操作符。</p>
+<p>到这里，有必要做一些说明：假设某一个类型为 <code>T</code> ，那么接收者设置为 <code>T</code> 和 <code>*T</code> 是存在区别的，比如在 <strong>接口</strong> 章节就会有所体现 ( 是 <code>T</code> 实现了接口还是 <code>*T</code> 实现了接口呢？)。由于 Go 语言的语法机制导致了这样的一个现象：假设某个方法的接收者为 <code>T</code> ，那么这个方法可以被 <code>T</code> 和 <code>*T</code> 类型所用。但反之，如果某个方法的接收者为 <code>*T</code> ，那么这个方法只可以被 <code>*T</code> 或者辅以 <code>&amp;</code> 取址符的方式调用。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/03/17/Go-%E4%B8%89-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;17&#x2F;Go-%E4%B8%89-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;17&#x2F;Go-%E4%B8%89-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/03/20/Go-%E5%9B%9B-%E6%8E%A5%E5%8F%A3/"><i class="iconfont iconleft"></i>Go: (四)接口</a>
+    <a href="/2021/03/17/Go-%E4%BA%8C-%E5%A4%8D%E5%90%88%E6%95%B0%E6%8D%AE/">Go: (二)复合数据<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%87%BD%E6%95%B0"><span class="toc-text">第五章 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E"><span class="toc-text">5.1 函数声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%A4%9A%E4%B8%AA%E5%80%BC"><span class="toc-text">5.2 函数返回多个值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-%E5%8F%98%E9%95%BF%E5%87%BD%E6%95%B0"><span class="toc-text">5.3 变长函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-%E5%87%BD%E6%95%B0%E5%8D%B3%E5%8F%98%E9%87%8F"><span class="toc-text">5.4 函数即变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-%E5%BB%B6%E8%BF%9F%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0-defer"><span class="toc-text">5.5 延迟调用函数 defer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-1-%E5%A4%9A%E4%B8%AA-defer-%E8%B0%83%E7%94%A8%E4%BC%9A%E5%80%92%E5%BA%8F%E6%89%A7%E8%A1%8C"><span class="toc-text">5.5.1 多个 defer 调用会倒序执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-2-defer-%E5%BB%B6%E8%BF%9F%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0%E7%9A%84%E8%B5%8B%E5%8F%82%E6%97%B6%E6%9C%BA"><span class="toc-text">5.5.2 defer 延迟调用函数的赋参时机</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-6-%E5%BE%AA%E7%8E%AF%E5%86%85%E7%9A%84%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0%E5%85%B1%E4%BA%AB%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86%E5%9C%B0%E5%9D%80"><span class="toc-text">5.6 循环内的匿名函数共享迭代遍历地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-7-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-text">5.7 错误处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-8-%E5%AE%95%E6%9C%BA"><span class="toc-text">5.8 宕机</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E6%96%B9%E6%B3%95"><span class="toc-text">第六章 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-%E6%96%B9%E6%B3%95%E5%A3%B0%E6%98%8E"><span class="toc-text">6.1 方法声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-%E6%8E%A5%E6%94%B6%E8%80%85%E5%8F%AF%E4%BB%A5%E4%B8%BA%E6%8C%87%E9%92%88"><span class="toc-text">6.2 接收者可以为指针</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-1-%E8%AD%A6%E6%83%95%E6%8E%A5%E6%94%B6%E8%80%85%E4%B8%BA-nil-%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-text">6.2.1 警惕接收者为 nil 的情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-2-%E6%97%A0%E6%B3%95%E6%9B%B4%E6%94%B9%E6%8C%87%E9%92%88%E6%8E%A5%E6%94%B6%E8%80%85%E7%9A%84%E5%BC%95%E7%94%A8"><span class="toc-text">6.2.2 无法更改指针接收者的引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-%E9%80%9A%E8%BF%87%E7%BB%93%E6%9E%84%E4%BD%93%E5%86%85%E5%B5%8C%E7%BB%84%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-text">6.3 通过结构体内嵌组合类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-%E6%96%B9%E6%B3%95%E5%8F%98%E9%87%8F"><span class="toc-text">6.4 方法变量</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

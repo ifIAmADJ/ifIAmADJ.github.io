@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>配置 Hexo 到远程仓库的简明思路 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="欢迎在使用 Hexo 之前，需要在本机安装操作系统对应...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">配置 Hexo 到远程仓库的简明思路</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="https://i.im5i.com/2021/03/16/hmhJ6.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">配置 Hexo 到远程仓库的简明思路</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>March 13, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/03/13/%E9%85%8D%E7%BD%AE-Hexo-%E5%88%B0-Github-%E7%9A%84%E6%96%B9%E6%B3%95/" class="leancloud" data-flag-title="配置 Hexo 到远程仓库的简明思路"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2000</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="欢迎"><a href="#欢迎" class="headerlink" title="欢迎"></a>欢迎</h1><p>在使用 Hexo 之前，需要在本机安装操作系统对应的 Node.js 和 git 工具。 Hexo 及插件的依赖包会通过 Node.js 中的 npm 工具下载并安装，git 则用于保管博客代码。使用 Hexo 不需要很了解 JavaScript ，但是需要至少了解有关 git 的一些基本操作。这些前置工作非常简单，<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">官方文档</a>已经给出足够详细的说明。</p>
+<p>对于 Windows 用户，各种 <code>hexo ...</code> 以及 <code>git ...</code> ，<code>npm ....</code> 等命令都是通过在 Hexo 根目录下右键 <code>Git Bash Here</code> 打开的伪 Linux 终端进行的。</p>
+<p>Hexo 的工作原理是：我们在 <code>source =&gt; _posts</code> 目录杜撰的 Markdown 文章以及根目录 <code>_config.yml</code> 配置文件最终被 Hexo 统一解析，最终在根目录下生成一个名为 <code>public </code> 文件夹。如果直接在本机通过 <code>hexo s</code> 命令启动站点服务，则 Hexo 会基于根目录下的 <code>public</code> 文件夹内的静态文件渲染出博客站点。</p>
+<p>但通常情况下，<code>hexo s</code> 命令仅用于本地调试，因为我们需要在一个随时保持运行的服务器中部署站点。如果没有私人服务器，那么就需要 <code>hexo d</code> 命令将渲染好的静态文件迁移到远程仓库 ( Github，Gitee 等)，再由这些远程仓库提供的静态网页渲染服务实现远程部署 (<strong>这要求仓库命名符合一定格式</strong>，详细请见后文)。</p>
+<p>执行 <code>hexo d</code> 需要这个插件，直接运行即可。</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">$ npm install <span class="hljs-comment">--save hexo-deployer-git</span><br></code></pre></td></tr></table></figure>
+
+<p><code>hexo d</code> 的工作原理是：在根目录下额外生成一个 <code>.deploy_git</code> 文件夹，而它是 <code>public</code> 目录的拷贝。而 Hexo 替我们完成对这个文件夹的一系列 <code>git</code> 操作：<code>add</code>，<code>commit</code> 然后 <code>push</code> 。</p>
+<p>这需要在根目录的 <code>_config.yml</code> =&gt; <code>deploy</code> 选项中配置一个我们提前准备好的，一个新创建的远程仓库地址和分支名，并且要求<strong>本机在对应的远程仓库配置了 ssh key</strong>，这样 Hexo 才能替我们进行免密提交。</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-meta"># username 指我们的 GitHub 用户名。</span><br><span class="hljs-meta"># branch 一般是 master 。</span><br><span class="hljs-symbol">deploy:</span><br><span class="hljs-symbol">  type:</span> git<br><span class="hljs-symbol">  repository:</span> git@github.com:username/username.github.io.git  <br><span class="hljs-symbol">  branch:</span> master<br></code></pre></td></tr></table></figure>
+
+<p>远程仓库仅负责保管并渲染本地提交的 <code>.deploy_git</code> 文件夹 ( 即本地 <code>public</code> 的副本 ) 。而 Hexo 根目录下的各种诸如 <code>_config.yml</code> ，<code>theme</code>，<code>scaffolds</code> 等其它文件 (夹) 如有需要请另行存储。</p>
+<p>GitHub 和 Gitee 都提供基于 Hexo 的静态网页渲染服务，并且会提供诸如 <code>xxxxx.github.io</code> ，<code>xxxxxx.gitee.io</code> 格式的域名供外界访问，免去了购买云服务器的成本。 </p>
+<p>选择 GitHub 的一大优势是：简单。假设我们的 GitHub 账户名是 <code>username</code>，那么远程仓库名称应当直接以 <code>username.io</code> 命名。这样，GitHub 会自动根据仓库内的静态文件渲染出博客站点页面 ( 在第一次渲染完成后，GitHub 会通过账号邮箱向你发送提示邮件)。并且，每当我们通过 <code>hexo d</code> 部署时，GitHub 会主动地重新渲染，不需要额外的操作就可以通过浏览器收到反馈。</p>
+<p>选择 Gitee 的一大优势是：稳定。国内访问 GitHub 的速度非常不稳定，甚至有时候需要用户科学上网才能浏览我们的博客，体验极差。但是 Gitee 平台的操作要比 GitHub 稍微繁琐一些。</p>
+<p>首先，我们需要在服务栏中，主动通过 Gitee Pages 开启静态页面渲染服务：</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/03/16/hmQh5.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Gitee Pages 按钮.png</span></p>
+<p>其次，Gitee 本身不会对仓库名做强制要求。但是，假设我们的 Gitee 账户名是 <code>username</code>，而远程仓库也被命名为 <code>username</code>，那么 Gitee 会直接提供 <code>username.gitee.io</code> 格式的访问域名 ( 建议这样做，避免因路径问题导致渲染网页所需要的 js，css 文件丢失 ) 。</p>
+<p>另一个要注意的点是，即便在本地通过 <code>hexo d</code> 将更新提交到了 Gitee 仓库，<strong>它也并不会像 GitHub 那样自动地重新渲染页面</strong>。我们需要通过个人账户重新登录到 Gitee 仓库，然后再一次点击刚才的 Gitee Pages 按钮，跳转页面后点击<strong>更新</strong>按钮令 Gitee 重新部署 ( 如果你希望 Gitee 能够像 GitHub 那样 “聪明”，应该是要向平台支付一点点服务费 )。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/03/13/%E9%85%8D%E7%BD%AE-Hexo-%E5%88%B0-Github-%E7%9A%84%E6%96%B9%E6%B3%95/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;13&#x2F;%E9%85%8D%E7%BD%AE-Hexo-%E5%88%B0-Github-%E7%9A%84%E6%96%B9%E6%B3%95&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;13&#x2F;%E9%85%8D%E7%BD%AE-Hexo-%E5%88%B0-Github-%E7%9A%84%E6%96%B9%E6%B3%95&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/" rel="tag">Hexo</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/03/15/Go%20(%E4%B8%80)%20%E5%85%A5%E9%97%A8/"><i class="iconfont iconleft"></i>Go: (一)入门</a>
+    <a></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AC%A2%E8%BF%8E"><span class="toc-text">欢迎</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

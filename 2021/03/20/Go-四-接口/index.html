@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Go: (四)接口 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="第七章 接口接口的本质是 “抽象”。Go 语言中，接口...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Go: (四)接口</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/go_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Go: (四)接口</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>March 20, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/03/20/Go-%E5%9B%9B-%E6%8E%A5%E5%8F%A3/" class="leancloud" data-flag-title="Go: (四)接口"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>10864</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="第七章-接口"><a href="#第七章-接口" class="headerlink" title="第七章 接口"></a>第七章 接口</h1><p>接口的本质是 “抽象”。Go 语言中，接口是<strong>隐式实现</strong>的，不需要诸如 <code>implements</code>，<code>extends</code> 的关键字主动定义一个结构体类型打算实现哪些接口。这样设计的好处是：只要某个库的类型是可导出的，我们可以就地为它拓展接口，而不用改动原有的声明 ( 满足 OCP 原则 ) 。</p>
+<h2 id="7-1-接口即约定"><a href="#7-1-接口即约定" class="headerlink" title="7.1 接口即约定"></a>7.1 接口即约定</h2><p>如果说之前介绍的类型全部都是具体类型，那么接口就是一个<strong>抽象类型</strong>。接口的具体类型是不确定的，我们仅仅知道接口定义了哪些方法，这些方法各自接收哪些参数，又返回哪些内容。</p>
+<p>这里举一个简单的例子：<code>Phone</code> 接口定义了一部手机所应当具备的基本功能：通话，短信，还有网上冲浪。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Phone <span class="hljs-keyword">interface</span> &#123;<br>	<span class="hljs-comment">// 接口内部可以有方法，可以再内嵌其它接口，但是不能声明普通的成员。</span><br>    <span class="hljs-comment">// 这里定义的都是抽象方法，不需要使用 func 关键字定义，且没有 &#123;&#125; 语句块。</span><br>	call()<br>	text()<br>	wifi()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>那么，任何一个品牌的手机都应该具备这三个基本功能 ( 各个厂商如何实现的，我们也不关心 ) ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 小米手机--------------------------</span><br><span class="hljs-keyword">type</span> XiaoMi <span class="hljs-keyword">struct</span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x XiaoMi)</span> <span class="hljs-title">call</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Print(<span class="hljs-string">&quot;Are you OK?&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x XiaoMi)</span> <span class="hljs-title">text</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;I&#x27;m fine, thank you!&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x XiaoMi)</span> <span class="hljs-title">wifi</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;to Indian Mi Bands!&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x XiaoMi)</span> <span class="hljs-title">MiUI</span></span> &#123;<br>    fmt.Println(<span class="hljs-string">&quot;Mi Ui&quot;</span>)<br>&#125;<br><br><span class="hljs-comment">// 锤子手机-----------------------------</span><br><span class="hljs-keyword">type</span> Smartisan <span class="hljs-keyword">struct</span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s Smartisan)</span> <span class="hljs-title">call</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;Lao Luo don&#x27;t do this&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s Smartisan)</span> <span class="hljs-title">text</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;TNT yyds&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s Smartisan)</span> <span class="hljs-title">wifi</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;Li Jie Wan Sui&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>顺带一提，GoLand 会随时检测我们新创建的结构体 ( 类型 )，一旦它实现了某个接口的所有功能，其左侧会亮起熟悉的绿色 <code>I</code> 字母图标。另外，我们还可以在结构体内按下 <code>Ctrl</code> + <code>i</code> 并通过搜索接口的方式直接创建出方法模板。</p>
+<p>对于用户而言，它仅使用统一的 <code>Phone</code> 接口实现预期的功能，而不再关注具体的实现类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> aPhone Phone<br><br><span class="hljs-comment">// aPhone = Smartisan&#123;&#125;</span><br><span class="hljs-comment">// aPhone = ... 可以是任何实现了 Phone 接口约定的结构体类型，</span><br><span class="hljs-comment">// 接口带来了编程的可取代性。 </span><br>aPhone = XiaoMi&#123;&#125;<br><br>aPhone.call()<br>aPhone.text()<br><br><span class="hljs-comment">// 不能使用</span><br>aPhone.MiUI()<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，我们可以这样表述：<code>XiaoMi</code> <strong>是</strong> ( is-a 的关系 ) 一个 <code>Phone</code> 类型。当 <code>XiaoMi</code> 被当作一个 <code>Phone</code> 类型使用时，它独有的 <code>MiUI</code> 方法会被禁止直接调用 ( 当然，通过类型断言可以将其重新特化成 <code>XiaoMi</code>，这样我们就可以调用这个方法了，见后文 )。这非常容易理解，因为该方法并不在 <code>Phone</code> 接口的约束范畴。</p>
+<p>如果希望某个类型的方法调用是传地址 ( 而非传值 ) 的，那么根据经验，我们会将方法的接收者设置为类型指针，此时称 <code>*XiaoMi</code> 是一个 <code>Phone</code> 类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> XiaoMi <span class="hljs-keyword">struct</span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x *XiaoMi)</span> <span class="hljs-title">call</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;implement me&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x *XiaoMi)</span> <span class="hljs-title">text</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;implement me&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x *XiaoMi)</span> <span class="hljs-title">wifi</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;implement me&quot;</span>)<br>&#125;<br><br><span class="hljs-comment">//....</span><br>aPhone = &amp;XiaoMi&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意，” <code>XiaoMi</code> 是一个 <code>Phone</code> “ 和 “<code>*XiaoMi 是一个 Phone</code> 类型 “ 是存在一些微妙区别的。假定 <code>XiaoMi</code> 现在的实现是这个样子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Phone <span class="hljs-keyword">interface</span> &#123;<br>	<span class="hljs-comment">// 接口内部可以有方法，可以再内嵌其它接口，但是不能声明普通的成员。</span><br>	<span class="hljs-comment">// 这里定义的都是抽象方法，不需要使用 func 关键字定义，且没有 &#123;&#125; 语句块。</span><br>	call()<br>	text()<br>	wifi()<br>&#125;<br><br><span class="hljs-keyword">type</span> XiaoMi <span class="hljs-keyword">struct</span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x *XiaoMi)</span> <span class="hljs-title">call</span><span class="hljs-params">()</span></span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x XiaoMi)</span> <span class="hljs-title">text</span><span class="hljs-params">()</span></span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(x *XiaoMi)</span> <span class="hljs-title">wifi</span><span class="hljs-params">()</span></span> &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此时， “<code>XiaoMi</code> 是一个 <code>Phone</code> 类型” 不成立，但是 “ <code>*XiaoMi</code> 是一个 <code>Phone</code> 类型”  成立。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> p Phone = &amp;XiaoMi&#123;&#125;<br><br><span class="hljs-comment">// 接收者为指针时，语法不报错，方法都可以调用。</span><br>p.text()<br>p.call()<br>p.wifi()<br><br><span class="hljs-keyword">var</span> q Phone = XiaoMi&#123;&#125;<br><br><span class="hljs-comment">// 接收者为指针时，语法报错，原因在于 XiaoMi 被认为仅仅实现了 text() 方法。</span><br>q.wifi()<br>q.call()<br>q.text()<br></code></pre></td></tr></table></figure>
+
+<p>以 <code>XiaoMi</code> 类型的角度去思考，它只实现了 <code>text()</code> 方法，因为该方法的接收者是 <code>*XiaoMi</code> 而不是 <code>XiaoMi</code>。这么看来，<code>*XiaoMi</code> 似乎也没实现 <code>call()</code> 方法，那为什么它却可以当作 <code>Phone</code> 去使用呢？</p>
+<p>原因是 Go 提供了这样的语法糖：假定 p 是 <code>XiaoMi</code> 类型，那么该方法调用： <code>p.text()</code> 会被自动转化为 <code>(*p).text()</code>。因此，可以认为 <code>*XiaoMi</code> 也是 <code>text()</code> 方法的接收者，但是反之，接收者 <code>XiaoMi</code> 却 “不享受这样的待遇”。</p>
+<p>推广并总结一下：由于接收者为 <code>T</code> 的方法可以被 <code>*T</code> 直接调用，因此 <code>*T</code> 可能会实现比 <code>T</code> 更多的接口。但实际上，当实现某个接口时，方法的接收者一般都是统一的：要么就都是命名类型，要么就都是类型指针，总体而言，接收者为类型指针时更 “赚” 一些，因为它还避免了值复制的开销。</p>
+<p>接口内部不能内嵌普通的类型成员，但是可以组合其它的接口。比如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// Go 源码库乐于以 &quot;单一职责原则&quot; 定义一些只包含一个方法的接口，然后供其它更复杂的接口加以组合。</span><br><span class="hljs-keyword">type</span> Reader <span class="hljs-keyword">interface</span> &#123;<br>	Read()<br>&#125;<br><br><span class="hljs-keyword">type</span> Writer <span class="hljs-keyword">interface</span> &#123;<br>	Write(<span class="hljs-keyword">string</span>)<br>&#125;<br><br><span class="hljs-keyword">type</span> IOChannel <span class="hljs-keyword">interface</span> &#123;<br>	<span class="hljs-comment">// 它相当于获得了 Reader 和 Writer 定义的抽象方法。</span><br>	Reader<br>	Writer<br>	<br>	<span class="hljs-comment">// 这不影响该接口定义自己的抽象方法。</span><br>	Close()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以上述代码块为例，任何一个实现 <code>IOChannel</code> 接口的类型，它除了实现该结构自身定义的 <code>Close()</code> 方法之外，还要实现 <code>Reader</code> 和 <code>Writer</code> 接口定义的所有方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> FileChannel <span class="hljs-keyword">struct</span> &#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(f *FileChannel)</span> <span class="hljs-title">Read</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">//panic(&quot;implement me&quot;)</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(f *FileChannel)</span> <span class="hljs-title">Write</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span></span> &#123;<br>	<span class="hljs-comment">//panic(&quot;implement me&quot;)</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(f *FileChannel)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">//panic(&quot;implement me&quot;)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>显然，任何实现 <code>IOChannel</code> 接口的类型 ( 比如 <code>FileChannel</code> ) 都可以去充当 <code>Reader</code> 或者是 <code>Writer</code> 接口，但是反之不成立。</p>
+<h2 id="7-2-空接口"><a href="#7-2-空接口" class="headerlink" title="7.2 空接口"></a>7.2 空接口</h2><p>故名思意，空接口就是 <code>interface&#123;&#125;</code>，它里面什么都没有。从语义上来讲，它接近 Java 中的 <code>Object</code> 类型或者是 Scala 中的 <code>Any</code> ，因为任何类型即便是没有声明方法也可以认为是实现了 <code>interface&#123;&#125;</code> 接口。</p>
+<p>如果留意之前曾使用的 <code>fmt.Fprintf(...)</code> 等方法，能够发现，其后续的 <code>arg</code> 参数正是 <code>...interface&#123;&#125;</code> 类型，它使得用户在调用该函数时能够传入任何数据结构。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> any <span class="hljs-keyword">interface</span>&#123;&#125;<br>any = <span class="hljs-number">1</span><br>any = <span class="hljs-number">1.00</span><br>any = <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
+
+<p>但反之，其逆操作 ( 从一个 <code>interface&#123;&#125;</code> 中还原出具体的值 ) 需要借助<strong>类型断言</strong>来实现。</p>
+<h2 id="7-3-接口值与可比较性"><a href="#7-3-接口值与可比较性" class="headerlink" title="7.3 接口值与可比较性"></a>7.3 接口值与可比较性</h2><p>一个接口类型的值包含了两个信息：该接口实际的具体类型 ( <strong>动态类型</strong> ) 以及该类型的值 ( <strong>动态值</strong> )。由于 Go 是一门编译性的语言，因此类型不能直接被当作是一个普通的值来看待，其动态类型是通过引入 <strong>类型描述符</strong> 来获得的。</p>
+<p>下面代码块中的接口值 <code>p</code> 经历了一次声明和三次赋值：代码的注释部分标记了在每个过程中该接口值的动态类型以及动态值的变化。在一个接口刚被声明时，它的动态类型和动态值均指向 <code>nil</code>，此时它也被称作是一个 <code>nil</code> 接口。</p>
+<p>注意，仅动态值为 <code>nil</code> 但动态类型非 <code>nil</code> 的接口和两者均为 <code>nil</code> 的接口是不一样的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">/*</span><br><span class="hljs-comment">	p 此时的动态类型: nil</span><br><span class="hljs-comment">	p 此时的值: nil</span><br><span class="hljs-comment">	此时调用任何方法都会报错</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">var</span> p Phone<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">	p 此时的动态类型: *XiaoMi</span><br><span class="hljs-comment">	p 此时的值: &amp;XiaoMi&#123;&#125;</span><br><span class="hljs-comment">	p.call() =&gt;(&amp;XiaoMi&#123;&#125;).call()</span><br><span class="hljs-comment">*/</span><br>p = &amp;XiaoMi&#123;&#125;<br>p.call()<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">	p 此时的动态类型: *HuaWi</span><br><span class="hljs-comment">	p 此时的值: &amp;HuaWei&#123;&#125;</span><br><span class="hljs-comment">	p.text() =&gt;(&amp;HuaWei&#123;&#125;).text()</span><br><span class="hljs-comment">*/</span><br>p = &amp;HuaWei&#123;&#125;<br>p.text()<br><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">	p 此时的动态类型: nil</span><br><span class="hljs-comment">	p 此时的值: nil</span><br><span class="hljs-comment">	此时调用任何方法都会报错</span><br><span class="hljs-comment">*/</span><br>p = <span class="hljs-literal">nil</span><br></code></pre></td></tr></table></figure>
+
+<p>两个接口值是<strong>可以比较</strong>的。如果两个接口值的动态类型相同，且动态值<strong>在可比较的前提下</strong>也完全相等，那么这两个接口值就相同，进而，接口可以充当 <code>map</code> 散列表的 Key，或者是 <code>switch</code> 语句的操作数。</p>
+<p>但是，如果两个接口的动态类型相同，但是其动态值是不可比较的类型，那么这个比较就会以宕机告终。比如，我们将切片 <code>[]int8</code> 重新命名类型，然后就地拓展一个 <code>Iterable</code> 接口 ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> IntSeq []<span class="hljs-keyword">int8</span><br><span class="hljs-keyword">type</span> Iterable <span class="hljs-keyword">interface</span> &#123;<br>	foreach()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s IntSeq)</span> <span class="hljs-title">foreach</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">for</span> i,v := <span class="hljs-keyword">range</span> *s &#123;<br>		fmt.Printf(<span class="hljs-string">&quot;[%v](%v)&quot;</span>,i,v)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下述代码块企图对两个 <code>Iterable</code> ( 或者说对两个 <code>[]int8</code>) 类型的值进行比较，显然，程序会出错：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> seq1 Iterable<br><span class="hljs-keyword">var</span> seq2 Iterable<br><br><span class="hljs-comment">// IntSeq 是[]int8 的命名别称，因此 IntSeq&#123;1,3,4&#125; 等价于 []int8&#123;1,3,4&#125;</span><br>seq1 = IntSeq&#123;<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br>seq2 = IntSeq&#123;<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">   panic: runtime error: comparing uncomparable type main.IntSeq</span><br><span class="hljs-comment">*/</span><br>fmt.Print(seq1 == seq2)<br></code></pre></td></tr></table></figure>
+
+<p>假设 <code>Iterable</code> 接口的实现者不是 <code>IntSeq</code> 而是 <code>*IntSeq</code>，那么这段程序就可以正常运行。原因是：虽然切片值是不可比较的，但是切片的地址是可以比较的。此时比较两个接口动态值是否相同，实际上是在检查两个切片的地址是否指向了同一个内存区域。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> seq1 Iterable<br><span class="hljs-keyword">var</span> seq2 Iterable<br><br><span class="hljs-comment">// IntSeq 是[]int8 的命名别称，因此 IntSeq&#123;1,3,4&#125; 等价于 []int8&#123;1,3,4&#125;</span><br>seq1 = &amp;IntSeq&#123;<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br><br><span class="hljs-comment">// 如果 seq2 = seq1 ，那么程序的运行结果将是 true.</span><br>seq2 = &amp;IntSeq&#123;<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br><br><span class="hljs-comment">// 程序的运行结果是 false.</span><br>fmt.Print(seq1 == seq2)<br></code></pre></td></tr></table></figure>
+
+<p>另外，通过 <code>fmt.Printf</code> 和 <code>%T</code> 可以令 <code>fmt</code> 通过反射的形式获取到某个接口的动态类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> seq1 Iterable<br><br><span class="hljs-comment">// IntSeq 是[]int8 的命名别称，因此 IntSeq&#123;1,3,4&#125; 等价于 []int8&#123;1,3,4&#125;</span><br>seq1 = &amp;IntSeq&#123;<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br><br><span class="hljs-comment">// *main.IntSeq</span><br>fmt.Printf(<span class="hljs-string">&quot;%T&quot;</span>,seq1)<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-4-sort-Interface-接口"><a href="#7-4-sort-Interface-接口" class="headerlink" title="7.4 sort.Interface 接口"></a>7.4 sort.Interface 接口</h2><p>接下来我们要了解 Go 标准库当中提供的两个重要接口，在这里首先介绍 <code>sort.Interface</code>  。排序是在编程工作中的通用操作，因此它显然不适合与任意一个具体的元素类型进行绑定。</p>
+<p>在其它语言中，排序方法通常都是和已有的序列类型绑定，比如 Java 中的 <code>List</code> ，然后元素类型再通过约束类型边界的形式令其满足 “可排序” 的特征。但在  Go 语言中，<code>sort.Sort(...)</code> 方法允许我们对任何类型的序列进行排序，这个序列类型可以是切片，甚至是由我们自行定义的，满足 “索引序列” 特征的结构体。并且，Go 丝毫不关心序列的元素是什么类型。</p>
+<p>但是在此之前，我们需要提前令该序列实现 <code>sort.Interface</code> 接口，以告知程序如何获取这个序列的长度 <code>Len()</code>，如何判别元素 A 小于另一个元素 B <code>less(..)</code>，如何交换两个元素。</p>
+<p>下面用两个示例介绍如何配合 <code>sort.Interface</code> 和 <code>sort.Sort(..)</code> 完成对序列的排序。这里规定元素类型是 <code>Person</code>，在第一个例子中，序列选择原生的切片类型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Persons []Person<br><span class="hljs-keyword">type</span> Person <span class="hljs-keyword">struct</span> &#123;age <span class="hljs-keyword">int8</span>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Persons)</span> <span class="hljs-title">Len</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>    <span class="hljs-comment">// 由于 Persons 本质上是 []Person 类型，因此可以仅通过调用 len() 方法快速得到长度。</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(*p)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Persons)</span> <span class="hljs-title">Less</span><span class="hljs-params">(i, j <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">bool</span></span> &#123;<br>    <span class="hljs-comment">// 这里声明 pp 仅仅是为了避免下方代码使用 (*p)[x] 的繁琐写法，下同</span><br>    pp  := *p<br>    <span class="hljs-keyword">if</span>  pp[i].age &lt; pp[j].age &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Persons)</span> <span class="hljs-title">Swap</span><span class="hljs-params">(i, j <span class="hljs-keyword">int</span>)</span></span> &#123;<br>    pp := *p<br>    <span class="hljs-comment">// 多重赋值的写法，在之前提到过。</span><br>    pp[i],pp[j] = pp[j],pp[i]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而在第二个例子中，我们选择对自定义的 <code>PersonList</code> 序列 ( 它本质上是通过递归组织起来的链表) 进行排序。由于 <code>sort.Interface</code> 基于 “索引” 号进行比较，因此这里要额外完善 “索引” 查找的 <code>Get(...)</code> 方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> PersonList <span class="hljs-keyword">struct</span> &#123;<br>   head *node<br>&#125;<br><br><span class="hljs-keyword">type</span> node <span class="hljs-keyword">struct</span> &#123;<br>   Person<br>   next *node<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">   注意, index 值从 0 开始，在以下两种情况下程序会宕机：</span><br><span class="hljs-comment">   index &lt; 0 或者 index 超过了列表长度;</span><br><span class="hljs-comment">   列表的头结点为 nil。</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ps *PersonList)</span> <span class="hljs-title">Get</span><span class="hljs-params">(index <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(target *node)</span></span> &#123;<br><br>   <span class="hljs-comment">// 定义内部递归的局部函数</span><br>   <span class="hljs-keyword">var</span> _get <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*node,<span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">node</span></span><br>   _get = <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(n *node,step <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(target *node)</span></span>&#123;<br><br>      <span class="hljs-keyword">switch</span> &#123;<br>      <span class="hljs-keyword">case</span> step == <span class="hljs-number">0</span>: target = n<br>      <span class="hljs-keyword">default</span>:<br>         target = _get(n.next,step<span class="hljs-number">-1</span>)<br>      &#125;<br>      <span class="hljs-keyword">return</span><br>   &#125;<br><br>	<span class="hljs-keyword">switch</span> &#123;<br>	<span class="hljs-keyword">case</span> ps.head == <span class="hljs-literal">nil</span>:<br>		<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;该 PersonList 为 nil。&quot;</span>)<br>	<span class="hljs-keyword">case</span> index &lt; <span class="hljs-number">0</span>:<br>		<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;越界下标&quot;</span>)<br>	<span class="hljs-keyword">case</span> index &gt; ps.Len()<span class="hljs-number">-1</span>:<br>		<span class="hljs-comment">//如果该列表的长度为 0，那么程序必定在此处宕机。</span><br>		<span class="hljs-built_in">panic</span>(<span class="hljs-string">&quot;越界下标&quot;</span>)<br>	&#125;<br>    <br>   <span class="hljs-keyword">return</span> _get(ps.head,index)<br>&#125;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">   通过递归的方式来获取列表长度。</span><br><span class="hljs-comment">   如果列表的头结点为 nil，则长度为 0，</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ps *PersonList)</span> <span class="hljs-title">Len</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-built_in">len</span> <span class="hljs-keyword">int</span>)</span></span> &#123;<br><br>   <span class="hljs-keyword">var</span> iterator <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(*node,<span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span><br>   iterator = <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(n *node, acc <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(<span class="hljs-built_in">len</span> <span class="hljs-keyword">int</span>)</span></span> &#123;<br><br>      <span class="hljs-keyword">switch</span> &#123;<br>      <span class="hljs-keyword">case</span> n.next == <span class="hljs-literal">nil</span>: <span class="hljs-built_in">len</span> = acc<br>      <span class="hljs-keyword">default</span>:<br><br>         <span class="hljs-comment">// 注意, 如果直接写 iterator(....) ，函数不会继续递归，而是直接 return.</span><br>         <span class="hljs-built_in">len</span> = iterator(n.next,acc+<span class="hljs-number">1</span>)<br>      &#125;<br><br>      <span class="hljs-keyword">return</span><br>   &#125;<br><br>   <span class="hljs-keyword">if</span> ps.head == <span class="hljs-literal">nil</span> &#123;<br>      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>   &#125;<br><br>   <span class="hljs-built_in">len</span> = iterator(ps.head,<span class="hljs-number">1</span>)<br>   <span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ps *PersonList)</span> <span class="hljs-title">Less</span><span class="hljs-params">(i, j <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">bool</span></span> &#123;<br>	<span class="hljs-keyword">return</span> ps.Get(i).age &lt; ps.Get(j).age<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ps *PersonList)</span> <span class="hljs-title">Swap</span><span class="hljs-params">(i, j <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	ps.Get(i).Person,ps.Get(j).Person = ps.Get(j).Person,ps.Get(i).Person<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-5-error-接口"><a href="#7-5-error-接口" class="headerlink" title="7.5 error 接口"></a>7.5 error 接口</h2><p>其实我们早在之前调用 <code>os</code> 等资源库的例子中就接触过这个 <code>error</code> 接口。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个 err 实现了 error 接口</span><br>open, err := os.Open(<span class="hljs-string">&quot;/src/name/touch.txt&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><code>error</code> 接口的约束非常简单直接：通过 <code>Error()</code> ( 该方法返回一个 <code>string</code> 类型 ) 对外暴露错误信息。</p>
+<p>现在，我们可以通过调用 <code>errors.New</code> 函数主动创建一个 <code>error</code> ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">div</span><span class="hljs-params">(a,b <span class="hljs-keyword">float64</span>)</span> <span class="hljs-params">(r <span class="hljs-keyword">float64</span>,err error)</span></span>&#123;<br><br>	err = <span class="hljs-literal">nil</span><br>	<span class="hljs-keyword">if</span> b == <span class="hljs-number">0</span> &#123;<br>		<span class="hljs-comment">// New 函数相当于是 error 的 &quot;构造器&quot;</span><br>		err =  errors.New(<span class="hljs-string">&quot;除数不可为0&quot;</span>)<br>		r = math.NaN()<br>	&#125;<br><br>	r = a / b<br>	<span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>更常用的做法是通过 <code>fmt.Errorf</code> 来实现，因为我们可以通过格式化的方式构造字符串。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">err = fmt.Errorf(<span class="hljs-string">&quot;非法的除数:%v&quot;</span>,b)<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-6-类型断言"><a href="#7-6-类型断言" class="headerlink" title="7.6 类型断言"></a>7.6 类型断言</h2><p>类型断言相当于是将具体类型泛化为接口的逆操作：尝试将某个接口 <code>I</code> 转化成某个具体的类型或者是更加特化的接口 <code>O</code> ( 并不是强制性的，但通常我们没有必要断言更泛化的接口)，如果成功了，那么就可以获得更多的拓展方法。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> aPhone Phone<br>aPhone = &amp;XiaoMi&#123;&#125;<br><br><span class="hljs-comment">// 由于 MiUI 是小米手机独有的方法，因此这里要借助类型断言将其强制转换为小米手机。</span><br><span class="hljs-comment">// 语法是 (接口值).(目标类型/接口)</span><br>mi := aPhone.(*XiaoMi)<br>mi.MiUI()<br></code></pre></td></tr></table></figure>
+
+<p>类型断言并不总是成功的，因此它有可能引发系统宕机。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> aPhone Phone<br>aPhone = &amp;HuaWei&#123;&#125;<br><br><span class="hljs-comment">// 编译器不报错，但是运行报错</span><br><span class="hljs-comment">// panic: interface conversion: main.Phone is *main.HuaWei, not *main.XiaoMi</span><br>mi := aPhone.(*XiaoMi)<br>mi.MiUI()<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-7-类型分支"><a href="#7-7-类型分支" class="headerlink" title="7.7 类型分支"></a>7.7 类型分支</h2><p>接口有完全不同的两种使用风格。截至目前，我们利用接口的目的是：抽象方法，提供约束，屏蔽实现，分离代码。这种使用风格称之为子类型多态 ( subtype polymorphism ) ：通俗的话就是 “基类” 能做的活 “派生类” 都能做。在 C++ / Java 的世界观中，这种风格通过 “继承” 来体现。</p>
+<p>另一种使用风格是，利用接口可以容纳多种类型的能力，将这些多个类型看做是一个联合 ( union ) 。函数接收联合类型，并通过判断它的实际类型来采取 ( 可能是截然不同 ) 的处理策略。当然，和完全的 <strong>泛型</strong> 相比，联合类型是有限数量的。这种接口的使用风格称之为特设多态 ( ad hoc polymorphism ) 。</p>
+<p>下面用一个简单的例子来演示：函数通过 <code>interface&#123;&#125;</code> 以接收任何类型的参数，然后根据参数的类型在控制台打印不同的内容：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">is</span><span class="hljs-params">(a <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span>&#123;<br><br>	<span class="hljs-comment">// a.(type) type 是关键字，该写法在 switch 语句中用于提取 a 的实际类型。</span><br>	<span class="hljs-keyword">switch</span> a.(<span class="hljs-keyword">type</span>) &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-literal">nil</span>: fmt.Print(<span class="hljs-string">&quot;空指针&quot;</span>)<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">int</span>: fmt.Print(<span class="hljs-string">&quot;int 类型&quot;</span>)<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">float32</span>: fmt.Print(<span class="hljs-string">&quot;float32 类型&quot;</span>)<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">float64</span>: fmt.Print(<span class="hljs-string">&quot;float64 类型&quot;</span>)<br>	<span class="hljs-keyword">default</span>:<br>		fmt.Print(<span class="hljs-string">&quot;其它的类型...&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/03/20/Go-%E5%9B%9B-%E6%8E%A5%E5%8F%A3/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;20&#x2F;Go-%E5%9B%9B-%E6%8E%A5%E5%8F%A3&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;20&#x2F;Go-%E5%9B%9B-%E6%8E%A5%E5%8F%A3&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/03/31/Go-%E4%BA%94-Goroutine%E4%B8%8Echannel/"><i class="iconfont iconleft"></i>Go: (五)Goroutine & Channel</a>
+    <a href="/2021/03/17/Go-%E4%B8%89-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95/">Go: (三)函数与方法<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E6%8E%A5%E5%8F%A3"><span class="toc-text">第七章 接口</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-%E6%8E%A5%E5%8F%A3%E5%8D%B3%E7%BA%A6%E5%AE%9A"><span class="toc-text">7.1 接口即约定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-%E7%A9%BA%E6%8E%A5%E5%8F%A3"><span class="toc-text">7.2 空接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-3-%E6%8E%A5%E5%8F%A3%E5%80%BC%E4%B8%8E%E5%8F%AF%E6%AF%94%E8%BE%83%E6%80%A7"><span class="toc-text">7.3 接口值与可比较性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-4-sort-Interface-%E6%8E%A5%E5%8F%A3"><span class="toc-text">7.4 sort.Interface 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-5-error-%E6%8E%A5%E5%8F%A3"><span class="toc-text">7.5 error 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-6-%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80"><span class="toc-text">7.6 类型断言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-7-%E7%B1%BB%E5%9E%8B%E5%88%86%E6%94%AF"><span class="toc-text">7.7 类型分支</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

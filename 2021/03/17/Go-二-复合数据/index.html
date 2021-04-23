@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Go: (二)复合数据 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="本专题记载了 Go 语言的复合类型：数组，切片 Sli...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Go: (二)复合数据</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/go_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Go: (二)复合数据</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>March 17, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/03/17/Go-%E4%BA%8C-%E5%A4%8D%E5%90%88%E6%95%B0%E6%8D%AE/" class="leancloud" data-flag-title="Go: (二)复合数据"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>27286</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>本专题记载了 Go 语言的复合类型：数组，切片 Slice，结构体 ( 以及和 JSON 数据之间的相互转换)，散列表 <code>map</code> 。其中，切片是一个比较难理解的部分，因此它占据了大部分章节。</p>
+<h1 id="第四章-复合数据类型"><a href="#第四章-复合数据类型" class="headerlink" title="第四章 复合数据类型"></a>第四章 复合数据类型</h1><h2 id="1-数组"><a href="#1-数组" class="headerlink" title="1. 数组"></a>1. 数组</h2><p>了解数组是了解 Go 语言切片的前提。数组是具备固定长度的，由 0 ~ 多个相同元素组成的连续序列。数组内的元素通过索引 ( 或者称之 “下标号” ) 访问。下面的代码演示了如何创建一个可容纳 3 个 <code>int8</code> 空间的数组：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> ints [<span class="hljs-number">3</span>]<span class="hljs-keyword">int8</span><br></code></pre></td></tr></table></figure>
+
+<p>默认情况下，数组的零值就是指内部元素类型的零值。如果要在创建数组时赋初始值，则可以使用数组字面量来完成。( 如果字面量的数量不够，之后的元素仍采用零值。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> ints = [<span class="hljs-number">3</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br><br><span class="hljs-keyword">for</span> index, value := <span class="hljs-keyword">range</span> ints&#123;<br>    fmt.Printf(<span class="hljs-string">&quot;index %v is %v\n&quot;</span>,index,value)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>也可以不主动指定数组的长度，这样的话实际长度将由数组字面量的个数来决定。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> ints = [...]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br><br><span class="hljs-comment">// len 函数可以返回该数组的长度。</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(ints))<br></code></pre></td></tr></table></figure>
+
+<p>注意，数组的长度也是数组类型的一部分。比如说 <code>[3]int</code> 和 <code>[4]int</code> 就是完全不同的两个类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> ints = [...]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>&#125;<br><br><span class="hljs-comment">// %T 会打印该变量的数据类型。数组的数据类型包含数组长度。</span><br>fmt.Printf(<span class="hljs-string">&quot;%T&quot;</span>,ints)<br></code></pre></td></tr></table></figure>
+
+<p>数组之间是可以比较的，前提是内部的元素类型也是可比较的。假定有表达式 <code>arr1 == arr2</code> ，其中两个变量均为数组类型。那么程序会依次判断两数组内部的元素是否都完全相等。若为真，则该表达式结果为 <code>true</code> 。</p>
+<p><strong>如果两个数组的长度不同，那么它们就必定是不同的</strong>。对不同类型的变量进行比较，Go 会直接给出一个编译错误。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr1 = [...]<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;<br><span class="hljs-keyword">var</span> arr2 = [...]<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">4</span>&#125;<br><span class="hljs-keyword">var</span> arr3 = [...]<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;<br><span class="hljs-keyword">var</span> arr4 = [...]<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br><br><span class="hljs-comment">//false</span><br><span class="hljs-built_in">println</span>(arr1==arr2)<br><br><span class="hljs-comment">//ture</span><br><span class="hljs-built_in">println</span>(arr1==arr3)<br><br><span class="hljs-comment">// 编译不通过，原因是 [3]int 和 [5]int 不是同一种类型。</span><br><span class="hljs-built_in">println</span>(arr1==arr4)<br></code></pre></td></tr></table></figure>
+
+<p>如果函数中出现了与数组相关的形参，它将是这样的：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 这个函数将 ints 内的三个元素全部 + 1</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add_1</span><span class="hljs-params">(ints [3]<span class="hljs-keyword">int</span>)</span></span>&#123;<span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> ints&#123;v++&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但是当在主程序使用它时，会发现外部传入的数组并没有发生改变：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go">ints := [<span class="hljs-number">3</span>]<span class="hljs-keyword">int</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>&#125;<br><br>add_1(ints)<br><br><span class="hljs-comment">// ints 并没有因为 add_1 函数的操作而发生改变。</span><br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> ints&#123;<span class="hljs-built_in">println</span>(v)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这是由于当调用 Go 函数时，传入的参数都是一个副本 ( 值拷贝 )。当传入的是一个大数组时，这种方式将变得十分低效。并且，函数内部修改的都是其数组的副本，而不是传入的那个数组本身。但是在其它语言当中，数组可能是隐式地引用方式传递。</p>
+<p>行之有效的方法是令函数接收一个 <code>[3]int</code> 类型的指针，然后根据下标修改数组的值。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add_1</span><span class="hljs-params">(pInt3 *[3]<span class="hljs-keyword">int</span>)</span></span>&#123;<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> pInt3 &#123;<br>		pInt3[i]++<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>值得一提的是，下面这种方式也不会改变原有的数组：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add_1</span><span class="hljs-params">(pInt3 *[3]<span class="hljs-keyword">int</span>)</span></span>&#123;<br>	<span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> pInt3 &#123;<br>		<span class="hljs-comment">// 这种方式只是将数组内的元素拷贝给局部变量 v 并使 v 自增，但是并没有影响到数组内的元素本身。</span><br>		v++<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果不采取指针的方式，也可以在函数运行结束之后将改动后的数组值传回到外部：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">add_1</span><span class="hljs-params">(ints [3]<span class="hljs-keyword">int</span>)</span> [3]<span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">for</span> i,v := <span class="hljs-keyword">range</span> ints &#123;<br>		ints[i] = v+<span class="hljs-number">1</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> ints<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>由于数组天然就是不可变的，因此它没有定义有关扩容，或者收缩的操作。在实际开发中，很少直接使用不可变的数组，而是其依附于数组的切片 Slice。</p>
+<h2 id="2-切片"><a href="#2-切片" class="headerlink" title="2. 切片"></a>2. 切片</h2><p>切片表示一个长度可变的，由同类元素组成的序列。切片的类型为 <code>[]T</code>，和数组类型的最大区别是，它不指派长度。切片和不可变的数组紧密相关，又或者称切片是依附于某个数组的。这个数组被称为<strong>底层数组</strong>。切片包含了三个内容：指针，长度，和容量。</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/03/17/hmKxl.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">len 和 cap</span></p>
+<p>指针，记录了这个切片从数组的哪个位置 “切入”，因此笔者习惯额外称它是 “头指针”。上述演示的代码块中，<code>arr[1:6]</code> 表示从 <code>arr[1]</code> 这个 “切点” 切入并得到了一个左闭 ( 含 <code>arr[1]</code> ) 右开 ( 不包含 <code>arr[6]</code> ) 区间的切片。</p>
+<p>容量 <code>cap</code> 是一个和长度 <code>len</code> 不同的概念。<strong>这个数值通常等于切片指针到底层数组末端的这段距离</strong>，<code>cap &gt;= len</code> 恒成立。 <code>cap - len</code> 则代表了 “这个切片的可拓展空间” 。比如，在通常情况下 <code>cap(arr[1:6]) = len(arr) - 1 = 9</code>  ( 底层数组长 - 此切片 “头” 指针对应底层数组的下标 ) 。后文会通过例子介绍 <code>cap</code> 存在的意义。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">10</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;<br><br><span class="hljs-comment">// 由于切片 slice[m:n] 的前闭后开区间，因此计算长度很容易：n - m.</span><br><span class="hljs-comment">// 5</span><br><span class="hljs-built_in">println</span>(<span class="hljs-built_in">len</span>(arr[<span class="hljs-number">1</span>:<span class="hljs-number">6</span>]))<br><br><span class="hljs-comment">// 通常都是 len(arr) - m</span><br><span class="hljs-comment">// 9</span><br><span class="hljs-built_in">println</span>(<span class="hljs-built_in">cap</span>(arr[<span class="hljs-number">1</span>:<span class="hljs-number">6</span>]))<br></code></pre></td></tr></table></figure>
+
+<p>注意，切片的可访问下标范围仅在 <code>0</code> ~ <code>len-1</code> 之间，这和 <code>cap</code> 没有关系。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">10</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;<br><br><span class="hljs-comment">//len = 6 - 3 = 3</span><br><span class="hljs-comment">//cap = 10 - 3 = 7</span><br><span class="hljs-comment">//可用的下标号为 0 ~ 2,在本例中，值依次对应 3 ~ 5</span><br>slice := arr[<span class="hljs-number">3</span>:<span class="hljs-number">6</span>]<br><br>fmt.Print(slice[<span class="hljs-number">0</span>])<br>fmt.Print(slice[<span class="hljs-number">1</span>])<br>fmt.Print(slice[<span class="hljs-number">2</span>])<br><br><span class="hljs-comment">// 编译通过，但是运行错误。</span><br><span class="hljs-comment">// panic: runtime error: index out of range [3] with length 3</span><br>fmt.Print(slice[<span class="hljs-number">3</span>])<br></code></pre></td></tr></table></figure>
+
+<p>切片字面量的初始化方式和数组字面量非常相似，但是不会像数组那样声明长度。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 得到的是切片</span><br>a := []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br><br><span class="hljs-comment">// 得到的是数组</span><br>b := [<span class="hljs-number">5</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br><br>fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>,a)<br>fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>,b)<br></code></pre></td></tr></table></figure>
+
+<p>格外要注意的点是，<strong>切片之间不允许相互比较</strong>。切片唯一能够比较的值是 <code>nil</code>，用来判断它是否是一个空切片。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// a 和 b 相等吗? 或者说可比较吗?</span><br>a := []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br>b := []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br><br><span class="hljs-comment">// 提示 []int8 没有定义 == 操作符。</span><br><span class="hljs-built_in">println</span>(a == b)<br><span class="hljs-built_in">println</span>(a != <span class="hljs-literal">nil</span>)<br></code></pre></td></tr></table></figure>
+
+<p>一个底层数组可以覆盖多个切片。切片可以从底层数组的任意一点 “切入”，并且切片之间可以相互<strong>重叠</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">10</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;<br><br>slice1 := arr[<span class="hljs-number">1</span>:<span class="hljs-number">5</span>]<br><br><span class="hljs-comment">// 可以像访问数组元素那样，从切片中摘出某一个元素。</span><br><span class="hljs-comment">// 对于 slice1 而言，它的第一个元素相当于是底层数组的第二个元素，因此这个值是1.</span><br><span class="hljs-built_in">println</span>(slice1[<span class="hljs-number">3</span>])<br><span class="hljs-comment">// 这个切片修改了底层数组</span><br>slice1[<span class="hljs-number">3</span>] = <span class="hljs-number">127</span><br><br><span class="hljs-comment">// 切片之间可以相互重叠。</span><br>slice2 := arr[<span class="hljs-number">2</span>:<span class="hljs-number">6</span>]<br><span class="hljs-comment">// 切片对底层数组的修改可能会导致另外的切片也随之变化。</span><br><span class="hljs-comment">// 打印结果将是 127，因为这个位置的元素被 slice1 修改过。</span><br><span class="hljs-built_in">println</span>(slice2[<span class="hljs-number">2</span>])<br></code></pre></td></tr></table></figure>
+
+<p>切片之间相互重叠的情况下要格外小心：一个切片对底层数组的重叠位置做了修改，这个行为会影响到另一个切片。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">10</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;<br><br><span class="hljs-comment">//arr[1] ~ arr[7],length = 6;</span><br>slice1 := arr[<span class="hljs-number">1</span>:<span class="hljs-number">8</span>]<br>slice2 := slice1[<span class="hljs-number">2</span>:<span class="hljs-number">5</span>]<br><br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> slice2 &#123;<span class="hljs-built_in">println</span>(v)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一个切片 B 可以切于令一个切片 A，切片 A，B 会共享底层数组。这种情况下必定会引起切片 A，B 发生重叠，且切片 B 的长度未必就比 A 短。</p>
+<p>下面用图示方式举了一个例子：切片 B 的末端可以越过切片 A 的末端，这将导致切片 A 被 “暂时动态扩容”。<strong>有一点可以肯定的是：切片 B 的前端一定不会越过切片 A 的前端。</strong></p>
+<p>这时，切片 A 的 <code>cap</code> 就是一个关键量。在这里按默认情况计算 <code>sliceA</code> 的 <code>cap = 10 - 3 = 7</code> 。 也就是说如果 <code>sliceB := sliceA[n:m]</code> ，这个 <code>m</code> 的最大值可以为 <code>7</code> 。 </p>
+<p>下面的图示中，<code>m == 6</code> 。显然，如果 <code>m</code> 的取值大于 <code>7</code> ( <code>cap(sliceA)</code> )  ，那么就说明 <code>sliceB</code> 的末端已经延展到了底层数组的外界，这会引发程序错误。</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/03/17/hmGtn.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">通过 &quot;扩容&quot; 创建切片的切片</span></p>
+<p>下面将用程序来演示这个过程。值得强调的一点是，上文使用了”暂时动态扩容” 的措辞，这是一种 “形象” 又便于理解的说法，同时还暗示了：在创建切片 B 的前后，<strong>切片 A 的长度没有因此发生任何变化</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">10</span>]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>&#125;<br><br>sliceA := arr[<span class="hljs-number">3</span>:<span class="hljs-number">7</span>]<br><span class="hljs-comment">//输出切片 A 的长: 7 - 3.</span><br><span class="hljs-built_in">println</span>(<span class="hljs-built_in">len</span>(sliceA))<br><br><span class="hljs-comment">// 切片 B 截取自切片 A</span><br>sliceB := sliceA[<span class="hljs-number">1</span>:<span class="hljs-number">6</span>]<br><span class="hljs-comment">// 切片 A 的长度不变</span><br><span class="hljs-built_in">println</span>(<span class="hljs-built_in">len</span>(sliceA))<br><br><span class="hljs-comment">// 查看切片 B 的最后一个元素：8</span><br><span class="hljs-built_in">println</span>(sliceB[<span class="hljs-built_in">len</span>(sliceB)<span class="hljs-number">-1</span>])<br></code></pre></td></tr></table></figure>
+
+<p>通过这个例子展现了 <code>cap</code> 的一般意义：它提供一种保证，以防止其它切片在某一个切片为基准 “切入” 时，不慎拓展到底层数组的 “外面” 。不过，<code>cap</code> 并不总是切片指针到数组末端的距离长，后文演示了如何主动设置 <code>cap</code> 值。</p>
+<h3 id="2-1-append-函数"><a href="#2-1-append-函数" class="headerlink" title="2.1 append 函数"></a>2.1 append 函数</h3><p><code>append</code> 函数可以为切片扩容。直观的用法是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">sliceA := []<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;<br>sliceB := <span class="hljs-built_in">append</span>(sliceA,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>)<br><br><span class="hljs-comment">//&#123;1,2,3,4,5,6,7&#125;</span><br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> sliceB &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>相比于用法，<code>append</code> 函数更值得探讨的地方在于：如果在一般的情形中使用了 <code>append</code> 函数，这是否会影响到原切片所引用的底层数组？答案是：不确定。前文已经介绍了一个切片具有的两个量值：<code>len</code> 长度和 <code>cap</code> 容量。下文为了方便叙述，会将 <code>cap - len</code> 这片空间称之为 “剩余空间” 。</p>
+<p>第一种情况是：作为参数的切片 <code>sliceA</code> 的剩余空间足够容纳 <code>appned</code> 函数新添加的元素：( 比如下面的代码块中，<code>append</code> 只添加了一个新元素 <code>10</code> ) 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go">i8s := [...]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br><span class="hljs-comment">// len = 4 , cap = 5 , usable = 5 - 4 = 1.</span><br>sliceA := i8s[:<span class="hljs-number">4</span>]<br>sliceB := <span class="hljs-built_in">append</span>(sliceA,<span class="hljs-number">10</span>)<br><br><span class="hljs-comment">// 显然 slice 序列里有 &#123;1, 2, 3, 4, 10&#125;</span><br>fmt.Println(<span class="hljs-string">&quot;sliceB:&quot;</span>)<br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> sliceB &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br><br><span class="hljs-comment">// 此时的底层数组也被改变了:&#123;1, 2, 3, 4, 10&#125;</span><br>fmt.Println(<span class="hljs-string">&quot;\n[after] i8s:&quot;</span>)<br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> i8s &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种情况下，<code>append</code> 函数相当于是基于切片 <code>sliceA</code> 的底层数组创建了另一个切片 <code>sliceB</code> 。为了能够在原切片的基础上新增一个值 <code>10</code>，<code>append</code> 函数的做法是修改了 <code>sliceA</code> 的底层数组 <code>i8s[4]</code>，将原来的元素值 <code>5</code> 修改成了 <code>10</code> 。</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/03/17/hmVh7.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">剩余空间足够时的情形</span></p>
+<p>第二种情况是：<code>append</code> 函数添加的元素数量多于 <code>sliceA</code> 的剩余空间。下面的例子中，新增的元素数量有 3 个，但是 <code>sliceA</code> 的剩余空间只有 1 个。如果按照默认方式计算 <code>cap(sliceA)</code> ，这其实还表明了 <code>sliceA</code> 的底层数组没有办法装下多出来的那 2 个元素。由于数组本身又是不可变的，<code>append</code> 函数自然就无法再基于 <code>sliceA</code> 的底层数组 <code>i8s</code> 做处理了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go">i8s := [...]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br><span class="hljs-comment">// len = 4 , cap = 5 , usable = 5 - 4 = 1.</span><br>sliceA := i8s[:<span class="hljs-number">4</span>]<br><span class="hljs-comment">// element Count = 3 &gt; usable</span><br>sliceB := <span class="hljs-built_in">append</span>(sliceA,<span class="hljs-number">10</span>,<span class="hljs-number">11</span>,<span class="hljs-number">12</span>)<br><br><span class="hljs-comment">// &#123;1, 2, 3, 4, 5, 10, 11, 12&#125;</span><br>fmt.Println(<span class="hljs-string">&quot;sliceB:&quot;</span>)<br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> sliceB &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br><br><span class="hljs-comment">// 此时的 sliceA 的底层数组没有变化，&#123;1, 2, 3, 4, 5&#125;</span><br>fmt.Println(<span class="hljs-string">&quot;\n[after] i8s:&quot;</span>)<br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> i8s &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这时 <code>append</code> 的逻辑是：索性在内存空间中在原有底层数组的基础上复制出一个有更多空余空间的<strong>新数组</strong>，返回的新切片将以这个新数组作为底层数组。</p>
+<p>说得再直白一些，此时得到的 <code>sliceB</code> 已经和 <code>sliceA</code> 及其底层数组 <code>i8s</code>  没有联系了。</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/03/17/hmdJ2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">剩余空间不足时的情形</span></p>
+<p>总之， <code>append</code> 函数可能会引发副作用，这取决于被放入的 <code>sliceA</code> 剩余空间 <code>cap - len</code> 是否足够容纳这些被添加的元素。</p>
+<p>如果要强制令 <code>append</code> 为新切片 <code>sliceB</code> 分配一个新的底层数组 ( 如果你想实现这样的效果 )，这里有两个思路：</p>
+<p>思路一：限定 <code>sliceA</code> 的剩余空间为 0，表明 “不可在 <code>sliceA</code> 之上做拓展”。这其实只要限制切片的 <code>cap == len</code> 即可。Go 提供这样的语法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// index - start = len;</span><br><span class="hljs-comment">// max -start = cap</span><br><span class="hljs-comment">// start &lt;= index &lt;= max</span><br><span class="hljs-comment">// avaliable: [start,index)</span><br>array[start:index:max]<br></code></pre></td></tr></table></figure>
+
+<p>该语法在 <code>array[m：n]</code> 的基础上增添了第三项：<code>max</code> 。其中，<code>start</code> 可以被缺省，默认为 0，写法为 <code>array[:index:max]</code> 。</p>
+<p>程序通过计算 <code>max - start</code> 来设置此切片的 <code>cap</code> 容量。如果该 <code>max == len(array)</code> ，则两者声明方式等价。本例则通过设置 <code>max == index</code> 来使切片的剩余空间为 <code>0</code> 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr =[...]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>&#125;<br><br><span class="hljs-comment">// start = 2, index = 5, max = 5</span><br><span class="hljs-comment">// len(sliceA) = 5 - 2 = 3</span><br><span class="hljs-comment">// cap(sliceA) = 5 - 2 = 3</span><br><span class="hljs-comment">// usable = cap - len = 0</span><br><span class="hljs-comment">// sliceA: &#123;3, 4, 5&#125;</span><br><span class="hljs-comment">// 使用 &quot;arr[2:5]&quot; 和 &quot;arr[2:5:5]&quot; 观察会对 arr 数组有何影响.</span><br>sliceA := arr[<span class="hljs-number">2</span>:<span class="hljs-number">5</span>:<span class="hljs-number">5</span>]<br><br><span class="hljs-comment">// sliceB: &#123;3, 4, 5, 16, 17&#125;</span><br>sliceB := <span class="hljs-built_in">append</span>(sliceA, <span class="hljs-number">16</span>, <span class="hljs-number">17</span>)<br><br>fmt.Println(<span class="hljs-string">&quot;arr...&quot;</span>)<br><span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> arr &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br><br>fmt.Println(<span class="hljs-string">&quot;\nsliceB...&quot;</span>)<br><span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> sliceB &#123;fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>思路二：如果不想令某一个数组会随着切片而改变，那么只需要让切片在创建时引用另一个底层数组，且这两个数组通过值拷贝的方式共享数据，以此达到切片和原数组 “松耦合” 的效果。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> arr =[...]<span class="hljs-keyword">int8</span>&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>,<span class="hljs-number">7</span>&#125;<br><br><span class="hljs-comment">// make(slice type, len, cap)，这个空切片引用的是一个长度为 cap 的零值数组。</span><br>sliceA := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int8</span>, <span class="hljs-number">3</span>, <span class="hljs-number">30</span>)<br><br><span class="hljs-comment">// slice = &#123;3, 4, 5&#125;</span><br><span class="hljs-built_in">copy</span>(sliceA,arr[<span class="hljs-number">2</span>:<span class="hljs-number">5</span>])<br><br><span class="hljs-comment">// sliceB = &#123;3, 4, 5, 100, 101&#125;</span><br>sliceB := <span class="hljs-built_in">append</span>(sliceA,<span class="hljs-number">100</span>,<span class="hljs-number">101</span>)<br><br><span class="hljs-comment">// arr is 1 2 3 4 5 6 7</span><br>fmt.Println(<span class="hljs-string">&quot;arr is...&quot;</span>)<br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> arr&#123;<br>    fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)<br>&#125;<br><br><span class="hljs-comment">// sliceB is 3 4 5 100 101</span><br>fmt.Println(<span class="hljs-string">&quot;\nsliceB is...&quot;</span>)<br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> sliceB&#123;<br>    fmt.Print(v,<span class="hljs-string">&quot; &quot;</span>)<br>&#125;                                		<br></code></pre></td></tr></table></figure>
+
+<p>首先，这里的 <code>sliceA</code> 没有直接引用 <code>arr[2:5]</code> 片段 ，它通过 <code>make</code> 函数完成了初始化。这使切片 <code>sliceA</code> 引用一个<strong>新的零值数组作为底层数组</strong>，而不是 <code>arr</code> 本身。 </p>
+<p><code>sliceA</code> 需要获取到 <code>arr[2:5]</code> 的内容，而这一步通过内置的 <code>copy</code> 函数将 <code>arr[2:5]</code> 片段上的值拷贝到了 <code>sliceA</code> 的底层数组。</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/03/17/hmfoP.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">通过 copy 实现 &quot;低耦合&quot; append</span></p>
+<h2 id="3-散列表-map"><a href="#3-散列表-map" class="headerlink" title="3. 散列表 map"></a>3. 散列表 map</h2><p>散列表是一个拥有键值对元素的无序集合。散列表的键 ( key ) 总是唯一的。在 Go 程序中，需要借助内置的 <code>make</code> 函数来得到一个散列表 <code>map</code> 的引用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// K: Key 的类型。</span><br><span class="hljs-comment">// V: Value 的类型。</span><br><span class="hljs-comment">// 通过 make 函数得到的是一个非 nil，但是内容为空的 map 散列表。</span><br>aMap := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[K]V)<br></code></pre></td></tr></table></figure>
+
+<p>从写法上来看，键占据了一个相对更重要的地位：Go 要求它的类型必须是可以通过 <code>==</code> 符号比较的，这样 <code>map</code> 才能快速检测某个键是否已经存在了。可以使用 <code>map</code> 字面量在初始化时插入 K-V，不管这个键值对是不是列表中的最后一个，它总是需要以 <code>,</code> 收尾 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 通过 map 字面量赋值的方式可以在初始化时就在内部插入键值对。</span><br>aMap := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>    <span class="hljs-comment">// 无论后面有没有 k-v 对，总是需要使用半角,符号收尾。</span><br>    <span class="hljs-string">&quot;age&quot;</span>:   <span class="hljs-number">20</span>,<br>    <span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">100</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-1-注意初始化问题"><a href="#3-1-注意初始化问题" class="headerlink" title="3.1 注意初始化问题"></a>3.1 注意初始化问题</h3><p>当如下方式声明一个 <code>map</code> 时，得到的是一个 <code>nil</code> 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 声明却不赋值</span><br><span class="hljs-keyword">var</span> aMap <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span><br></code></pre></td></tr></table></figure>
+
+<p>这样的 <code>map</code> 是没有意义的，因为它还没有被初始化 ( 如果要得到一个内容为空的 <code>map</code> 引用，则应该使用 <code>make</code> 函数 )，除非在之后为它赋值了一个 <code>map</code> 字面量，这个字面量里面可以不包含任何内容：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> a <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span><br><br><span class="hljs-comment">// 也可以这样赋值: a = map[string]int8&#123;&#125;</span><br><span class="hljs-comment">// 这将等价于 =&gt; make(map[string]int8)</span><br>a = <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>   <span class="hljs-string">&quot;java&quot;</span>:<span class="hljs-number">2017</span>,<br>   <span class="hljs-string">&quot;scala&quot;</span>:<span class="hljs-number">2020</span>,<br>   <span class="hljs-string">&quot;go&quot;</span>:<span class="hljs-number">2021</span>,<br>&#125;<br><br>fmt.Println(a[<span class="hljs-string">&quot;python&quot;</span>])<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-有关散列表的查找删除"><a href="#3-2-有关散列表的查找删除" class="headerlink" title="3.2 有关散列表的查找删除"></a>3.2 有关散列表的查找删除</h3><p>在 <code>map</code> 中的查找，删除操作都是安全的。如果程序没有找到某个 Key，则会在访问时返回 Value 类型的零值；同样的，如果要删除某个不存在的 Key，那么这个 <code>map</code> 就不会发生任何变化。</p>
+<p>散列表维持了 “下标” 方式访问元素的传统，因此在写法上保留了方括号 <code>[]</code>。不过，这里 “下标” 指代的是 Key 值。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go">aMap := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>	<span class="hljs-string">&quot;age&quot;</span>:   <span class="hljs-number">20</span>,<br>	<span class="hljs-string">&quot;score&quot;</span>: <span class="hljs-number">100</span>,<br>&#125;<br><br><span class="hljs-comment">//访问 key = &quot;age&quot; 的 value 值。</span><br><span class="hljs-built_in">println</span>(aMap[<span class="hljs-string">&quot;age&quot;</span>])<br><br><span class="hljs-comment">//修改 key = &quot;score&quot; 的 value 值。</span><br>aMap[<span class="hljs-string">&quot;score&quot;</span>] = <span class="hljs-number">60</span><br></code></pre></td></tr></table></figure>
+
+<p>上述代码块的赋值语句要分两个情况考虑：如果这个 Key 之前并不存在，那么这条语句相当于插入了一个新的键值对。否则，由于 <code>map</code> 中 Key 不允许重复，这会修改原来这个 Key 所对应的 Value。</p>
+<p>因此，下面的这一条语句包含了两条信息：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// aMap is a type of map[string]int8</span><br>aMap[<span class="hljs-string">&quot;age&quot;</span>] ++<br></code></pre></td></tr></table></figure>
+
+<p>如果这个 Key 未曾存在过，那么这条语句会在 <code>aMap</code> 表内插入一条 <code>&quot;age&quot;:0</code> ，然后再做自增操作 ( 这样的话，该键的返回值就是 1 ) 。否则，就将 Value 在之前的基础上自增 1 。换句话说，<code>aMap[&quot;age&quot;]++</code> 得到的值将至少为 1 。</p>
+<p>无论一个 Key 是否存在于 <code>map</code> 中，Go 程序总是至少会返回一个零值，因此避免了 “<code>NullPointerException</code>“。但是，这种 “贴心” 的做法也会带来混淆的情况，比如说用户程序恰好插入的就是 Value 为零值的键值对：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go">_3dPosition := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>    <span class="hljs-string">&quot;x&quot;</span>:<span class="hljs-number">100</span>,<br>    <span class="hljs-string">&quot;y&quot;</span>:<span class="hljs-number">80</span>,<br>    <span class="hljs-string">&quot;z&quot;</span>:<span class="hljs-number">0</span>,<br>&#125;<br><br>_,isExist := _3dPosition[<span class="hljs-string">&quot;z&quot;</span>]<br><span class="hljs-keyword">if</span>(isExist)&#123;fmt.Println(<span class="hljs-string">&quot;value of z is 0&quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>为了避免这种混淆，Go 语言做了如下设计：当访问 <code>map</code> 元素时，实际上会得到两个值，一个是 Value 本身，另一个则是布尔类型的值，它表达了程序是否在此 <code>map</code> 找到了预期的 Value。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go">_3dPosition := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>    <span class="hljs-string">&quot;x&quot;</span>:<span class="hljs-number">100</span>,<br>    <span class="hljs-string">&quot;y&quot;</span>:<span class="hljs-number">80</span>,<br>    <span class="hljs-string">&quot;z&quot;</span>:<span class="hljs-number">0</span>,<br>&#125;<br><br>_,isExist := _3dPosition[<span class="hljs-string">&quot;z&quot;</span>]<br><span class="hljs-keyword">if</span>(isExist)&#123;fmt.Println(<span class="hljs-string">&quot;value of z is 0&quot;</span>)&#125;<br><br>_2dPosition:=<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>    <span class="hljs-string">&quot;x&quot;</span>:<span class="hljs-number">100</span>,<br>    <span class="hljs-string">&quot;y&quot;</span>:<span class="hljs-number">80</span>,<br>&#125;<br><br>_,isExist = _2dPosition[<span class="hljs-string">&quot;z&quot;</span>]<br><span class="hljs-keyword">if</span>(!isExist)&#123;fmt.Println(<span class="hljs-string">&quot;have no param of &#x27;z&#x27;&quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意，无法获取 <code>map</code> 元素的地址：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">&amp;aMap[<span class="hljs-string">&quot;age&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+<p>原因是因为随着 <code>map</code> 散列表的增长，内部元素的地址可能会发生改变 ( 它们可能会被挪到一个新的地址 ) 。<code>map</code> 被视作下标为 “Key” 的特殊序列，因此 <code>for</code> 循环中的 <code>range</code> 关键字对它仍然适用：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">for</span> k,v := <span class="hljs-keyword">range</span>  aMap &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;the key is %v, and the value is %v\n&quot;</span>,k,v)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-有序遍历-map-散列表的思路"><a href="#3-3-有序遍历-map-散列表的思路" class="headerlink" title="3.3 有序遍历 map 散列表的思路"></a>3.3 有序遍历 map 散列表的思路</h3><p>值得一提的是，<code>map</code> 依赖足够随机的散列算法来避免碰撞，这也导致直接对 <code>map</code> 进行 <code>for</code> 循环遍历时，程序并不保证其迭代的顺序。如果要按照某种顺序遍历 <code>map</code>，一种委婉的方法是：单独创建一个切片有序保管 Key 值，然后按照遍历顺序去访问 <code>map[Key]</code> 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go">nameList := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>   <span class="hljs-string">&quot;Li Lei&quot;</span>:    <span class="hljs-number">100</span>,<br>   <span class="hljs-string">&quot;Wang Fang&quot;</span>: <span class="hljs-number">80</span>,<br>   <span class="hljs-string">&quot;A Wei&quot;</span>:     <span class="hljs-number">70</span>,<br>&#125;<br><br><span class="hljs-comment">//make(type of slice,len,cap)</span><br>names := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">string</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(nameList))<br><br><span class="hljs-comment">// 1.将 map 内的 key 全部插入到 names 切片</span><br><span class="hljs-keyword">for</span> key := <span class="hljs-keyword">range</span> nameList&#123;<br>   names = <span class="hljs-built_in">append</span>(names,key)<br>&#125;<br><br><span class="hljs-comment">// 2.这个包的作用相当于对 names 切片就地进行了一步重排序。</span><br><span class="hljs-comment">// 字符串的排序是按首字母 A-Z 顺序排列的。</span><br>sort.Strings(names)<br><br><span class="hljs-comment">// 3.按照有序的 key 列表去访问 map.</span><br><span class="hljs-keyword">for</span> _,v := <span class="hljs-keyword">range</span> names &#123;<br>   fmt.Println(nameList[v])<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-4-将不可比较的类型设置为-Key-的思路"><a href="#3-4-将不可比较的类型设置为-Key-的思路" class="headerlink" title="3.4 将不可比较的类型设置为 Key 的思路"></a>3.4 将不可比较的类型设置为 Key 的思路</h3><p>前文提到作为 Key 的类型必须是可使用 <code>==</code> ，<code>!=</code> 比较的类型，因此声明下面的 <code>map</code> 不会通过编译，因为 Key 是一个不可比较的字符串切片。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">map</span>[[]<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;<br>    []<span class="hljs-keyword">string</span>&#123;<span class="hljs-string">&quot;hello&quot;</span>,<span class="hljs-string">&quot;go&quot;</span>&#125;:<span class="hljs-number">3</span>,<br>    <span class="hljs-comment">//....</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>答案是适配器设计思想。我们只需要设计一个助手函数 <code>k</code>，将不可变的 <code>[]string</code> 映射成 <code>string</code>，就可以通过一种 “委婉” 的方式实现这个需求。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	slice := []<span class="hljs-keyword">string</span>&#123;<span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-string">&quot;go&quot;</span>&#125;<br><br>	aMap := <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>&#123;&#125;<br>	Insert(aMap, slice, <span class="hljs-number">3</span>)<br>	r, rExist := GetOrReturn(aMap, []<span class="hljs-keyword">string</span>&#123;<span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-string">&quot;go&quot;</span>&#125;, <span class="hljs-number">-1</span>)<br>	<span class="hljs-keyword">if</span> rExist &#123;<br>		<span class="hljs-built_in">println</span>(r)<br>	&#125;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">k</span><span class="hljs-params">(key []<span class="hljs-keyword">string</span>)</span> <span class="hljs-title">string</span></span> &#123;<br>	<span class="hljs-keyword">return</span> fmt.Sprintf(<span class="hljs-string">&quot;%q&quot;</span>, key)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Insert</span><span class="hljs-params">(thisMap <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>, key []<span class="hljs-keyword">string</span>, value <span class="hljs-keyword">int8</span>)</span></span> &#123;<br>	thisMap[k(key)] = value<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GetOrReturn</span><span class="hljs-params">(thisMap <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int8</span>, key []<span class="hljs-keyword">string</span>, ifNone <span class="hljs-keyword">int8</span>)</span> <span class="hljs-params">(<span class="hljs-keyword">int8</span>, <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>	result, ifExist := thisMap[k(key)]<br>	<span class="hljs-keyword">if</span> !ifExist &#123;<br>		result = ifNone<br>	&#125;<br>	<span class="hljs-keyword">return</span> result, ifExist<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-5-结构体"><a href="#3-5-结构体" class="headerlink" title="3.5 结构体"></a>3.5 结构体</h2><p>结构体是将 0 个或者多个类型的变量组合在一起的聚合数据类型，可以将它理解成是一张数据库的表。声明方式类似于 C 语言：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// type 和 struct 是两个关键字</span><br><span class="hljs-comment">// not &#x27;Class&#x27;</span><br><span class="hljs-keyword">type</span> Employee <span class="hljs-keyword">struct</span> &#123;<br>    name,address <span class="hljs-keyword">string</span><br>    age <span class="hljs-keyword">int8</span><br>    salary <span class="hljs-keyword">int32</span><br>    boss *Employee<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>首先，结构体 <code>S</code> 内部的成员可以是基本数据类型，或者是其它类型的结构体 <code>V</code> 或其指针 <code>*V</code>，异或是自身类型的指针 <code>*S</code>，但是，<strong>不可以</strong>是自身类型 <code>S</code> 。</p>
+<p>结构体内可以定义任意数量的成员。如果有多个成员属于同一种数据类型，则可以将它们写在一行，使用 <code>,</code> 分割。总体来看，结构体内部成员的排列顺序是由左至右，由上到下的。</p>
+<p>使用点操作符 <code>.</code> 来访问一个结构体变量的成员：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">Bob.name<br></code></pre></td></tr></table></figure>
+
+<p>结构体可以通过指针方式来访问，如果对结构体指针使用 <code>.</code> 操作符，则等价于对指针指向的结构体变量使用 <code>.</code> 操作符：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> p2Employee *Employee = &amp;Bob<br><span class="hljs-comment">// 等价于*(p2Employee).name</span><br><span class="hljs-built_in">println</span>(p2Employee.name)<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-1-结构体成员的可导出性"><a href="#3-5-1-结构体成员的可导出性" class="headerlink" title="3.5.1 结构体成员的可导出性"></a>3.5.1 结构体成员的可导出性</h3><p>如果结构体内部定义的成员名是首字母大写的，则意味着该成员可以被跨包访问，或者称可以被导出 ( 相当于 <code>public</code> 成员 ) 。比如在 B 包定义一个这样的结构体，注意，<code>info</code> 成员为小写开头。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Protocol <span class="hljs-keyword">struct</span> &#123;<br>	info <span class="hljs-keyword">string</span><br>	Host <span class="hljs-keyword">string</span><br>	Port <span class="hljs-keyword">int32</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在另一个 A 包中，可以导入 B 包并创建一个 <code>Protocol</code> 类型的变量，但是只能够为 <code>Host</code> 和 <code>Port</code> 成员赋值。在 A 包操作 <code>Protocol</code> 类型的结构体时，成员 <code>info</code> 会如同不存在一样。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;B&quot;</span><br><br>client := B.Protocol&#123;<br>    Host: <span class="hljs-string">&quot;localhost&quot;</span>,<br>    Port:  <span class="hljs-number">8000</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>同理，如果结构体本身以小写字母开头命名，则在其它包中就无法使用此结构体。除非要实现 “密封类” 的效果，一般情况下结构体总是大写字母开头，而需要被保护的个别成员则使用小写字母开头。</p>
+<h3 id="3-5-2-结构体赋值"><a href="#3-5-2-结构体赋值" class="headerlink" title="3.5.2 结构体赋值"></a>3.5.2 结构体赋值</h3><p>结构体一般情况下通过两种方式赋值：调用函数并使用返回值赋值，或者是直接使用结构体字面量赋值。结构体字面量的完整写法类似于 json ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><br>    <span class="hljs-comment">// Employee&#123;...&#125; 部分又称之为结构体字面量，不需要使用诸如 new 之类的关键字。内部写法类似于 map.</span><br>    Tim := Employee&#123;<br>        name:    <span class="hljs-string">&quot;Tim&quot;</span>,<br>        address: <span class="hljs-string">&quot;UK&quot;</span><br>        age:     <span class="hljs-number">26</span>,<br>        salary:  <span class="hljs-number">10000</span>,<br>        boss:    <span class="hljs-literal">nil</span>,<br>    &#125;<br><br>    Bob := Employee&#123;<br>        name:    <span class="hljs-string">&quot;Bob&quot;</span>,<br>        address: <span class="hljs-string">&quot;UK&quot;</span><br>        age:     <span class="hljs-number">18</span>,<br>        salary:  <span class="hljs-number">15000</span>,<br>        boss:    &amp;Tim,<br>    &#125;    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在结构体的结构非常简单的场合，结构体字面量可以直接写值而忽略掉成员名：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Position&#123;X,Y <span class="hljs-keyword">int</span>&#125;<br>p := Position&#123;<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这意味着代码将不会显式地提示每个数值的意义，这时需要程序员自己保证赋值顺序要和成员声明的顺序严格一致，以保证每个值对应正确的语义。当结构体的结构比较复杂时，这种写法并不会推荐，因为这会为后续的维护工作带来难度。</p>
+<p>结构体字面量的写法只能在上述两种取其一：要么显式地带上所有的成员名，要么就一个都不带。尤其对于第二种赋值方式而言，要格外注意结构体成员的排列顺序 ( 前文提到的：从上到下，从左到右 ) 。对于这样 “模棱两可” 的结构体字面量赋值， Go 会拒绝编译：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">Bob := Employee&#123;<br>    name:    <span class="hljs-string">&quot;Bob&quot;</span>,<br>    address: <span class="hljs-string">&quot;UK&quot;</span><br>    <span class="hljs-number">18</span>,<br>    <span class="hljs-number">15000</span>,<br>    boss:    &amp;Tim,<br>&#125;    <br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-3-在函数中传递结构体"><a href="#3-5-3-在函数中传递结构体" class="headerlink" title="3.5.3 在函数中传递结构体"></a>3.5.3 在函数中传递结构体</h3><p>结构体及其指针都可以作为函数的参数或者返回值。首先假定有以下两组函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 好耶</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">PayRaise</span><span class="hljs-params">(employee Employee)</span></span> &#123;<br>	employee.salary += <span class="hljs-number">5000</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">PayRaiseP</span><span class="hljs-params">(employee *Employee)</span></span>&#123;<br>	employee.salary += <span class="hljs-number">5000</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一个函数 <code>PayRaise</code> 接收 <code>Employee</code> 类型，而第二个函数 <code>PayRaiseP</code> 接收的是其指针，两个函数的逻辑均是将传进来的员工信息 “涨薪” 5000。下面在主程序中调用这两个函数，并观察传入的值 <code>Tim</code> 是否真的被改变了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go">Tim := Employee&#123;<br>    name:    <span class="hljs-string">&quot;Tim&quot;</span>,<br>    address: <span class="hljs-string">&quot;EN&quot;</span>,<br>    age:     <span class="hljs-number">26</span>,<br>    salary:  <span class="hljs-number">10000</span>,<br>    boss:    <span class="hljs-literal">nil</span>,<br>&#125;<br><br>PayRaise(Tim)<br>fmt.Println(Tim.salary)<br><br>PayRaiseP(&amp;Tim)<br>fmt.Println(Tim.salary)<br></code></pre></td></tr></table></figure>
+
+<p>通过运行代码可以观察到：调用 <code>PayRaise</code> 方法时， <code>Tim</code> 的实际工资并没有上涨；但是在调用了 <code>PayRaiseP</code> 方法之后，<code>Tim</code> 的实际工资真的被改变了。这表明当形参列表中出现的是结构体类型时，参数只是简单地值传递。然而，如果要在函数内部对外界的结构体做出修改时，此时传入的应该是结构体指针。</p>
+<p>下面有另两组函数，它们分别返回结构体类型及其指针类型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewEmployee</span><span class="hljs-params">()</span> <span class="hljs-title">Employee</span></span>&#123;<br>	<span class="hljs-keyword">return</span> Employee&#123;<br>		name:    <span class="hljs-string">&quot;John&quot;</span>,<br>		address: <span class="hljs-string">&quot;UK&quot;</span>,<br>		age:     <span class="hljs-number">30</span>,<br>		salary:  <span class="hljs-number">16000</span>,<br>		boss:    <span class="hljs-literal">nil</span>,<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewEmployeeP</span><span class="hljs-params">()</span> *<span class="hljs-title">Employee</span></span>&#123;<br>	<span class="hljs-keyword">return</span> &amp;Employee&#123;<br>		name:    <span class="hljs-string">&quot;John&quot;</span>,<br>		address: <span class="hljs-string">&quot;UK&quot;</span>,<br>		age:     <span class="hljs-number">30</span>,<br>		salary:  <span class="hljs-number">16000</span>,<br>		boss:    <span class="hljs-literal">nil</span>,<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这两者返回的内容及其相似，只不过一个是结构体字面量的值，另一个则是结构体字面量的地址。<strong>出于效率的考虑，函数中接收，返回的通常都是结构体指针</strong>，因为这避免了一次 “值拷贝” 的过程。除非你不希望函数在原有的数据进行改动，而是返回一个新的结构体数据。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 该变量将是一个普通的结构体类型</span><br>newEmployee := NewEmployee()<br>fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>,newEmployee)<br>fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>,newEmployee.name)<br>newEmployee = Tim<br><br><span class="hljs-comment">// 该变量是 *Employee 类型。</span><br>newEmployeeP := NewEmployeeP()<br>fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>,newEmployeeP)<br>fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>,newEmployeeP.name)<br>newEmployeeP = &amp;Tim<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-4-结构体的可比较性"><a href="#3-5-4-结构体的可比较性" class="headerlink" title="3.5.4 结构体的可比较性"></a>3.5.4 结构体的可比较性</h3><p>当且仅当一个结构体内部的成员全部可以比较时，这个结构体才是可以比较的。如果这个结构体是可比较的，那么它就可以作为 <code>map</code> 散列表的键 Key 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go">p := Position&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#125;<br>q :=Position&#123;<span class="hljs-number">3</span>,<span class="hljs-number">4</span>&#125;<br><br><span class="hljs-comment">// 如果结构体内部全是可比较的，那么这个结构体本身就是可比较的。</span><br><span class="hljs-built_in">println</span>(p==q)<br><br><span class="hljs-comment">// 如果一个结构体是可以比较的，则它可以充当 map 的 key。</span><br>_ = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[Position]<span class="hljs-keyword">string</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-5-结构体嵌套结构和匿名成员"><a href="#3-5-5-结构体嵌套结构和匿名成员" class="headerlink" title="3.5.5 结构体嵌套结构和匿名成员"></a>3.5.5 结构体嵌套结构和匿名成员</h3><p>结构体内部的成员可以是其它的结构体类型或指针。假设有一个名为 <code>Item</code> 的结构体，它内部成员由 <code>ItemName</code> 和嵌套的 <code>Position</code> 结构体组成：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Position <span class="hljs-keyword">struct</span>&#123; X, Y <span class="hljs-keyword">int</span> &#125;<br><span class="hljs-keyword">type</span> Item <span class="hljs-keyword">struct</span> &#123;<br>	p        Position<br>	ItemName <span class="hljs-keyword">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果要访问某个 <code>Item</code> 的 <code>X</code> 坐标，则需要两次 <code>.</code> 操作符来完成：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go">item := Item&#123;<br>    P:        Position&#123;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&#125;,<br>    ItemName: <span class="hljs-string">&quot;apple&quot;</span>,<br>&#125;<br><br><span class="hljs-comment">// 写起来很麻烦。</span><br><span class="hljs-built_in">println</span>(item.p.X)<br></code></pre></td></tr></table></figure>
+
+<p>从语法上来看，这不难理解：成员 <code>X</code> 属于 <code>p</code> ，而非 <code>item</code>。因此如果要访问成员 <code>X</code>，这需要首先访问 <code>Item</code> 得到 <code>p</code> 才行。如果有一种办法可以令 <code>X</code> 和 <code>Y</code> 能 “直属于” <code>Item</code>，那么访问它们就会容易得多了。</p>
+<p>Go 语言提供这样的语法糖，我们要做的是就是将那个 <code>Position</code> 类型的成员 <code>p</code> 改成 “匿名” 成员：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Position <span class="hljs-keyword">struct</span>&#123; X, Y <span class="hljs-keyword">int</span> &#125;<br><span class="hljs-keyword">type</span> Item <span class="hljs-keyword">struct</span> &#123;<br>	Position<br>	itemName <span class="hljs-keyword">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从访问的逻辑上看，这相当于做了一步 <code>flat</code> 操作：</p>
+<figure class="highlight tp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs tp">Item&#123;Position&#123;<span class="hljs-keyword">X</span>,<span class="hljs-keyword">Y</span>&#125;,ItemName&#125; =&gt; Item&#123;<span class="hljs-keyword">X</span>,<span class="hljs-keyword">Y</span>,ItemName&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这么做的好处是：仅仅需要一个 <code>.</code> 操作符就可以直接访问到原本不直接属于 <code>Item</code> 结构体的成员 <code>X</code> ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// before:</span><br><span class="hljs-comment">// println(item.p.X)</span><br><br><span class="hljs-built_in">println</span>(item.X)<br></code></pre></td></tr></table></figure>
+
+<p>然而，”匿名成员” 的说法其实并不准确，因为 Go 其实仍然会为 “匿名成员” 隐式地指派一个名字，这个名字就是结构体类型。在这个例子中，仍然可以通过 <code>item.Position.X</code> 的方式来访问到 X 坐标，只是在此处没有必要这么做而已。</p>
+<p>同时，这种做法其实还含蓄的表达了：”匿名成员” 的可导出性将由这个结构体的可导出性决定。</p>
+<h2 id="4-JSON"><a href="#4-JSON" class="headerlink" title="4. JSON"></a>4. JSON</h2><p>有关 JSON 本身在此处应该无需赘言了，它是目前使用最广泛的一种网络发送和接收格式化信息的标准 ( 它并不是唯一的标准，类似的还有 XML ) 。在 Go 语言中，无论是将结构体转换为 JSON ( 这个过程在 Go 程序里称之为 “<code>marshal</code>“，意为 “整理，排序” )，还是 JSON 转换回结构体数据都十分简单，不需要从外部导入一些 <code>fastjson</code> 或是 <code>gson</code> 包的依赖 …… </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go">item := Item&#123;<br>    Position:Position&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#125;,<br>    ItemName: <span class="hljs-string">&quot;apple&quot;</span>,<br>&#125;<br><br>marshal, err := json.Marshal(item)<br><br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    fmt.Printf(<span class="hljs-string">&quot;%s&quot;</span>,marshal)<br>&#125;<span class="hljs-keyword">else</span> &#123;<br>    log.Fatal(err.Error())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Go-to-JSON"><a href="#Go-to-JSON" class="headerlink" title="Go to JSON"></a>Go to JSON</h3><p><code>json.Marshal(...)</code> 函数返回两个值：一个是 <code>[]uint8</code>  ( 或者称 <code>[]byte</code> ) 类型的转换结果，另一个变量则是可能出现的错误情况。对于转换结果可以使用 <code>fmt.Sprintf(...)</code> 等方法将其转换成字符串形式。上述代码会在控制台打印以下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;X&quot;</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">&quot;Y&quot;</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">&quot;ItemName&quot;</span>:<span class="hljs-string">&quot;apple&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>当 JSON 数据结构比较复杂时，将其打印在一行可能难以阅读。<code>json.MarshalIndent</code> 函数可以输出更加整齐的格式化结果：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 在第一个参数种传入要被转换的 Go 数据。</span><br><span class="hljs-comment">// 第二个参数是前缀符号。通常情况下它都是 &quot;&quot;，不过在这里出于演示效果而使用了其它符号。</span><br><span class="hljs-comment">// 第一个参数是定义的缩进字符串，这里使用了制表符 `\t` 。</span><br>marshal, err := json.MarshalIndent(item,<span class="hljs-string">&quot;|&quot;</span>,<span class="hljs-string">&quot;\t&quot;</span>)<br><br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    fmt.Printf(<span class="hljs-string">&quot;%s&quot;</span>,marshal)<br>&#125;<span class="hljs-keyword">else</span> &#123;<br>    log.Fatal(err.Error())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上述代码会在控制台打印以下内容：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">&#123;<br>|	<span class="hljs-string">&quot;X&quot;</span>: <span class="hljs-number">1</span>,<br>|	<span class="hljs-string">&quot;Y&quot;</span>: <span class="hljs-number">2</span>,<br>|	<span class="hljs-string">&quot;ItemName&quot;</span>: <span class="hljs-string">&quot;apple&quot;</span><br>|&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，<code>json</code> 包只针对可被导出 ( 首字母大写命名 ) 的成员，<strong>对于不可导出的成员，在处理过程中会被直接忽略</strong>。</p>
+<h3 id="成员标签定义"><a href="#成员标签定义" class="headerlink" title="成员标签定义"></a>成员标签定义</h3><p>在定义结构体时，可以通过标记 <strong>成员标签定义( field flag)</strong> 令 <code>json</code> 在处理数据时做一些额外工作：比如说你希望将某个成员 <code>s</code> 导出成 JSON 数据时，能够换成另一个名字 <code>v</code> 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Item <span class="hljs-keyword">struct</span> &#123;<br>	Position <span class="hljs-string">`json:&quot;position&quot;`</span><br>	ItemName <span class="hljs-keyword">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>json:&quot;position&quot;</code> 就是一个成员标签定义。它本身其实可以是任何一个字符串，但是它通常都以 <code>key:&quot;value&quot;</code> 的写法来定义。重新运行这段代码，观察控制台的打印结果会发生什么变化：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go">item := Item&#123;<br>    Position:Position&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#125;,<br>    ItemName: <span class="hljs-string">&quot;apple&quot;</span>,<br>&#125;<br><br>marshal, err := json.Marshal(item)<br><br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    fmt.Printf(<span class="hljs-string">&quot;%s&quot;</span>,marshal)<br>&#125;<span class="hljs-keyword">else</span> &#123;<br>    log.Fatal(err.Error())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>匿名成员 <code>Position</code> 转换为 JSON 输出时，它的名字从 <code>Position</code> 变成了小写开头的 <code>position</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;position&quot;</span>:&#123;<span class="hljs-attr">&quot;X&quot;</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">&quot;Y&quot;</span>:<span class="hljs-number">2</span>&#125;,<span class="hljs-attr">&quot;ItemName&quot;</span>:<span class="hljs-string">&quot;apple&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>json</code> 还提供一个额外的标签 <code>omitempty</code>，它表示：<strong>如果在转换为 JSON 的过程中发现这个成员是零值，那么就忽略它</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Item <span class="hljs-keyword">struct</span> &#123;<br>	Position <span class="hljs-string">&#x27;json:&quot;position,omitempty&quot;&#x27;</span><br>	ItemName <span class="hljs-keyword">string</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="JSON-to-Go"><a href="#JSON-to-Go" class="headerlink" title="JSON to Go"></a>JSON to Go</h3><p>相对地，将 JSON 转回结构体数据使用的是 <code>json.Unmarshal(...)</code> 函数。它可能比 <code>json.Marshal(...)</code> 函数更容易出现错误，因为你需要预留一个合适的结构体指针装载数据。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go">item := Item&#123;<br>    Position:Position&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#125;,<br>    ItemName: <span class="hljs-string">&quot;apple&quot;</span>,<br>&#125;<br><br>marshal, _ := json.Marshal(item)<br><br><span class="hljs-keyword">var</span> parsedItem Item<br><br>err := json.Unmarshal(marshal, &amp;parsedItem)<br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    <span class="hljs-comment">// &quot;%#v&quot; 会输出完整的成员名称，包括匿名成员。</span><br>    fmt.Printf(<span class="hljs-string">&quot;%#v&quot;</span>,parsedItem)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>Unmarshal</code> 函数需要两个参数，一个是符合 JSON 语法的字符串字节形式 <code>[]byte</code> ，一个是合理的结构体指针。它会就地将数据存放到指定的指针，因此返回值只有一个 <code>err</code> 。这里额外给出一个提示，可以通过 <code>[]byte(&quot;.....&quot;)</code> 得到 <code>string</code> 值的字节序列。比如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go">bytes := []<span class="hljs-keyword">byte</span>(<span class="hljs-string">`</span><br><span class="hljs-string">	&#123;</span><br><span class="hljs-string">		&quot;AInt&quot;:12</span><br><span class="hljs-string">	&#125;</span><br><span class="hljs-string">	`</span>)<br></code></pre></td></tr></table></figure>
+
+<p>如果只希望得到 <code>Item</code> 中的 <code>position</code> 数据，那只需要设置一个仅包含了 <code>position</code> 的匿名结构体变量 ( 其它数据会在转换过程中被丢弃 ) ，然后传递它的指针：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go">item := Item&#123;<br>    Position:Position&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#125;,<br>    ItemName: <span class="hljs-string">&quot;apple&quot;</span>,<br>&#125;<br><br>marshal, _ := json.Marshal(item)<br><br><span class="hljs-keyword">var</span> parsedPosition <span class="hljs-keyword">struct</span>&#123;<br>    <span class="hljs-comment">// 由于结构体通过标签 `json:position` 将匿名成员 &quot;重命名&quot; 为了 position，</span><br>    <span class="hljs-comment">// 故这里也设置了一个同为小写字母开头的成员 position。</span><br>    <span class="hljs-comment">// 如果不这样做，Json.Unmarshal 就找不到合适的数据类型。</span><br>    position Position<br>&#125;<br><br>err := json.Unmarshal(marshal,&amp;parsedPosition)<br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    fmt.Printf(<span class="hljs-string">&quot;%#v&quot;</span>,Position&#123;&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-文本模板"><a href="#5-文本模板" class="headerlink" title="5. 文本模板"></a>5. 文本模板</h2><p>对于简单的格式化输出，或许使用 <code>fmt.Fprint(...)</code> 就足够了。但如果格式化的是一个足够复杂的段落，这种情况下要求格式和嵌入的数据相互分离。而 Go 的 <code>text/template</code> 包则提供了这个功能 ( 其实 Go 还提供了渲染 HTML 模板的包：<code>text/html</code> ，但是本章暂时不考虑它 ) 。</p>
+<p>这里首先给出一个简单的示例，然后逐步通过代码分析 <code>text/template</code> 提供的功能。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 模板字符串。内部含有占位符 &#123;&#123;.&#125;&#125;</span><br><span class="hljs-keyword">const</span> templ = <span class="hljs-string">`</span><br><span class="hljs-string">		ISSUE:&#123;&#123;.Issue&#125;&#125;</span><br><span class="hljs-string">		AUTHOR:&#123;&#123;.Author&#125;&#125;</span><br><span class="hljs-string">	`</span><br><span class="hljs-comment">// 生成模板。</span><br>parse, err := template.New(<span class="hljs-string">&quot;Hello&quot;</span>).Parse(templ)<br><br><span class="hljs-comment">// 准备插入的数据，这里直接使用了一个匿名结构体。</span><br><span class="hljs-keyword">var</span> data = <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// 注意，这些数据必须是可导出的，否则会在创建模板的过程中出现错误。</span><br>    Issue <span class="hljs-keyword">string</span><br>    Author <span class="hljs-keyword">string</span><br>&#125;&#123;<span class="hljs-string">&quot;Hello,go&quot;</span>,<span class="hljs-string">&quot;me&quot;</span>&#125;<br><br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    <span class="hljs-comment">// 执行模板</span><br>    err := parse.Execute(os.Stdout, data)<br>    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;log.Fatal(err.Error())&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个函数大体上分为三个步骤：定义一个字符串形式的模板，然后通过 <code>text/template</code> 的 <code>Parse(...)</code> 函数创建它，最终通过 <code>Execute(...)</code> 函数执行这个模板，同时将外部数据插入到了模板中。程序最终的执行结果是：</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vbnet"><span class="hljs-symbol">ISSUE:</span>Hello,go<br><span class="hljs-symbol">AUTHOR:</span><span class="hljs-keyword">me</span><br>	<br></code></pre></td></tr></table></figure>
+
+<p>在字符串模板中，形如 <code>&#123;&#123;.XXX&#125;&#125;</code> 的片段起到了 “占位符” 的作用。如 <code>&#123;&#123;.Issue&#125;&#125;</code> 表示：在这个位置，将来会从传入的结构体数据 <code>data</code> 中摘出 <code>Issue</code> 成员的值替代之，<code>&#123;&#123;.Author&#125;&#125;</code> 同理。</p>
+<p><code>template.New(&quot;name&quot;).Parse(templ)</code> 是一串链式调用，首先 <code>New(...)</code> 函数为这个新的模板指定了一个名字，随后 <code>Parse(...)</code> 函数接收刚才定义好的字符串模板，并返回了一个可以被执行的文本模板，还有可能发生的错误 <code>err</code>。</p>
+<p>下一步则是准备好要插值的数据。注意，<strong>模板接收的是一整个结构体变量，因此在这里需要将模板所需要的各种数值打包到一个结构体变量内</strong>。至于这个结构体是什么类型 <code>parse.Execute(...)</code> 函数并不关心，它可以是临时定义的匿名类型，也可以是在外部声明的具名类型。</p>
+<p>这个结构体内部的成员名要和模板的占位符对应，而且要保证这些成员是可以被导出的，否则程序就不能正确地渲染数据。</p>
+<p>上述流程全部就绪后，可以调用 <code>parse.Execute(...)</code> 函数指定输出流 ( 这里选择输出到控制台，标准输出流 <code>os.Stdout</code>) 和刚才准备好的结构体变量 <code>data</code> ，然后得到预期的结果。</p>
+<p>上面是使用文本模板的基本流程，下面补充细节：</p>
+<h3 id="5-1-将函数绑定到模板内"><a href="#5-1-将函数绑定到模板内" class="headerlink" title="5.1 将函数绑定到模板内"></a>5.1 将函数绑定到模板内</h3><p>首先，如果某些<strong>函数具备返回值</strong>，则它们可以被 “安装” 到文本模板中用于渲染数值。这些函数需要被传递到 <code>template.FuncMap</code> 散列表内 ( 在 Go 语言中，函数是一等公民，我们很快就会提到它 )，然后通过调用 <code>Funcs(...)</code> 函数将这个散列表和文本模板绑定起来。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>    <span class="hljs-comment">// 这里的 &#123;&#123;greet&#125;&#125; 相当于调用了 FuncMap[&quot;greet&quot;] 的那个函数。</span><br>	<span class="hljs-keyword">const</span> template_ = <span class="hljs-string">`</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">		&#123;&#123;greet&#125;&#125;</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">    `</span><br><br>	parse, err := template.New(<span class="hljs-string">&quot;evokeFunction&quot;</span>).Funcs(<br>		template.FuncMap&#123;<span class="hljs-string">&quot;greet&quot;</span>: greet&#125;,<br>	).Parse(template_)<br><br>	<span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>		err := parse.Execute(os.Stdout, <span class="hljs-literal">nil</span>)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			log.Fatal(err.Error())<br>		&#125;<br>	&#125;<br><br>&#125;<br><br><span class="hljs-comment">// 这个函数只返回字符串，什么都不做。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">greet</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> &#123;<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;hello,go&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>假定这个函数的执行需要参数，则可以借助管道符号 <code>|</code> 实现参数传递 ( 在 *nix 系统中我们曾经常这么做 ) ：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>    <span class="hljs-comment">// 将访问到的 &#123;&#123;.Name&#125;&#125; 值传给了 FuncMap[&quot;greet&quot;] 函数。</span><br>	<span class="hljs-keyword">const</span> template_ = <span class="hljs-string">`</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">		&#123;&#123;.Name | greet&#125;&#125;</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">	`</span><br><br>	safeParse := template.Must(<br>		template.New(<span class="hljs-string">&quot;newTemplate&quot;</span>).<br>			Funcs(template.FuncMap&#123;<span class="hljs-string">&quot;greet&quot;</span>: greet&#125;).<br>			Parse(template_))<br><br>	data := <span class="hljs-keyword">struct</span>&#123;<br>		Name <span class="hljs-keyword">string</span><br>	&#125;&#123;<span class="hljs-string">&quot;John&quot;</span>&#125;<br><br>	<span class="hljs-keyword">if</span> err := safeParse.Execute(os.Stdout, data);err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(err.Error())<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果一个函数需要更多的参数，笔者的做法是将多个参数绑定到一个结构体再进行整体传递。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	<span class="hljs-keyword">const</span> template_ = <span class="hljs-string">`</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">		&#123;&#123;.GreetArgs | greet&#125;&#125;</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">    `</span><br><br>	safeParse := template.Must(<br>		template.New(<span class="hljs-string">&quot;evokeFunction&quot;</span>).Funcs(<br>			template.FuncMap&#123;<span class="hljs-string">&quot;greet&quot;</span>: greet&#125;,<br>		).Parse(template_),<br>	)<br><br>	data := <span class="hljs-keyword">struct</span> &#123;<br>		GreetArgs <span class="hljs-keyword">struct</span> &#123;<br>			BoyName  <span class="hljs-keyword">string</span><br>			GirlName <span class="hljs-keyword">string</span><br>		&#125;<br>	&#125;&#123;<span class="hljs-keyword">struct</span> &#123;<br>		BoyName  <span class="hljs-keyword">string</span><br>		GirlName <span class="hljs-keyword">string</span><br>	&#125;&#123;BoyName: <span class="hljs-string">&quot;John&quot;</span>, GirlName: <span class="hljs-string">&quot;River&quot;</span>&#125;&#125;<br><br>	<span class="hljs-keyword">if</span> err := safeParse.Execute(os.Stdout, data); err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatal(err.Error())<br>	&#125;<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">greet</span><span class="hljs-params">(args <span class="hljs-keyword">struct</span> &#123;</span></span><br><span class="hljs-function"><span class="hljs-params">	BoyName  <span class="hljs-keyword">string</span></span></span><br><span class="hljs-function"><span class="hljs-params">	GirlName <span class="hljs-keyword">string</span></span></span><br><span class="hljs-function"><span class="hljs-params">&#125;)</span> <span class="hljs-title">string</span></span> &#123;<br>	<span class="hljs-keyword">return</span> fmt.Sprintf(<span class="hljs-string">&quot;hello,%s and %s&quot;</span>, args.BoyName, args.GirlName)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，如果将频繁使用的匿名结构体提取出来并定义为具名结构体，则代码的可读性会更高。</p>
+<h3 id="5-2-“错误拦截器”-template-Must"><a href="#5-2-“错误拦截器”-template-Must" class="headerlink" title="5.2 “错误拦截器”  template.Must"></a>5.2 “错误拦截器”  template.Must</h3><p>由于 <code>Parse(...)</code> 和 <code>Execute(...)</code> 函数都有可能抛出异常，这将迫使程序员通过写嵌套的 <code>if</code> 语句来处理：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// parse,err := .... Parse(...)</span><br><span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>    <span class="hljs-keyword">if</span> err := parse.Execute(os.Stdout, <span class="hljs-literal">nil</span>);err != <span class="hljs-literal">nil</span> &#123;<br>        log.Fatal(err.Error())<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中，由于文本模板通常在编译阶段就被固定下来了，如果 <code>Parse(...)</code> 函数执行出错将是一个严重的程序 BUG 。Go 提供了一个帮助函数 <code>template.Must(...)</code> ，它负责检查执行 <code>Parse(...)</code> 的过程中是否会出现异常，如果是，则程序会结束。如果一切正常，则过滤掉 <code>err</code> ，只返回一个创建成功的模板。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> template_ = <span class="hljs-string">`</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">		&#123;&#123;greet&#125;&#125;</span><br><span class="hljs-string">		===========</span><br><span class="hljs-string">    `</span><br><br>safeParse := template.Must(<br>    template.New(<span class="hljs-string">&quot;evokeFunction&quot;</span>).Funcs(<br>        template.FuncMap&#123;<span class="hljs-string">&quot;greet&quot;</span>: greet&#125;,<br>    ).Parse(template_),<br>)<br><br><span class="hljs-keyword">if</span> err := safeParse.Execute(os.Stdout, <span class="hljs-literal">nil</span>);err != <span class="hljs-literal">nil</span>  &#123;<br>    log.Fatal(err.Error())<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-模板内的循环体"><a href="#5-3-模板内的循环体" class="headerlink" title="5.3 模板内的循环体"></a>5.3 模板内的循环体</h3><p>如果希望模板遍历一个切片数据并渲染每一个元素，需要在文本模板内插入循环语句，这种感觉有点像在 <code>.jsp</code> 中写 EL 表达式。在这个例子中，文本模板渲染的是 <code>[]Employee</code> 类型的结构体切片：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	<span class="hljs-keyword">const</span> temp = <span class="hljs-string">`</span><br><span class="hljs-string">         Author: &#123;&#123;.Name&#125;&#125;</span><br><span class="hljs-string"></span><br><span class="hljs-string">		&#123;&#123;range .Employees&#125;&#125;</span><br><span class="hljs-string">		====================</span><br><span class="hljs-string">		name : &#123;&#123;.Name&#125;&#125;</span><br><span class="hljs-string">		age  : &#123;&#123;.Age&#125;&#125;</span><br><span class="hljs-string">		====================</span><br><span class="hljs-string">		&#123;&#123;end&#125;&#125;</span><br><span class="hljs-string">	`</span><br><br>	employees := []Employee&#123;<br>		&#123;<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-number">25</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;River&quot;</span>,<span class="hljs-number">23</span>&#125;,<br>		&#123;<span class="hljs-string">&quot;NASA&quot;</span>,<span class="hljs-number">30</span>&#125;,<br>	&#125;<br><br>	data := <span class="hljs-keyword">struct</span>&#123;<br>		Employees []Employee<br>		Name <span class="hljs-keyword">string</span><br>	&#125;&#123;employees,<span class="hljs-string">&quot;Li&quot;</span>&#125;<br><br>	err := template.Must(template.New(<span class="hljs-string">&quot;aTest&quot;</span>).Parse(temp)).<br>		Execute(os.Stdout, data)<br><br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;log.Fatal(err.Error())&#125;<br><br>&#125;<br><br><span class="hljs-keyword">type</span> Employee <span class="hljs-keyword">struct</span> &#123;<br>	Name <span class="hljs-keyword">string</span><br>	Age <span class="hljs-keyword">int</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在文本模板内，通过 <code>&#123;&#123;range ...&#125;&#125;</code> 展开了一个循环体，它以 <code>&#123;&#123;end&#125;&#125;</code> 作为结尾。首先，<code>range .Employees</code> 表明了它遍历的是 <code>data</code> 数据内的 <code>[]Employee</code> 切片，其次，该循环体内部的 <code>&#123;&#123;.Name&#125;&#125;</code> 指代的将是 “切片内每一个 <code>Employee</code> 数据的 <code>Name</code> 成员”，而非单指 <code>data</code> 数据内的 <code>.Name</code> 成员。</p>
+<p>因此，运行此程序，控制台打印的结果将是：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-code">       Author: Li</span><br><br><br>====================<br>name : John<br>age  : 25<br>====================<br><br>====================<br>name : River<br>age  : 23<br>====================<br><br>====================<br>name : NASA<br>age  : 30<br>====================<br></code></pre></td></tr></table></figure>
+
+
+
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/03/17/Go-%E4%BA%8C-%E5%A4%8D%E5%90%88%E6%95%B0%E6%8D%AE/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;17&#x2F;Go-%E4%BA%8C-%E5%A4%8D%E5%90%88%E6%95%B0%E6%8D%AE&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;17&#x2F;Go-%E4%BA%8C-%E5%A4%8D%E5%90%88%E6%95%B0%E6%8D%AE&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/03/17/Go-%E4%B8%89-%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95/"><i class="iconfont iconleft"></i>Go: (三)函数与方法</a>
+    <a href="/2021/03/15/Go%20(%E4%B8%80)%20%E5%85%A5%E9%97%A8/">Go: (一)入门<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E5%A4%8D%E5%90%88%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">第四章 复合数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%95%B0%E7%BB%84"><span class="toc-text">1. 数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%87%E7%89%87"><span class="toc-text">2. 切片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-append-%E5%87%BD%E6%95%B0"><span class="toc-text">2.1 append 函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%95%A3%E5%88%97%E8%A1%A8-map"><span class="toc-text">3. 散列表 map</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%B3%A8%E6%84%8F%E5%88%9D%E5%A7%8B%E5%8C%96%E9%97%AE%E9%A2%98"><span class="toc-text">3.1 注意初始化问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%9C%89%E5%85%B3%E6%95%A3%E5%88%97%E8%A1%A8%E7%9A%84%E6%9F%A5%E6%89%BE%E5%88%A0%E9%99%A4"><span class="toc-text">3.2 有关散列表的查找删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%9C%89%E5%BA%8F%E9%81%8D%E5%8E%86-map-%E6%95%A3%E5%88%97%E8%A1%A8%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="toc-text">3.3 有序遍历 map 散列表的思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%B0%86%E4%B8%8D%E5%8F%AF%E6%AF%94%E8%BE%83%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%AE%BE%E7%BD%AE%E4%B8%BA-Key-%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="toc-text">3.4 将不可比较的类型设置为 Key 的思路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-text">3.5 结构体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-1-%E7%BB%93%E6%9E%84%E4%BD%93%E6%88%90%E5%91%98%E7%9A%84%E5%8F%AF%E5%AF%BC%E5%87%BA%E6%80%A7"><span class="toc-text">3.5.1 结构体成员的可导出性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-2-%E7%BB%93%E6%9E%84%E4%BD%93%E8%B5%8B%E5%80%BC"><span class="toc-text">3.5.2 结构体赋值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-3-%E5%9C%A8%E5%87%BD%E6%95%B0%E4%B8%AD%E4%BC%A0%E9%80%92%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-text">3.5.3 在函数中传递结构体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-4-%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E5%8F%AF%E6%AF%94%E8%BE%83%E6%80%A7"><span class="toc-text">3.5.4 结构体的可比较性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-5-%E7%BB%93%E6%9E%84%E4%BD%93%E5%B5%8C%E5%A5%97%E7%BB%93%E6%9E%84%E5%92%8C%E5%8C%BF%E5%90%8D%E6%88%90%E5%91%98"><span class="toc-text">3.5.5 结构体嵌套结构和匿名成员</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-JSON"><span class="toc-text">4. JSON</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Go-to-JSON"><span class="toc-text">Go to JSON</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%A0%87%E7%AD%BE%E5%AE%9A%E4%B9%89"><span class="toc-text">成员标签定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON-to-Go"><span class="toc-text">JSON to Go</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%96%87%E6%9C%AC%E6%A8%A1%E6%9D%BF"><span class="toc-text">5. 文本模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%B0%86%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A%E5%88%B0%E6%A8%A1%E6%9D%BF%E5%86%85"><span class="toc-text">5.1 将函数绑定到模板内</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E2%80%9C%E9%94%99%E8%AF%AF%E6%8B%A6%E6%88%AA%E5%99%A8%E2%80%9D-template-Must"><span class="toc-text">5.2 “错误拦截器”  template.Must</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%A8%A1%E6%9D%BF%E5%86%85%E7%9A%84%E5%BE%AA%E7%8E%AF%E4%BD%93"><span class="toc-text">5.3 模板内的循环体</span></a></li></ol></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>

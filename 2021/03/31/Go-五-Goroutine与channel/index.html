@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Go: (五)Goroutine &amp; Channel - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="Go 提供 goroutine ( 函数体 ) 和 c...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Go: (五)Goroutine &amp; Channel</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/go_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Go: (五)Goroutine &amp; Channel</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>March 31, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/03/31/Go-%E4%BA%94-Goroutine%E4%B8%8Echannel/" class="leancloud" data-flag-title="Go: (五)Goroutine & Channel"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>25591</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <p>Go 提供 <code>goroutine</code> ( 函数体 ) 和 channel ( 通道 ) 来供程序员进行并发编程。在其它语言中很难通过开辟上千个线程来建立一个庞大的系统，但在 Go 语言中，我们可以轻松创建十万，百万乃至千万级别的 <code>goroutine</code> 去执行并发任务。Go 非常提倡基于 CSP ( Communicating Sequential Process，顺序通信模型 ) 理论实现并发 ( 见第八章 ) ，但也提供传统的锁模式实现多 <code>goroutine</code> 之间的数据共享 ( 见第九章 ) 。</p>
+<h1 id="第八章-Goroutine-amp-通道"><a href="#第八章-Goroutine-amp-通道" class="headerlink" title="第八章 Goroutine  &amp; 通道"></a>第八章 Goroutine  &amp; 通道</h1><blockquote>
+<p>Go 箴言 —— 不要通过共享内存来通信，通过通信来共享内存。</p>
+</blockquote>
+<h2 id="8-1-Goroutine-amp-go-关键字"><a href="#8-1-Goroutine-amp-go-关键字" class="headerlink" title="8.1 Goroutine &amp; go 关键字"></a>8.1 Goroutine &amp; go 关键字</h2><p>如果有两个函数调用互不依赖，则意味这两个调用可以 <strong>并发</strong> 进行。在这里，可以将 Go 语言的 Goroutine 视作是 mini 版 “线程” ( 但实际上，<code>goroutine</code> 和线程存在非常大的数量差别，详见第 9 章 ) 。</p>
+<p>在程序启动时，会有一个 <code>goroutine</code> 运行 <code>main</code> 函数，它被称之为主 <code>goroutine</code> 。如果要另启一个新的 <code>goroutine</code>，这只需要在一系列函数调用之前加上一个 <code>go</code> 关键字。和 <code>defer</code> 一样，<code>go</code> 关键字后面必须跟上一个函数调用，不过你可以将一个 <code>func()&#123;...&#125;()</code> 视作是将要被执行的一段语句块。</p>
+<p>在下面的例子中，主函数以低效率的方式计算斐波那契数列，而在另一个 <code>goroutine</code> 当中输出一些信息表示系统仍然在运行 ( 因此这两个工作是同时进行的 ) 。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fibonacci</span><span class="hljs-params">(x <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-comment">//return fib(x, 1, 1)</span><br>	<span class="hljs-keyword">return</span> slowFib(x)<br>&#125;<br><br><span class="hljs-comment">// 这种计算方式会传递计算结果，并且是尾递归，效率非常高。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fib</span><span class="hljs-params">(n, left, right <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">switch</span> &#123;<br>	<span class="hljs-keyword">case</span> n &lt; <span class="hljs-number">2</span>:<br>		<span class="hljs-keyword">return</span> left<br>	<span class="hljs-keyword">default</span>:<br>		<span class="hljs-keyword">return</span> fib(n<span class="hljs-number">-1</span>, right, left+right)<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// 这种计算方式做了大量重复计算，因此效率非常低。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">slowFib</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">switch</span> &#123;<br>	<span class="hljs-keyword">case</span> n &lt; <span class="hljs-number">2</span>:<br>		<span class="hljs-keyword">return</span> n<br>	<span class="hljs-keyword">default</span>:<br>		<span class="hljs-keyword">return</span> slowFib(n<span class="hljs-number">-1</span>) + slowFib(n<span class="hljs-number">-2</span>)<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	<span class="hljs-comment">// 相当于创建了一个 Thread, 然后直接 start().</span><br>	<span class="hljs-comment">// 这个 goroutine 独立于主 goroutine 运行。</span><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>		<span class="hljs-keyword">for</span> &#123;<br>			fmt.Print(<span class="hljs-string">&quot;still running...\n&quot;</span>)<br>			time.Sleep(<span class="hljs-number">250</span> * time.Millisecond)<br>		&#125;<br>	&#125;()<br><br>	<span class="hljs-comment">// 主 goroutine 会持续计算</span><br>	fmt.Print(fibonacci(<span class="hljs-number">46</span>))<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，一旦 <code>main</code> 函数执行完毕并返回，所有的 <code>goroutine</code> 都会被强制结束。所以在本文测试一些代码时，不要忘记使用 <code>time.Sleep(...)</code> 或者 <code>func&#123;&#125;</code> 将主 <code>goroutine</code> 挂起或另其空转。</p>
+<h2 id="8-2-通道"><a href="#8-2-通道" class="headerlink" title="8.2 通道"></a>8.2 通道</h2><p>通道是连接 <code>goroutine</code> 之间的桥梁，每一个通道是一个具体类型的导管，称为通道的元素类型。通道的关键字是 <code>chan</code>，下面借助 <code>make</code> 函数创建了一个元素类型为 <code>int</code>  的 <code>chan</code> 。</p>
+<p>和 <code>map</code> 散列表相同，<code>make</code> 函数返回的是某个 <code>chan</code> 引用本身。当它被复制或者被传入到某个函数时，调用者和被调用者实际上得到的都是同一个引用。通道的零值是 <code>nil</code>，且通道之间是可以比较的：这仅需要判断两个通道是不是指向同一个引用。</p>
+<h3 id="8-2-1-建立双向通道"><a href="#8-2-1-建立双向通道" class="headerlink" title="8.2.1 建立双向通道"></a>8.2.1 建立双向通道</h3><p>通道的用途有两个：发送 ( Send ) 消息，或者接收 ( Receive ) 消息，这两个操作统称为 <strong>通信</strong>。Go 语言引入了 <code>&lt;-</code> 符号来形象地表述通信：<code>ch &lt;- x</code> 表示将值 <code>x</code> 发送到通道 <code>ch</code> ，这个表达式可理解成是一个调用；<code>&lt;-ch</code> 则表示从通道 <code>ch</code> 中接收消息，这个表达式的返回值是通道的元素类型。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs go">ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br><span class="hljs-comment">// 在另一个 goroutine 中可以像该 int chan 发送指定类型的消息。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-comment">// do something....</span><br>	<span class="hljs-keyword">var</span> x = <span class="hljs-number">100</span><br>	<br>	<span class="hljs-comment">// 表示将变量 x 的值发送到 ch.</span><br>	ch &lt;- x<br><br>&#125;()<br><br><span class="hljs-comment">// 在另一个 goroutine 中可以接收 int chan 接收指定类型的消息。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// 表示将 ch 通道的取值赋值给 y.</span><br>    <span class="hljs-keyword">var</span> y = &lt;- ch<br>    fmt.Print(y)<br>&#125;()<br><br><span class="hljs-comment">// 这个 goroutine 没有消息可以接收。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// 该 goroutine 运行到这里之后会陷入阻塞。</span><br>    <span class="hljs-keyword">var</span> y = &lt;- ch<br>    <br>    <span class="hljs-comment">// 这条 string 永远不会被打印在控制台。</span><br>	fmt.Printf(<span class="hljs-string">&quot;get a new message! %v&quot;</span>,y)<br>&#125;()<br><br><span class="hljs-comment">// 注意，主 goroutine 一旦退出，所有任务都会结束，因此这里要尝试阻塞它。</span><br>fmt.Print(fibonacci(<span class="hljs-number">46</span>))<br></code></pre></td></tr></table></figure>
+
+<p>注意，调用 <code>&lt;-ch</code> 即<strong>意味着消费数据 ( 不管有没有使用它 )</strong> ，且每条消息只能被 <strong>消费一次</strong> 。在这个例子中，第一个 <code>goroutine</code> ( 称它是 “生产者” <code>goroutine</code> ) 发送的 <code>100</code> 已经被另一个 “消费者”  <code>goroutine</code> 接收。此时如果又有一个 “消费者” <code>goroutine</code> 调用了 <code> &lt;- ch</code> ，那么它将<strong>陷入阻塞状态</strong>，直到有其它的 <code>goroutine</code> 向这个 <code>ch</code> 发送了新的消息之后，才会执行读取语句。</p>
+<p>顺带一提，可以从通道中只取值而不处理，<strong>只是这一条消息会被丢弃</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// 从通道中取值，但是不做处理。</span><br>    &lt;- ch<br>	<span class="hljs-comment">// ...</span><br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>同样，如果 “生产者” <code>goroutine</code> 向 <code>ch</code> 通道发送消息却没有 “消费者” 处理，则<strong>它就不会发送这条消息</strong> ( 这很重要，见后文的缓冲通道 )。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// 这条消息 &quot;无人处理&quot;</span><br>    ch &lt;- <span class="hljs-number">100</span><br><br>    <span class="hljs-comment">// 导致这条消息被阻塞。</span><br>    ch &lt;- <span class="hljs-number">101</span><br>    fmt.Print(<span class="hljs-string">&quot;程序不会执行到这里。&quot;</span>)<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>目前创建的通道没有缓冲空间，<code>ch</code> 只支持 “现发现取”，所以导致任何一方想要发送 / 接收消息时，需要保证旧的消息<strong>已经</strong>被取走 / 新的消息<strong>已经</strong>到达，如果不满足条件，则会陷入阻塞状态。因此，没有缓冲空间的通道又被称之为 <strong>同步通道</strong> 。</p>
+<p>两个 <code>goroutine</code> X，Y 如果使用同步通道收发消息，通常意味着 X，Y 的执行存在着严格的前后顺序。比如 Y 必须等到 X 输入变量之后才可以继续运行，或者说 X 必须先于 Y 处理好某个变量并传递。另一种情况是，它们正以<strong>串行受限</strong>地方式交互某个受 “同步锁” 保护的共享变量。</p>
+<p>如果 X，Y 没有 ( 或无法描述 ) 执行的先后顺序，那么 X 和 Y 就是<strong>并发</strong>的。我们也会将通信中的每一条消息称作是事件 ( events ) 。当然，通信可以不携带其它信息，仅使用通信动作本身来代表一个任务的完成。</p>
+<h3 id="8-2-2-管道"><a href="#8-2-2-管道" class="headerlink" title="8.2.2 管道"></a>8.2.2 管道</h3><p><code>goroutine</code> 之间可以通过 <code>chan</code> 串联起来，从而形成连贯的流水线。这个流水线也可以被称之为 “管道” ( Pipeline ) 。比如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs go">from := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br>to := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br><br><span class="hljs-comment">// 将这个 goroutine 命名为 producer.</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++ &#123;<br>        from &lt;- i<br>        log.Printf(<span class="hljs-string">&quot;sent message &#123;%d&#125; to channel [from].&quot;</span>, i)<br>    &#125;<br>&#125;()<br><br><span class="hljs-comment">// 将这个 goroutine 命名为 consumer.</span><br><span class="hljs-comment">// 它将 from 接收的值 x2 之后输入到 to 通道中。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">for</span> &#123;<br>        i := &lt;-from * <span class="hljs-number">2</span><br>        to &lt;- i<br>        log.Printf(<span class="hljs-string">&quot;convert message to &#123;%d&#125; and send to channel [to]&quot;</span>, i)<br><br>    &#125;<br>&#125;()<br><br><span class="hljs-comment">// 将这个 goroutine 命名为 printer.</span><br><span class="hljs-comment">// 它输出 to 通道的消息。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">for</span> &#123;<br>        log.Printf(<span class="hljs-string">&quot;message from channel [to]:&#123;%d&#125;&quot;</span>, &lt;-to)<br>    &#125;<br>&#125;()<br><br><span class="hljs-comment">// 阻塞主 goroutine</span><br>time.Sleep(<span class="hljs-number">500</span> * time.Second)<br></code></pre></td></tr></table></figure>
+
+<p>三个 <code>goroutine</code> 之间有两个通道 <code>from</code> 和 <code>to</code> ( 这个命名是以 consumer 的角度出发的 ) 。程序整体运行起来没有什么问题，只不过我们希望做进一步完善：比如：consumer 不应该向 <code>from</code> 通道 “回送” 消息，也不应该向 <code>to</code> 通道 “撤回” 消息。</p>
+<h3 id="8-2-3-通过形参列表约束单向通道"><a href="#8-2-3-通过形参列表约束单向通道" class="headerlink" title="8.2.3 通过形参列表约束单向通道"></a>8.2.3 通过形参列表约束单向通道</h3><p>限制通道的流向是<strong>在函数的形参列表</strong>上进行的。”只发” 和 “只取” 的通道在写法上存在差异：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// chan &lt;- int 表示这是一个只发通道，它对应了在双向通道中的发送动作。</span><br><span class="hljs-comment">// &lt;-chan int  表示这是一个只收通道，它对应了在双向通道中的接收动作。</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">pipeline</span><span class="hljs-params">(out <span class="hljs-keyword">chan</span> &lt;- <span class="hljs-keyword">int</span>,in &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)</span></span>&#123;<br>	<span class="hljs-comment">// 如果在函数体内错误使用了单向通道，则会在编译期检查出来。</span><br>	out &lt;- <span class="hljs-number">100</span><br>	&lt;- in<br>	<br>	<span class="hljs-comment">// 错误的用法:</span><br>	&lt;- out<br>	in &lt;- <span class="hljs-number">100</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>双向通道 ( 比如 <code>chan int</code> ) 会通过隐式转换兼容 “只发” ( <code>chan &lt;- int</code> ) 或者 “只取” ( <code>&lt;-chan int</code>) 的通道类型。但反过来，单向通道不能再切换成双向通道。</p>
+<h3 id="8-2-4-缓冲通道"><a href="#8-2-4-缓冲通道" class="headerlink" title="8.2.4 缓冲通道"></a>8.2.4 缓冲通道</h3><p>可以通过 <code>make</code> 函数主动设置通道的<strong>容量</strong>。当容量为 0 时，缓冲通道会退化为同步通道。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//  在 make 函数后面传入第二个参数表示创建带长度的缓冲通道。</span><br>bufChannel := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">string</span>,<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>同步通道和长度为 1 的非缓冲通道之间是存在差别的</strong>。前文提到，对于同步通道而言，当 “生产者” 发现没有任何 “消费者” 能够接收这条消息时，”生产者” 就<strong>不会发送消息</strong> 并立刻阻塞。而对于长度为 1 的非缓冲通道而言，”生产者” 只有在<strong>准备发送第二条消息</strong>的时候才会开始检查：如果没有 “消费者” ，则等待并阻塞。</p>
+<p>当生产者向通道发送消息时，通道的长度加一。同样的，当消费者从通道获取消息时，通道的长度减一。当通道的长度小于容量时，双方可以不受阻塞地收发消息。从逻辑来看，可以将双向通道看作是 FIFO 的队列。</p>
+<p>现在，使用 <code>cap(bufChannel)</code> 可以查询缓冲通道的<strong>容量</strong>，使用 <code>len(bufChannel)</code> 可以查询某个缓冲通道在某一刻的<strong>长度</strong>。不过，如果一个程序是持续运行的，且处理消息的速度非常迅速，那么长度通常都是浮动的 —— 大部分情况下仅捕获一次长度都没有太大意义，建议捕获多次长度，并通过统计的形式来判断缓冲通道的容量是否设置得合理。</p>
+<p>下面的代码块演示了两个几乎是并发执行的两个 <code>goroutine</code>。由于这个程序是 “一次执行” 的，因此 consumer 在通过 <code>len</code> 察觉到通道内没有新消息之后会返回。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs go">ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">3</span>)<br><br><span class="hljs-comment">// producer</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>   ch &lt;- <span class="hljs-number">1</span><br>   ch &lt;- <span class="hljs-number">2</span><br>   ch &lt;- <span class="hljs-number">3</span><br>&#125;()<br><br><span class="hljs-comment">// consumer</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>   <span class="hljs-comment">// 不能让它在第一个 goroutine 之前运行，否则它会直接退出</span><br>   <span class="hljs-comment">// 因此在这里设置了少量延迟。</span><br>   time.Sleep(<span class="hljs-number">10</span> * time.Millisecond)<br><br>   <span class="hljs-keyword">for</span> &#123;<br>      <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(ch) == <span class="hljs-number">0</span> &#123;<span class="hljs-keyword">break</span>&#125;<br>      fmt.Print(&lt;-ch,<span class="hljs-string">&quot;\n&quot;</span>)<br>   &#125;<br>&#125;()<br><br>time.Sleep(<span class="hljs-number">20</span> * time.Second)<br></code></pre></td></tr></table></figure>
+
+<h3 id="8-2-5-谨防-Goroutine-泄漏"><a href="#8-2-5-谨防-Goroutine-泄漏" class="headerlink" title="8.2.5 谨防 Goroutine 泄漏"></a>8.2.5 谨防 Goroutine 泄漏</h3><p>下面的代码创建三个 <code>goroutine</code> 同时向 Baidu，Github，Gitee 三个站点发出请求，但是该函数最终只会返回最先收到的响应。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">cdn</span><span class="hljs-params">()</span> *<span class="hljs-title">http</span>.<span class="hljs-title">Response</span></span>&#123;<br><br>	resp := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> *http.Response)<br><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		get, err := http.Get(<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>)<br>		<span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>			resp &lt;- get<br>			fmt.Printf(<span class="hljs-string">&quot;baidu 请求完毕&quot;</span>)<br>		&#125;<br>	&#125;()<br><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		get, err := http.Get(<span class="hljs-string">&quot;https://www.github.com&quot;</span>)<br>		<span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>			resp &lt;- get<br>			fmt.Printf(<span class="hljs-string">&quot;github 请求完毕&quot;</span>)<br>		&#125;<br>	&#125;()<br><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		get, err := http.Get(<span class="hljs-string">&quot;https://www.gitee.com&quot;</span>)<br>		<span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>			resp &lt;- get<br>			fmt.Printf(<span class="hljs-string">&quot;gitee 请求完毕&quot;</span>)<br>		&#125;<br>	&#125;()<br>    <br>	<span class="hljs-keyword">return</span> &lt;-resp<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从表面上看，调用这个函数不会出现任何问题。但是它的 Bug 是内在的：一旦有任意一个请求返回，意味着 <code>cdn()</code> 函数将立刻返回并退栈。这对那两个稍慢的 <code>goroutine</code> 而言，没有后续的其它 <code>goroutine</code> 接收它们的消息，因此它们会被一直阻塞到主程序退出。调用 <code>cdn()</code> 函数，可以观察到，直到主程序运行完毕，控制台只会打印一行 “XXX 请求完毕”。</p>
+<p>这种现象称之为 <code>goroutine</code> 泄漏。这两个泄漏的 <code>goroutine</code> 不会被垃圾回收器回收。对于这个例子而言，有两种方法可以避免 <code>goroutine</code> 泄漏：</p>
+<p>第一种思路：任何一方在抢先发送消息之后调用 <code>close(resp)</code> ( 见后文 ) 禁止其它方再次发送，这里依赖原生的同步通道确保同一时刻只有一条消息发送成功。后来的两个 <code>goroutine</code> 一旦尝试发送消息，则会陷入宕机而非阻塞 —— 这个宕机是预期的，这只需要在延迟调用中恢复状态，然后让它们 “若无其事” 地退出即可。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">cdn</span><span class="hljs-params">()</span> *<span class="hljs-title">http</span>.<span class="hljs-title">Response</span></span>&#123;<br><br>   resp := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> *http.Response)<br><br>   <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>       <br>      <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>         <span class="hljs-built_in">recover</span>()<br>         fmt.Printf(<span class="hljs-string">&quot;其它 goroutine 已经获得了响应，routine1 退出。&quot;</span>)<br>      &#125;()<br><br>      get, err := http.Get(<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>)<br>      <span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>         resp &lt;- get<br>         fmt.Printf(<span class="hljs-string">&quot;baidu 请求完毕&quot;</span>)<br>         <span class="hljs-built_in">close</span>(resp)<br>      &#125;<br>   &#125;()<br><br>   <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br><br>      <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>         <span class="hljs-built_in">recover</span>()<br>         fmt.Printf(<span class="hljs-string">&quot;其它 goroutine 已经获得了响应，routine2 退出。&quot;</span>)<br>      &#125;()<br><br>      get, err := http.Get(<span class="hljs-string">&quot;https://www.github.com&quot;</span>)<br>      <span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>         resp &lt;- get<br>         fmt.Printf(<span class="hljs-string">&quot;github 请求完毕&quot;</span>)<br>         <span class="hljs-built_in">close</span>(resp)<br>      &#125;<br>   &#125;()<br><br>   <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br><br>      <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>         <span class="hljs-built_in">recover</span>()<br>         fmt.Printf(<span class="hljs-string">&quot;其它 goroutine 已经获得了响应，routine3 退出。&quot;</span>)<br>      &#125;()<br><br>      get, err := http.Get(<span class="hljs-string">&quot;https://www.gitee.com&quot;</span>)<br>      <span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>         resp &lt;- get<br>         fmt.Printf(<span class="hljs-string">&quot;gitee 请求完毕&quot;</span>)<br>         <span class="hljs-built_in">close</span>(resp)<br>      &#125;<br>   &#125;()<br><br>   <span class="hljs-keyword">return</span> &lt;-resp<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第二种思路是：将 <code>resp</code> 设置为容量为 3 的缓冲通道，然后确保所有的 <code>goroutine</code> 都能运行完毕。这里还引入了 <code>sync.WaitGroup</code> ，它可被认为是一个 “多 <code>goroutine</code> 安全” 的信号量。在每个子调用的开头和结尾分别埋下 <code>Add(1)</code> 和 <code>Done()</code> ，表示进入 <code>goroutine</code> 时将信号量 + 1，然后在退出时将信号量 - 1。</p>
+<p>对它们的父调用 <code>cdn()</code> 而言，如果信号量非 0 就意味着有些子调用没有完成。这时可以通过调用 <code>Wait()</code> 令父调用阻塞，直到后续的 <code>goroutine</code> 完成并最终将信号量重新置 0 为止。为了不耽误 <code>cdn()</code> 正常返回结果，在这里不妨将它交给另一个 <code>goroutine</code> 独立完成。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">cdn2</span><span class="hljs-params">()</span> *<span class="hljs-title">http</span>.<span class="hljs-title">Response</span></span> &#123;<br><br>    resp := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> *http.Response,<span class="hljs-number">3</span>)<br>    <span class="hljs-keyword">var</span> mu sync.WaitGroup<br><br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-comment">// 进入 goroutine 时信号量 +1，退出 goroutine 时信号量 -1。</span><br>        mu.Add(<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">defer</span> mu.Done()<br><br>        get, err := http.Get(<span class="hljs-string">&quot;https://www.baidu.com&quot;</span>)<br>        <span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>            resp &lt;- get<br>            fmt.Printf(<span class="hljs-string">&quot;baidu 请求完毕&quot;</span>)<br>        &#125;<br>    &#125;()<br><br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br><br>        <span class="hljs-comment">// 进入 goroutine 时信号量 +1，退出 goroutine 时信号量 -1。</span><br>        mu.Add(<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">defer</span> mu.Done()<br><br>        get, err := http.Get(<span class="hljs-string">&quot;https://www.github.com&quot;</span>)<br>        <span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>            resp &lt;- get<br>            fmt.Printf(<span class="hljs-string">&quot;github 请求完毕&quot;</span>)<br>        &#125;<br>    &#125;()<br><br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br><br>        <span class="hljs-comment">// 进入 goroutine 时信号量 +1，退出 goroutine 时信号量 -1。</span><br>        mu.Add(<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">defer</span> mu.Done()<br><br>        get, err := http.Get(<span class="hljs-string">&quot;https://www.gitee.com&quot;</span>)<br>        <span class="hljs-keyword">if</span> err == <span class="hljs-literal">nil</span> &#123;<br>            resp &lt;- get<br>            fmt.Printf(<span class="hljs-string">&quot;gitee 请求完毕&quot;</span>)<br>        &#125;<br>    &#125;()<br><br><br>    <span class="hljs-keyword">defer</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-comment">// 直接调用 mu.Wait() 会使函数等到所有的响应之后才返回，</span><br>        <span class="hljs-comment">// 对于该函数的预期功能而言，这没有必要。</span><br>        <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>            mu.Wait()<br>            fmt.Printf(<span class="hljs-string">&quot;剩下的请求也处理完毕。&quot;</span>)<br>            <span class="hljs-built_in">close</span>(resp)<br>        &#125;()<br>    &#125;()<br><br>    <span class="hljs-keyword">return</span> &lt;-resp<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="8-2-6-缓冲通道与同步通道的选择"><a href="#8-2-6-缓冲通道与同步通道的选择" class="headerlink" title="8.2.6 缓冲通道与同步通道的选择"></a>8.2.6 缓冲通道与同步通道的选择</h3><p>如何选择这两类通道，以及缓冲通道的长度都会对程序的性能造成影响。一句话概括就是：”缓冲通道” 不总是银弹。</p>
+<p>同步通道提供了强制性的同步保障，在一次 “发送” 必须强制对应一次 “接收” 的场合会很有用，比如 HTTP/1.1 协议中的阻塞队列，浏览器必须要等待上一个请求拿到响应之后才会继续发送下一个请求。</p>
+<p>而在 “流水线” 式的管道中，”发送” 和 “接收” 通常都是分离的，此时用缓冲通道则更加适合。假定 X 是 Y 的上游 worker，则 X 只管将处理好的数据存取到缓冲通道留给 Y 去处理，X 就可以继续处理它的上游 worker 发送给它的新数据了—— 这对于 Y 也一样。</p>
+<p>并且，当 X 和 Y 的处理效率存在一定差异时，缓冲通道为慢的一方争取到了工作时间。比如 X 的生产速度更快，则较长的缓冲通道让 X 不至于因阻塞而 “无事可做”，流水线的所有结点都能保持 “持续工作” 的状态。</p>
+<p>但如果 X 和 Y 的处理效率存在巨大差异，则缓冲通道在大部分时间要么占满 ( X 的效率 &gt;&gt; Y 的效率 )，要么全空 ( Y 的效率 &gt;&gt; X 的效率 )。此时节点之间就又退化到了同步阻塞的状态。此时的解决方法应当是通过创建更多的 workers 平衡工作上的效率差异，而不是一味地扩增缓冲通道的容量 ( 这只是延缓了阻塞的时机，不能解决根本问题 ) 。</p>
+<h3 id="8-2-7-通道关闭"><a href="#8-2-7-通道关闭" class="headerlink" title="8.2.7 通道关闭"></a>8.2.7 通道关闭</h3><p>更加正式的做法是：当生产者认为已经没有新消息要发送之后，它会调用 <code>close(...)</code> 主动关闭通道的发送端 —— 这句话的意思是，通道虽然被标记为 <code>closed</code>，但它仍然是可用的 ( 考虑到还在忙碌的消费者 )，只不过后续再向该通道发送消息会引发<strong>宕机</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go">ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>, <span class="hljs-number">3</span>)<br><br><span class="hljs-comment">// producer</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    ch &lt;- <span class="hljs-number">1</span><br>    ch &lt;- <span class="hljs-number">2</span><br>    ch &lt;- <span class="hljs-number">3</span><br>    <span class="hljs-comment">// 关闭通道。</span><br>    <span class="hljs-built_in">close</span>(ch)<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>同散列表 <code>map</code> 类似，消费者在接收消息时可以获取两个值：第一个值是消息本身，第二个 <code>bool</code> 值代表：”这个通道还有待处理的消息，不管该通道有没有被真的关闭，<strong>它还有用</strong>“。如果它的值是 <code>false</code>，则表明 “继续从这个通道读取消息没有意义”，伴随的则是消息类型的零值。</p>
+<p>对于消费者而言：<strong>一个被关闭的通道永远是可读的</strong>，它会不受阻塞地读取通道的剩余消息，或者是消息的零值和一个 <code>false</code> 。因此如果不加以控制，消费者将陷入死循环。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// consumer</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 不能让它在第一个 goroutine 之前运行，否则它会直接退出</span><br>    <span class="hljs-comment">// 因此在这里设置了少量延迟。</span><br>    time.Sleep(<span class="hljs-number">10</span> * time.Millisecond)<br><br>    <span class="hljs-keyword">for</span> &#123;<br>        <span class="hljs-comment">// 通过 hasMore 变量判断是否还有要处理的消息</span><br>        i,hasMore := &lt;-ch<br>        <span class="hljs-keyword">if</span> !hasMore &#123;<span class="hljs-keyword">break</span>&#125;<br>        fmt.Print(i,<span class="hljs-string">&quot;\n&quot;</span>)<br>    &#125;<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>只有消息的生产者 ( 或者称 “发送者” ) 应当掌握着关闭通道的权利 —— 在双向通道中，消费者如果 “任性地” 关闭了通道，那会极易导致生产者在发送新消息时意外宕机，而这样的高风险代码却不会在编译期间被检查出来。</p>
+<p>在单向通道中，这个约束会更加严格：如果消费者尝试去关闭来自上游的 “只收” 通道，那么这个错误在编译期间就会检查出来。</p>
+<h2 id="8-3-Select-多路复用"><a href="#8-3-Select-多路复用" class="headerlink" title="8.3 Select 多路复用"></a>8.3 Select 多路复用</h2><p>假定某一个 Job 有多个worker，不同的 worker 使用独立的通道向主 <code>goroutine</code> ( 或者其它某个 listener <code>goroutine</code> ) 进行消息交互。</p>
+<p>遗憾的是，由于代码是顺序执行的，因此 listener 无论决定先专注于监听哪一个 worker ，都会导致其它的 worker 被阻塞。在下面的代码块中，由于 listener 首先阻塞式等待 <code>&lt;- ch1</code> 发送的消息 ( 有 5 秒的延迟 ) ，导致 worker2 的消息处理被推迟，这 5 秒钟的时间被 listener 浪费掉了。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go">ch1 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br>ch2 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br><br><span class="hljs-comment">// worker1</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    time.Sleep(<span class="hljs-number">5</span> * time.Second)<br>    ch1 &lt;- <span class="hljs-number">1</span><br>&#125;()<br><br><span class="hljs-comment">// worker2</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    ch2 &lt;- <span class="hljs-number">1</span><br>&#125;()<br><br><span class="hljs-comment">//listener</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// 阻塞式等待接收 worker1 发来的同步信号</span><br>    &lt;- ch1<br>    fmt.Print(<span class="hljs-string">&quot;worker1 has done.\n&quot;</span>)<br>    <span class="hljs-comment">// 在收到 ch1 的信后之后，再等待接收 worker2 发来的同步信号</span><br>    &lt;- ch2<br>    fmt.Print(<span class="hljs-string">&quot;worker2 has done.\n&quot;</span>)<br>&#125;()<br><br><span class="hljs-comment">// 阻塞主进程</span><br>time.Sleep(<span class="hljs-number">10</span> * time.Second)<br></code></pre></td></tr></table></figure>
+
+<p>如果期望 listener 是 “高响应” 的，直接的办法是创建和 workers 等数量的 listeners 。显然，这大概率会直接创建出一大批闲置并阻塞的 <code>goroutine</code>，也会造成资源的浪费。</p>
+<p>一个改进方式是：不妨建立一个哨兵 selector，它专门以轮询的形式监听各个通道，当监听到某个通道有新消息之后再创建新的 <code>goroutine</code> 去处理即可。这样，只需要一个阻塞式的 selector 就能同时监听多个通道的消息，并且只会在所有通道都没有新消息的情况下进入阻塞。</p>
+<p>这种思路称之为阻塞式<strong>多路复用</strong>，曾被用于各大 OS 内核的线程管理。在 Go 语言中，具体的实现是：使用 <code>select</code> ( 它的语法很像 <code>switch</code> ) 语句来注册多个通道，然后包裹一层 <code>for</code> 循环来实现持续轮询。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>   <span class="hljs-keyword">for</span> &#123;<br>      <span class="hljs-comment">// 一次 select 只会执行一个语句。 </span><br>      <span class="hljs-keyword">select</span> &#123;<br>      <span class="hljs-keyword">case</span> &lt;-ch1: <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;worker1 has done.&quot;</span>)&#125;()<br>      <span class="hljs-keyword">case</span> &lt;-ch2: <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<span class="hljs-built_in">println</span>(<span class="hljs-string">&quot;worker2 has done.&quot;</span>)&#125;()<br>      &#125;<br>   &#125;<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>但偶尔，<code>select</code> 语句也会面临一些抉择，比如有多个通道都有新消息，这种情况在 “监听” 多个缓冲通道时比较常见。不过，一次 <code>select</code> 调用只会执行一条 <code>case</code>，并且执行哪一个将是<strong>随机</strong>的。 </p>
+<h2 id="8-4-关闭-Goroutine"><a href="#8-4-关闭-Goroutine" class="headerlink" title="8.4 关闭 Goroutine"></a>8.4 关闭 Goroutine</h2><p>有时，我们需要让多个 <code>goroutine</code> 主动停止自己手头上的任务，比如说客户端在上传文件途中突然取消的情况。子 <code>goroutine</code> 不会自动地随着父 <code>goroutine</code> 的结束而结束 ( 因为这些 <code>goroutine</code> 都是相互平级且独立的。这里的 “父子” 只是代码的调用层级关系的形象描述 ) ，除非这个父 <code>goroutine</code> 是主 <code>goroutine</code>。</p>
+<p>我们必须设置一个机制，使得父 <code>goroutine</code> 在认为没必要继续执行任务的时候通知它的子 <code>goroutine</code> 停止运行并退出。现在假定有两个子 <code>goroutine</code> 调用，它们各自以秒为单位向控制台输出奇数 / 偶数。现在的需求是：当在控制台按下任意键时，这两个 <code>goroutine</code> 退出，保持主函数仍然运行。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// goroutine1 持续输出偶数</span><br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">for</span> &#123;<br>            fmt.Printf(<span class="hljs-string">&quot;[goroutine1]:%v\n&quot;</span>,i)<br>            i = i+<span class="hljs-number">2</span><br>            time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>        &#125;<br>    &#125;()<br><br>    <span class="hljs-comment">// goroutine2 持续输出奇数</span><br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span><br>        <span class="hljs-keyword">for</span> &#123;<br>            fmt.Printf(<span class="hljs-string">&quot;[goroutine2]:%v\n&quot;</span>,i)<br>            i = i+<span class="hljs-number">2</span><br>            time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>        &#125;<br>    &#125;()<br><br>    <span class="hljs-keyword">for</span> &#123;<br>        fmt.Printf(<span class="hljs-string">&quot;[main]:still running...\n&quot;</span>)<br>        time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>或许可以建立一个足够长的缓冲通道，主 <code>goroutine</code> 发送 “足够多” 的信号量，令所有接收到信号量的 <code>goroutine</code> 结束工作。那么如何确定当前正在运行的 <code>goroutine</code> 的数量呢？不确定。尤其是对于复杂的系统来说，如果 <code>goroutine</code> 是可以繁殖的 —— 一个 <code>goroutine</code> 在运行时又创建了 ( 多个 ) <code>goroutine</code> ，再或者某些 <code>goroutine</code> 提前执行完并返回了，这都会导致其数量的浮动。</p>
+<p>要解决这类问题，不应让父 <code>goroutine</code> 主动通知子 <code>goroutine</code> ，而是应该让子 <code>goroutine</code> 主动检测父 <code>goroutine</code> 的某个信号量。这里利用一个同步通道来实现；</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>	done := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br><br>	<span class="hljs-keyword">var</span> cancel = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">bool</span></span> &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-comment">// 回想:消费者永远都可以从一个被关闭的通道获取值。</span><br>		<span class="hljs-keyword">case</span> &lt;-done:<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>		<span class="hljs-keyword">default</span>:<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>		&#125;<br>	&#125;<br><br>	<span class="hljs-comment">// goroutine1 持续输出偶数</span><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span><br>		<span class="hljs-keyword">for</span> &#123;<br>			<span class="hljs-keyword">if</span> cancel() &#123;<br>				<span class="hljs-keyword">return</span><br>			&#125;<br>			fmt.Printf(<span class="hljs-string">&quot;[goroutine1]:%v\n&quot;</span>, i)<br>			i = i + <span class="hljs-number">2</span><br>			time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>		&#125;<br>	&#125;()<br><br>	<span class="hljs-comment">// goroutine2 持续输出奇数</span><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span><br>		<span class="hljs-keyword">for</span> &#123;<br>			<span class="hljs-keyword">if</span> cancel() &#123;<br>				<span class="hljs-keyword">return</span><br>			&#125;<br>			fmt.Printf(<span class="hljs-string">&quot;[goroutine2]:%v\n&quot;</span>, i)<br>			i = i + <span class="hljs-number">2</span><br>			time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>		&#125;<br>	&#125;()<br><br>	<span class="hljs-comment">// 开启另一个 goroutine 用于监听输入</span><br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		bufio.NewScanner(os.Stdin).Scan()<br>		<span class="hljs-built_in">close</span>(done)<br>	&#125;()<br><br>	<span class="hljs-keyword">for</span> &#123;<br>		fmt.Println(<span class="hljs-string">&quot;[main]:still running...&quot;</span>)<br>		time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>主程序在接收到输入之后关闭了 <code>done</code> 通道。这样做的结果是：<code>cancel()</code> 函数会立刻接收到消息的 <code>nil</code> 值 ( 参考通道关闭节 ) ，并以此作为停止 <code>goroutine</code> 的信号量。主函数的所有子 <code>goroutine</code> 会在每一轮的迭代工作之前调用 <code>cancel()</code> 局部函数进行检查，结果被告知为 <code>true</code> ，因此相继返回退出。</p>
+<h1 id="第九章-共享变量"><a href="#第九章-共享变量" class="headerlink" title="第九章 共享变量"></a>第九章 共享变量</h1><h2 id="9-1-竞态"><a href="#9-1-竞态" class="headerlink" title="9.1 竞态"></a>9.1 竞态</h2><p>假定一个 <code>goroutine</code> X 的内部有三个依次发生的事件：x1，x2，x3 。另一个 <code>goroutine</code> Y 的内部也有三个依次发生的事件，y1，y2，y3。每个事件在各自的 <code>goroutine</code> 能够保证顺序运行，但如果 X 和 Y <strong>并发</strong> 运行，则事件 x<sub>i</sub> 和 y<sub>j</sub> 之间谁先谁后就无法确定了。假定多个 <code>goroutine</code> 并发地调用了同一个函数，而该函数总能返回正确的结果，那么称该函数是<strong>并发安全</strong>的。</p>
+<p>然而，不是所有的函数都可以确保这一点，其中一个原因就是数据<strong>竞态</strong>导致的。下面用一个存取款的例子来描述数据竞态如何影响程序运行结果 ( 在数据库教程中，这个例子曾经常用于讲解并发的事务 )：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> balance <span class="hljs-keyword">int</span> = <span class="hljs-number">100</span><br><br><span class="hljs-keyword">var</span> deposit = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(amount <span class="hljs-keyword">int</span>)</span></span> &#123;<br>	balance = balance + amount<br>&#125;<br><br><span class="hljs-keyword">var</span> show = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<span class="hljs-keyword">return</span> balance&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在有两个人共享 <code>balance</code> 账户。他们几乎在同一时刻向这个账户中发起存款：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// A</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    deposit(<span class="hljs-number">200</span>)<br>&#125;()<br><br><span class="hljs-comment">// B</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    deposit(<span class="hljs-number">100</span>)<br>&#125;()<br><br>time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>fmt.Print(show())<br></code></pre></td></tr></table></figure>
+
+<p>在串行化的运行环境中，最终账户的余额是 400，这没有任何争议。但是在并发执行的情况下，情况就不一样了：比如 A 在执行到 <code>balance + amount</code> 时，B 恰好通过 <code>deposit</code> 函数更新了余额，此时意味着 A 现在所持有的 <code>balance</code> 是一个过期的数据。用这个过期的数据更新账户余额，会导致 B 的更新会被覆盖 ( 银行凭空从这个账户中赚了 100 元 ) 。</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">balance = 100<br>-------------------------------------<br>Aread = 100    |	<br><span class="hljs-code">               |    Bread  = 100</span><br><span class="hljs-code">               |    Bwrite = 200</span><br>Awrite = 300   |<br>--------------------------------------<br>balance = 300<br></code></pre></td></tr></table></figure>
+
+<p>这种现象就是数据竞态的一种。它发生的前提条件是 —— 两个或者多个 <code>goroutine</code> 共享一个变量，并且至少有一方进行了写入操作。不过这个例子太轻量级了，我们很难看到程序反馈预期外的结果。</p>
+<p>另一个例子会引发明显的现象：一个 “薛定谔” 的下标访问。两个 <code>goroutine</code> 同时为一个 <code>x</code> 赋值，而 <code>x</code> 的长度有可能是 10，有可能是 100 ( 取决于哪个 <code>goroutine</code> 后执行 ) 。一旦 <code>x</code> 的长度是 10，那么这个主函数最终就会因下标越界而报错。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> x []<span class="hljs-keyword">int</span><br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    x = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>,<span class="hljs-number">100</span>)<br>&#125;()<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    x = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>,<span class="hljs-number">10</span>)<br>&#125;()<br><br>time.Sleep(<span class="hljs-number">100</span> *time.Millisecond)<br>fmt.Print(x[<span class="hljs-number">99</span>])<br></code></pre></td></tr></table></figure>
+
+<p>有三种方式可以消除数据竞态 —— 第一种，如果数据是<strong>不可变</strong>的，那么它一定是并发安全的。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> x []<span class="hljs-keyword">int</span><br><span class="hljs-keyword">const</span> (<br>    LENGTH = <span class="hljs-number">100</span><br>)<br><br><span class="hljs-comment">// 两个 goroutine 总是基于常量创建切片。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    x = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>,LENGTH)<br>&#125;()<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    x = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>,LENGTH)<br>&#125;()<br><br>time.Sleep(<span class="hljs-number">100</span> *time.Millisecond)<br>fmt.Print(x[<span class="hljs-number">99</span>])<br></code></pre></td></tr></table></figure>
+
+<p>但在一定会执行更新操作的业务中 ( 比如刚才银行账户的例子 ) ，这种方法不现实。第二种方法是：避免在多个 <code>goroutine</code> 下对变量进行改动。</p>
+<p>回到银行账户的例子当中，其它的 <code>goroutine</code> 线程只能提交修改请求，这些请求被发送给一个 <code>balance</code> 的代理 <code>goroutine</code> ，只有它能够对 <code>balance</code> 进行修改，或者回显。换句话说， <code>balance</code> 本身将对 A 和 B 不可见，他们被限制以<strong>同步通道</strong>的形式和代理交互数据。这对应了开篇 Go 语言的那句箴言。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go">request := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br>response := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br><br><span class="hljs-keyword">var</span> deposit = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(amount <span class="hljs-keyword">int</span>)</span></span> &#123;<br>    request &lt;- amount<br>&#125;<br><br><span class="hljs-keyword">var</span> show = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123; <span class="hljs-keyword">return</span> &lt;-response &#125;<br><br><span class="hljs-comment">// A</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    deposit(<span class="hljs-number">200</span>)<br>&#125;()<br><br><span class="hljs-comment">// B</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    deposit(<span class="hljs-number">100</span>)<br>&#125;()<br><br><span class="hljs-comment">// Proxy</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// Read from MySQL</span><br>    <span class="hljs-keyword">var</span> balance = <span class="hljs-number">100</span><br><br>    <span class="hljs-keyword">for</span>&#123;<br>        <span class="hljs-keyword">select</span> &#123;<br>            <span class="hljs-keyword">case</span> a := &lt;-request: balance += a<br>            <span class="hljs-keyword">case</span> response &lt;- balance:<br>        &#125;<br>    &#125;<br>&#125;()<br><br>time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>fmt.Print(show())<br></code></pre></td></tr></table></figure>
+
+<p>有些变量无法在一整个 <code>goroutine</code> 之内做出限制，这时可以通过 <strong>通道</strong> 将这个变量从流水线的上游逐步传递到下游。在流水线的单个节点内部，可以对这个变量做任意的串行操作，但是一旦这个变量发送出去，该节点就不允许再修改变量了。说得再直白些就是：变量首先传递到某个节点串行使用，然后再传递到下一个节点串行使用。这个变量共享的方式称之为<strong>串行受限</strong>。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go">syncCh1 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br>syncCh2 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br>syncCh3 := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(in &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>,out <span class="hljs-keyword">chan</span> &lt;- <span class="hljs-keyword">int</span>)</span></span>&#123;<br>   i := &lt;-in<br>   out &lt;- i + <span class="hljs-number">3</span><br>&#125;(syncCh1,syncCh2)<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(in &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>,out <span class="hljs-keyword">chan</span> &lt;- <span class="hljs-keyword">int</span>)</span></span>&#123;<br>   i := &lt;-in<br>   out &lt;- i * <span class="hljs-number">2</span><br>&#125;(syncCh2,syncCh3)<br><br><br>syncCh1 &lt;- <span class="hljs-number">1</span><br><span class="hljs-comment">// 串行受限方式地计算 ( x + 3 ) * 2。</span><br>fmt.Print(&lt;-syncCh3)<br></code></pre></td></tr></table></figure>
+
+<p>第三种方式则是最熟悉的互斥机制。</p>
+<h2 id="9-2-互斥锁-sync-Mutex"><a href="#9-2-互斥锁-sync-Mutex" class="headerlink" title="9.2 互斥锁 sync.Mutex"></a>9.2 互斥锁 sync.Mutex</h2><p>即便不借助任何额外地工具，我们也可以使用容量为 1 的缓冲通道构建一个互斥锁。这个通道表征了一个二进制信号量，有消息表示上锁，没有消息表示无锁。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> (<br>    mu = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>,<span class="hljs-number">1</span>)<br>    balance = <span class="hljs-number">100</span><br>)<br><br><span class="hljs-keyword">var</span> deposit = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(amount <span class="hljs-keyword">int</span>)</span></span> &#123;<br>    balance = balance + amount<br>&#125;<br><br><span class="hljs-keyword">var</span> show = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span>&#123;<span class="hljs-keyword">return</span> balance&#125;<br><br><span class="hljs-comment">// A</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-comment">// 加锁</span><br>    mu &lt;- <span class="hljs-number">1</span><br><br>    <span class="hljs-comment">// 以下是临界代码</span><br>    deposit(<span class="hljs-number">100</span>)<br><br>    <span class="hljs-comment">// 放锁</span><br>    &lt;-mu<br>&#125;()<br><br><span class="hljs-comment">// B</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    mu &lt;- <span class="hljs-number">1</span><br><br>    <span class="hljs-comment">// 以下是同步代码</span><br>    deposit(<span class="hljs-number">200</span>)<br><br>    &lt;-mu<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>互斥锁的用途十分广泛，因此 Go 直接提供了 <code>sync.Mutex</code> 。<code>Lock()</code> 方法即加锁，<code>Unlock</code> 方法即放锁：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> (<br>    mu sync.Mutex<br>    balance = <span class="hljs-number">100</span><br>)<br><br><span class="hljs-keyword">var</span> deposit = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(amount <span class="hljs-keyword">int</span>)</span></span> &#123;<br>    balance = balance + amount<br>&#125;<br><br><span class="hljs-keyword">var</span> show = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span>&#123;<span class="hljs-keyword">return</span> balance&#125;<br><br><span class="hljs-comment">// A</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    mu.Lock()<br>    <span class="hljs-comment">// 以下是同步代码</span><br>    deposit(<span class="hljs-number">100</span>)<br><br>    mu.Unlock()<br>&#125;()<br><br><span class="hljs-comment">// B</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    mu.Lock()<br>    <span class="hljs-comment">// 以下是同步代码</span><br>    deposit(<span class="hljs-number">200</span>)<br><br>    mu.Unlock()<br>&#125;()<br><br>time.Sleep(<span class="hljs-number">1</span> * time.Second)<br>fmt.Print(show())<br></code></pre></td></tr></table></figure>
+
+<p>所有夹杂在 <code>Lock()</code> 和 <code>Unlock()</code> 之间的代码块称之为临界区。在其它 <code>goroutine</code> 通过 <code>Lock()</code> 加锁之后，其它 <code>goroutine</code> 在执行到 <code>Lock()</code> 会陷入阻塞状态 ( 这个原理是Go 提供的这把锁是<strong>不可再入</strong>的，即不能给已经上锁的锁头再加锁 )，直到它抢先获得互斥锁为止。因此，对于上述的例子而言，这保证了同一时间 A 和 B 只可能有一个人调用 <code>deposit()</code> 函数。</p>
+<p>另外，在一个 <code>goroutine</code> 内，加锁和放锁操作必须是对应的，否则会导致其它等待释放锁的 <code>goroutine</code> 陷入死等的状态。这时，不如将放锁的动作添加到延迟调用栈中，这样函数将总是可以保证在退出之后 ( 无论是正常退出，还是因为内部发生错误而短路退出的 ) 能够释放锁资源。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">mu.Lock()<br><span class="hljs-keyword">defer</span> mu.Unlock()<br></code></pre></td></tr></table></figure>
+
+<p>一个由互斥锁保护的调用是<strong>并发安全</strong>的，而代价是牺牲少许性能。</p>
+<h2 id="9-3-共享锁-sync-RWMutex"><a href="#9-3-共享锁-sync-RWMutex" class="headerlink" title="9.3 共享锁 sync.RWMutex"></a>9.3 共享锁 sync.RWMutex</h2><p>假定银行发现大部分客户对账户的操作是读取而非写入，则可以考虑将一些事务的读操作设置成共享锁 ( 读写锁 ) 而非互斥锁。这样，如果有两个 <code>goroutine</code> 竞争同一个资源，但是它们<strong>都没有对这个竞争资源进行写操作</strong>，则可以共享它。换句话说，只有读-读锁可共存。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> (<br>    mu sync.RWMutex<br>    balance = <span class="hljs-number">100</span><br>)<br><span class="hljs-comment">// ... 对于写入操作，调用的仍然是 Lock 和 Unlock 方法，因此在这里省略重复代码。</span><br><span class="hljs-keyword">var</span> show = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span>&#123;<br>    mu.RLock()<br>    <span class="hljs-keyword">defer</span> mu.RUnlock()<br>    <span class="hljs-keyword">return</span> balance<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>因此，共享锁 ( 即读锁) 保护的临界区不应当存在包括写入数据在内的副作用。另外，共享锁内部机制比互斥锁更加复杂，因此 <code>sync.RWMutex</code> 只有在 goroutines 激烈地竞争读操作时才会比互斥锁更加有优势，否则，它的效率比互斥锁低。</p>
+<h2 id="9-4-延迟初始化-sync-Once"><a href="#9-4-延迟初始化-sync-Once" class="headerlink" title="9.4 延迟初始化 sync.Once"></a>9.4 延迟初始化 sync.Once</h2><p>由于 <code>if</code> 或者 <code>switch</code> 这类选择分支的存在，程序不保证所有的变量<strong>在运行时</strong>都会用到。尤其是某些资源的初始化需要比较大的代价时，将它声明为一个 “懒汉式” 单例更为明智一些。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> resp <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">loadResource</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;resp 加载开始...\n&quot;</span>)<br>	<span class="hljs-keyword">if</span> resp == <span class="hljs-literal">nil</span> &#123;<br>		resp = <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>&#123;<br>			<span class="hljs-string">&quot;banner&quot;</span>:     <span class="hljs-string">&quot;/banner.jpg&quot;</span>,<br>			<span class="hljs-string">&quot;body&quot;</span>:       <span class="hljs-string">&quot;/body.jpg&quot;</span>,<br>			<span class="hljs-string">&quot;background&quot;</span>: <span class="hljs-string">&quot;/background.jpg&quot;</span>,<br>		&#125;<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    loadResource()<br>    <span class="hljs-comment">// 主 goroutine 是串行运行的，因此我们总是能得到正确的结果。</span><br>    fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>, resp[<span class="hljs-string">&quot;body&quot;</span>])<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段代码不是 “goroutine 安全” ( 在其它语言中，这个现象称之为 “线程安全” ) 的。现在假定有两个 <code>goroutine</code> 分别执行初始化和访问工作，且其中一个 <code>goroutine</code> 早在 <code>resp</code> 被初始化之前就访问它，那么会得到一个空值，进而可能引发重复的初始化动作：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 一个 goroutine 正进行初始化。</span><br><span class="hljs-keyword">go</span> loadResource()<br><br><span class="hljs-comment">// 令一个 goroutine 正尝试读。</span><br><span class="hljs-comment">// 如果它没有观测到 resp 被初始化完成，则它会自行执行 loadResource() 函数。</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    s,ok := resp[<span class="hljs-string">&quot;body&quot;</span>]<br>    <span class="hljs-keyword">if</span> !ok &#123;<br>        loadResource()<br>        fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)<br>    &#125; <br>    <span class="hljs-keyword">else</span> &#123;fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)&#125;<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>比如在上述代码中，加载函数 <code>loadResource</code> 有可能会被调用多次，这种情况下会造成系统资源浪费。控制台有可能会打印：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs erlang">resp 加载开始...<br>resp 加载开始...<br></code></pre></td></tr></table></figure>
+
+<p>一个有效的方法是使用互斥锁 <code>sync.Mutex</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    loadMu.Lock()<br>    loadResource()<br>    loadMu.Unlock()<br>&#125;()<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    loadMu.Lock()<br>    s,ok := resp[<span class="hljs-string">&quot;body&quot;</span>]<br>    loadMu.Unlock()<br><br>    <span class="hljs-keyword">if</span> !ok &#123;<br>        loadMu.Lock()<br>        loadResource()<br>        loadMu.Unlock()<br>        fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)<br>    &#125; <span class="hljs-keyword">else</span> &#123;fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)&#125;<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>通常，对某个昂贵资源的初始化工作只需要一次，后续仅仅是对该资源的调用。因此，这里不妨使用共享锁 <code>sync.RWMutex</code> 来代替互斥锁。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> loadMu sync.RWMutex<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    loadMu.Lock()<br>    loadResource()<br>    loadMu.Unlock()<br>&#125;()<br><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    loadMu.RLock()<br>    s,ok := resp[<span class="hljs-string">&quot;body&quot;</span>]<br>    loadMu.RUnlock()<br><br>    <span class="hljs-keyword">if</span> !ok &#123;<br>        loadMu.Lock()<br>        loadResource()<br>        loadMu.Unlock()<br>        fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)<br>    &#125; <span class="hljs-keyword">else</span> &#123;fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)&#125;<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>Go 提供了一个更方便的工具来帮助实现 “goroutine 安全” 的懒汉式加载。下面的代码块将 <code>loadResource</code> 迁移到了一个 <code>sync.Once</code> 变量内：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> resourceOnce sync.Once<br><br><span class="hljs-comment">// worker1 </span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    resourceOnce.Do(loadResource)<br>&#125;()<br><br><span class="hljs-comment">// worker2</span><br><span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>    s,ok := resp[<span class="hljs-string">&quot;body&quot;</span>]<br>    <span class="hljs-keyword">if</span> !ok &#123;<br>        <span class="hljs-comment">// sync.Once 保证 loadResource 全局只会被调用一次。</span><br>        resourceOnce.Do(loadResource)<br>        fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)<br>    &#125; <span class="hljs-keyword">else</span> &#123;fmt.Printf(<span class="hljs-string">&quot;resp = [%v]&quot;</span>,s)&#125;<br>&#125;()<br></code></pre></td></tr></table></figure>
+
+<p>其函数调用 <code>Do(loadResource)</code> 总是能够保证在上下文中 <code>loadResource</code> 函数只会被调用一次。如果后续有其它 <code>goroutine</code> “误触” 了此加载函数，则这个 <code>Do</code> 将是一个空调用。</p>
+<h2 id="9-5-竞态检测器"><a href="#9-5-竞态检测器" class="headerlink" title="9.5 竞态检测器"></a>9.5 竞态检测器</h2><p>一个残酷的现实是，无论是多么小心翼翼地操纵多个 <code>goroutine</code> ，在并发编程的环境中数据竞态难以避免。Go 提供了便捷的工具来帮助程序员对测试并记录程序在实际运行时出现的数据竞态。如果需要使用它，则在 <code>go</code> 命令后面补充上一个 <code>-race</code> 参数即可。在 GoLand IDE 中，可以通过 <code>Edit Configuration -&gt; Go tool arguments</code> 进行设置。</p>
+<p>这个参数会命令 Go 编译器基于我们原有的代码构建一个附带竞态检测器的版本 ( 因此编译的时间可能要更长一些，但相比人工分析数据竞态而言，这点成本可以欣然接受 ) 。竞态检测器随着程序的运行检测事件流，并报告发生冲突的案例，下面是笔者在本机通过竞态检测器分析之前的案例程序并打印出的报告：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs gradle">==================<br>WARNING: DATA RACE<br><span class="hljs-keyword">Write</span> at <span class="hljs-number">0</span>x000000443688 by goroutine <span class="hljs-number">7</span>:<br>  main.loadResource()<br>      C:<span class="hljs-regexp">/Users/</span>liJunhu<span class="hljs-regexp">/go/</span>src<span class="hljs-regexp">/awesomeProject/m</span>ain/runFirst.go:<span class="hljs-number">13</span> +<span class="hljs-number">0</span>x204<br>  sync.(*Once).doSlow()<br>      C:<span class="hljs-regexp">/Go/</span>src<span class="hljs-regexp">/sync/</span>once.go:<span class="hljs-number">66</span> +<span class="hljs-number">0</span>x10a<br>  sync.(*Once).<span class="hljs-keyword">Do</span>()<br>      C:<span class="hljs-regexp">/Go/</span>src<span class="hljs-regexp">/sync/</span>once.go:<span class="hljs-number">57</span> +<span class="hljs-number">0</span>x72<br>  main.main.func1()<br>      C:<span class="hljs-regexp">/Users/</span>liJunhu<span class="hljs-regexp">/go/</span>src<span class="hljs-regexp">/awesomeProject/m</span>ain/runFirst.go:<span class="hljs-number">27</span> +<span class="hljs-number">0</span>x4b<br><br><span class="hljs-keyword">Previous</span> <span class="hljs-keyword">read</span> at <span class="hljs-number">0</span>x000000443688 by goroutine <span class="hljs-number">8</span>:<br>  main.main.func2()<br>      C:<span class="hljs-regexp">/Users/</span>liJunhu<span class="hljs-regexp">/go/</span>src<span class="hljs-regexp">/awesomeProject/m</span>ain/runFirst.go:<span class="hljs-number">31</span> +<span class="hljs-number">0</span>x45<br><br>Goroutine <span class="hljs-number">7</span> (running) created at:<br>  main.main()<br>      C:<span class="hljs-regexp">/Users/</span>liJunhu<span class="hljs-regexp">/go/</span>src<span class="hljs-regexp">/awesomeProject/m</span>ain/runFirst.go:<span class="hljs-number">26</span> +<span class="hljs-number">0</span>x94<br><br>Goroutine <span class="hljs-number">8</span> (running) created at:<br>  main.main()<br>      C:<span class="hljs-regexp">/Users/</span>liJunhu<span class="hljs-regexp">/go/</span>src<span class="hljs-regexp">/awesomeProject/m</span>ain/runFirst.go:<span class="hljs-number">30</span> +<span class="hljs-number">0</span>xb6<br>==================<br></code></pre></td></tr></table></figure>
+
+<p>这段报告的大体意思是说：worker1 ( 即 Goroutine 7 ) 尝试初始化资源 <code>resp</code> ( 地址 <code>0x000000443688</code> ) 之前， worker2 ( Goroutine 8 ) 正准备调用 <code>resp[&quot;body&quot;]</code> 来试图获取一个值，由此引发了这两个 <code>routine</code> 之间的数据竞争。</p>
+<p>不过需要注意的是，它只记录本次运行时发生的竞态，不确保这个竞态在将来仍然会发生。</p>
+<h2 id="9-6-Goroutine-amp-线程"><a href="#9-6-Goroutine-amp-线程" class="headerlink" title="9.6 Goroutine &amp; 线程"></a>9.6 Goroutine &amp; 线程</h2><p>首先，两者在数量和体量上可以存在巨大的差别。操作系统预留的用户线程占用<strong>固定大小</strong>的栈内存 ( 一般是 2 MB ) ，它用于保存函数调用期间所产出的局部变量。相比之下，一个 <code>goroutine</code> 占用<strong>非固定大小</strong>的栈内存 ( 用途和用户线程的占内存类似 )，并且在程序刚运行时它占用的内存通常都非常小 ( 或许只有 2KB ) 。随着程序的不断深入，一个 <code>goroutine</code> 所占用的占内存可以按需增加 / 减少，甚至说一个 <code>goroutine</code> 就能够占据 1 GB 的空间 ( 这比常规的线程还要庞大 )。</p>
+<p>用户线程由操作系统内核来调度。每过几毫秒，一个硬件时钟便会向 CPU 发送中断信号，CPU 通过调用名为<strong>调度器</strong>的内核函数 ( 这会使 CPU 从用户态陷入内核态 ) 实现<strong>上下文</strong>切换：即保存上一个线程的运行状态，并恢复当前线程的运行状态，其整个过程都需要一定的时间成本。假定程序频繁进行线程切换，那么这个时间成本的累计将是可观的。</p>
+<p>Go 语言使用自己的调度器实现 <code>goroutine</code> 切换，它建立在 <strong>G-P-M</strong> 模型之上。简单来说，该调度器使用 <strong>m : n</strong> 技术将 m 个 <code>goroutine</code> 映射到了 n 个操作系统的用户线程。它的工作机制和 CPU 的调度方式大体类似，但是它只需要关心 Go 程序如何调度 <code>goroutine</code> ，而不需要关注如何操作用户线程。在此期间，将 <code>goroutine</code> 映射到用户线程的逻辑则交给模型中的 “P” —— Processor，逻辑处理器去管理，它充当了 “中介人” 的身份。</p>
+<p>Go 调度器也不依赖硬件时钟来实现切换，而是由 Go 自身的架构来触发。和线程切换相比，它避免了 CPU 直接陷入内核态，因此切换 <code>goroutine</code> 的代价要比切换线程的代价要小。</p>
+<p>这里要提要一个 <code>GOMAXPROCS</code> 环境变量，它代表了 “m : n” 当中的 n 。通常，这个数值等于机器中 CPU 的数量。比如对于 8 核机器而言，一个 <code>goroutine</code> 会被分配到 8 个用户线程的其中一个。假定一个用户线程中的某一个 <code>goroutine</code> 因为调用 <code>time.Sleep</code> 函数或者通道通信而阻塞了，那么该用户线程的其它活跃的 <code>goroutine</code> 可以挪动到另一个可用的用户线程继续执行。</p>
+<p>但如果一个 <code>goroutine</code> 的执行涉及系统调用，或者依赖由其它语言实现的函数，这就需要另分配用户线程来执行，但这不会计算在 <code>GOMAXPROCS</code> 的数目内。Go 语言鼓励简单的编程风格，因此它特意没有为 <code>goroutine</code> 留下可被寻找的标识：一个函数的运行结果应当只由它的参数列表来决定，而不是 “谁来运行它”。 </p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/03/31/Go-%E4%BA%94-Goroutine%E4%B8%8Echannel/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;31&#x2F;Go-%E4%BA%94-Goroutine%E4%B8%8Echannel&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;03&#x2F;31&#x2F;Go-%E4%BA%94-Goroutine%E4%B8%8Echannel&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/04/23/Git%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%86%8C/"><i class="iconfont iconleft"></i>Git 实用小册</a>
+    <a href="/2021/03/20/Go-%E5%9B%9B-%E6%8E%A5%E5%8F%A3/">Go: (四)接口<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AB%E7%AB%A0-Goroutine-amp-%E9%80%9A%E9%81%93"><span class="toc-text">第八章 Goroutine  &amp; 通道</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-Goroutine-amp-go-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-text">8.1 Goroutine &amp; go 关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-%E9%80%9A%E9%81%93"><span class="toc-text">8.2 通道</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-1-%E5%BB%BA%E7%AB%8B%E5%8F%8C%E5%90%91%E9%80%9A%E9%81%93"><span class="toc-text">8.2.1 建立双向通道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-2-%E7%AE%A1%E9%81%93"><span class="toc-text">8.2.2 管道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-3-%E9%80%9A%E8%BF%87%E5%BD%A2%E5%8F%82%E5%88%97%E8%A1%A8%E7%BA%A6%E6%9D%9F%E5%8D%95%E5%90%91%E9%80%9A%E9%81%93"><span class="toc-text">8.2.3 通过形参列表约束单向通道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-4-%E7%BC%93%E5%86%B2%E9%80%9A%E9%81%93"><span class="toc-text">8.2.4 缓冲通道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-5-%E8%B0%A8%E9%98%B2-Goroutine-%E6%B3%84%E6%BC%8F"><span class="toc-text">8.2.5 谨防 Goroutine 泄漏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-6-%E7%BC%93%E5%86%B2%E9%80%9A%E9%81%93%E4%B8%8E%E5%90%8C%E6%AD%A5%E9%80%9A%E9%81%93%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-text">8.2.6 缓冲通道与同步通道的选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-7-%E9%80%9A%E9%81%93%E5%85%B3%E9%97%AD"><span class="toc-text">8.2.7 通道关闭</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-3-Select-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8"><span class="toc-text">8.3 Select 多路复用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-4-%E5%85%B3%E9%97%AD-Goroutine"><span class="toc-text">8.4 关闭 Goroutine</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F"><span class="toc-text">第九章 共享变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-%E7%AB%9E%E6%80%81"><span class="toc-text">9.1 竞态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-%E4%BA%92%E6%96%A5%E9%94%81-sync-Mutex"><span class="toc-text">9.2 互斥锁 sync.Mutex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-%E5%85%B1%E4%BA%AB%E9%94%81-sync-RWMutex"><span class="toc-text">9.3 共享锁 sync.RWMutex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-4-%E5%BB%B6%E8%BF%9F%E5%88%9D%E5%A7%8B%E5%8C%96-sync-Once"><span class="toc-text">9.4 延迟初始化 sync.Once</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-5-%E7%AB%9E%E6%80%81%E6%A3%80%E6%B5%8B%E5%99%A8"><span class="toc-text">9.5 竞态检测器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-6-Goroutine-amp-%E7%BA%BF%E7%A8%8B"><span class="toc-text">9.6 Goroutine &amp; 线程</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
