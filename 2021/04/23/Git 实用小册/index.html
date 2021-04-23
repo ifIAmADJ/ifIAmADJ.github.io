@@ -199,7 +199,7 @@
           <i class="iconfont iconeye"></i><span id="/2021/04/23/Git%20%E5%AE%9E%E7%94%A8%E5%B0%8F%E5%86%8C/" class="leancloud" data-flag-title="Git 实用小册"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>26709</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>26732</span>
     </div>
   </div>
 </section>
@@ -210,13 +210,13 @@
 <p>因此，安装 Git 后，请在项目根目录下点击右键：Git Bash Here 并使用 Git 。该终端将允许我们在模拟 Linux 的环境下来和 Git 进行交互。</p>
 <p>随着笔者对 Git 的了解逐渐加深，本文的内容可能会随之更新。文内若出现部分理解出现偏颇的内容，欢迎大家指正。此为 Git 的官方文档：<a target="_blank" rel="noopener" href="https://git-scm.com/doc">Git - Documentation (git-scm.com)</a></p>
 <h2 id="1-四大区域与三个层次"><a href="#1-四大区域与三个层次" class="headerlink" title="1. 四大区域与三个层次"></a>1. 四大区域与三个层次</h2><p>在使用 Git 之前，首先要对这四个区域有一个基本的了解：</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_areas.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_areas</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wWAL8.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Git 的四大库及其操作</span></p>
 <p>工作区间：即经过 <code>git init</code> 初始化后的项目目录。Git 会自动追踪该目录下的文件内容变更的情况。</p>
 <p>暂存区：通过 <code>add</code> 命令 ( 可理解成 “选中” 操作) 告知 Git 有哪些文件需要被托管，这些文件 ( 及更改的内容 ) 会被移动到暂存区。</p>
 <p>本地库：通过 <code>commit</code> 命令 ( 真正的 “提交” 操作 ) 告知 Git，将当前暂存区的内容永久保存。</p>
 <p>远程库：Github，码云等云端代码托管平台，我们最终将本地库的代码存储到这里，以便于团队的跨网协作。</p>
 <p>此外，对于一个 Git 项目，还可分为三个层级：</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_layers.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_layers</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wWevU.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Git 的库，分支，提交记录</span></p>
 <p>一个库可包含多条分支，每一条分支代表了该 Git 项目的不同版本 ( 正式版本，测试版本，开发版本，特性开发版本等等 )。一条分支内又包含了多条提交记录，可以将每一次提交理解成某个版本的一个对应版本号。</p>
 <h2 id="2-本地操作"><a href="#2-本地操作" class="headerlink" title="2. 本地操作"></a>2. 本地操作</h2><h3 id="2-1-创建本地分支并切换-Branch-Checkout"><a href="#2-1-创建本地分支并切换-Branch-Checkout" class="headerlink" title="2.1 创建本地分支并切换 - Branch / Checkout"></a>2.1 创建本地分支并切换 - Branch / Checkout</h3><p>对于任意一个想要托管到 Git 的项目工程，在根目录下使用以下命令进行初始化：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ git init <br></code></pre></td></tr></table></figure>
@@ -292,10 +292,10 @@
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">origin/<span class="hljs-literal">master</span><br></code></pre></td></tr></table></figure>
 
 <p>它指代的是名为 <code>origin</code> 的远程库中的 <code>master</code> 分支。下图描述了远程库和本地库的映射关系：不仅仅是分支对应分支，每条分支内的每条提交记录也是相对应的。</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_local_remote.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_local_remote</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wWzUw.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">远程库到本地库的映射关系</span></p>
 <h3 id="3-1-将本地库关联到一个新的远程库-Remote"><a href="#3-1-将本地库关联到一个新的远程库-Remote" class="headerlink" title="3.1 将本地库关联到一个新的远程库 - Remote"></a>3.1 将本地库关联到一个新的远程库 - Remote</h3><p>首先，登录到 Github 网页 ( 需要先注册 Github 账号 )  并创建一个新的空仓库，各种选项和命名可根据自己的需要而定。</p>
 <p>一个刚创建好的空仓库看起来是这样的：并且它目前没有关联任何分支，也没有任何提交记录。同时，它留下了两种形式的 <code>url</code> ，分别是 HTTPS 形式的链接和 SSH 形式的链接。</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\github_init.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">github_init</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wW0ZZ.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">GitHub 提供了提示命令</span></p>
 <p>下一步便是利用这个链接在本地库中关联远程库。<code>url</code> 原则上可以选择 HTTPS 和 SSH 的任意一种形式，这会影响到我们日后将以何种方式向远程库提交代码。如果对 SSH 方式暂时不了解，在这里可以先选择 HTTPS 形式的链接。同时为了日后能够引用这个远程库，还需要指定该远程库的命名 <code>rn</code> ( remote name，比如 <code>origin</code> )</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ git remote add &lt;rn&gt; &lt;url&gt;<br></code></pre></td></tr></table></figure>
 
@@ -331,9 +331,9 @@
 <p>其中，<code>rbn</code> ( remote branch name ) 指远程库中对应的分支名称。</p>
 <p>除此之外，<code>clone</code> 命令会另 Git 自动建立起本地库和远程库的关联，该远程库默认被命名为 <code>origin</code> 。</p>
 <h3 id="3-4-保证项目进度的一致性-Fetch-Pull"><a href="#3-4-保证项目进度的一致性-Fetch-Pull" class="headerlink" title="3.4 保证项目进度的一致性 - Fetch / Pull"></a>3.4 保证项目进度的一致性 - Fetch / Pull</h3><p>我们总是<strong>基于最新的项目进度进行开发</strong>，同样，我们也很清楚，并发 / 并行总是会引发一些同步上的问题。现在假设这样的生产环境：A 和 B 两个人同时维护同一个远程库分支。</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_push1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_push1</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wWaFJ.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">A 和 B 同时提交导致冲突</span></p>
 <p>如果 A 在向远程库分支 <code>push</code> 之前，B 却早已更新了分支内的一些内容，则 A 目前的本地分支就不再是 “最新的” 了。显然，此时如果 A 的代码更新成功了，那么就会导致 B 的更新丢失。</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_push2.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_push2</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wW4y1.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">B 在提交前获取 A 的更新</span></p>
 <p>或者，A 自己在另一个工作环境中提交的工作，却没有在当前的工作环境中及时更新，这也会引发类似的问题。在上述情况下，Git 会拒绝 <code>push</code> ：</p>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">error: failed <span class="hljs-built_in">to</span> push some refs <span class="hljs-built_in">to</span> <span class="hljs-string">&#x27;git@github.com:XXX/xxx.git&#x27;</span><br>hint: Updates were rejected because <span class="hljs-keyword">the</span> remote <span class="hljs-keyword">contains</span> work that you <span class="hljs-built_in">do</span><br>hint: <span class="hljs-keyword">not</span> have locally. This is usually caused <span class="hljs-keyword">by</span> another repository pushing<br>hint: <span class="hljs-built_in">to</span> <span class="hljs-keyword">the</span> same ref. You may want <span class="hljs-built_in">to</span> <span class="hljs-keyword">first</span> integrate <span class="hljs-keyword">the</span> remote changes<br>hint: (e.g., <span class="hljs-string">&#x27;git pull ...&#x27;</span>) <span class="hljs-keyword">before</span> pushing again.<br>hint: See <span class="hljs-keyword">the</span> <span class="hljs-string">&#x27;Note about fast-forwards&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-string">&#x27;git push --help&#x27;</span> <span class="hljs-keyword">for</span> details.<br></code></pre></td></tr></table></figure>
 
@@ -350,7 +350,7 @@
 <h3 id="3-5-远程库的跨团队协作-Fork"><a href="#3-5-远程库的跨团队协作-Fork" class="headerlink" title="3.5 远程库的跨团队协作 - Fork"></a>3.5 远程库的跨团队协作 - Fork</h3><p>首先，<code>fork</code> 是<strong>远程库行为</strong>，而非 Git 的命令。</p>
 <p>在介绍 <code>fork</code> 之前，首先说说 Git 提供的 <code>clone</code> 命令。对于 <code>clone</code> 得到的本地分支，虽然可以在本地库进行自定义更新，但由于我们不是该远程库的管理者，所以无法在 <code>push</code> 时提供 HTTPS / SSH 验证信息，自然就无法向远程库提交对该项目的后续更新。这个道理很好理解，我们没有权限向不属于自己的远程库中提交代码。</p>
 <p>或许，我们在 “用轮子” 的过程中有了一个不错的改进灵感，并希望原远程库的管理者充分考虑这些意见。登录到 Github 官网，通过 <code>fork</code> 按钮复制这份远程库到自己名下。显然，对于复制来的远程库，我们可以下载到本地库中自行维护，并有充分的权利通过 <code>push</code> 进行维护。整个逻辑类似于：</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_fork.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_push2</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wWpRn.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">PR 过程</span></p>
 <p>当时机成熟时，便可以向原远程库的管理者发起一个 <code>pull request</code> 请求，管理者将会对比这两个远程库的差异，并决定是否采纳这些更新。</p>
 <h2 id="4-git-log-与-cherry-Pick"><a href="#4-git-log-与-cherry-Pick" class="headerlink" title="4. git log 与 cherry-Pick"></a>4. git log 与 cherry-Pick</h2><p>随着项目开发的进行，每条分支都会延展成一条长长的时间线：每一个关键的 “时间节点” 都代表了一次 <code>commit </code> 更新记录 ( 而 <code>commit</code> 的原因可能是多种，也许是正常提交，也许是为了解决 <code>merge</code> ，<code>revert</code> 过程的冲突代码 ) 。</p>
 <p>Git 是基于增量更新的。这意味着，分支每一次更改都会添加一点 “新玩意” ( 它可能代表着一个系统的新功能，由多个额外的文件组成，我们暂且将它比喻为 ”cherry“ ) 。偶尔，我们想在另一个分支的时间线中，挑选一些其它分支的 “Cheeries” 并融入进来，这就是一个 <strong>cherry-Pick</strong> 的过程。</p>
@@ -443,9 +443,9 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># 恢复某一个 commit</span><br>$ git revert &lt;a_hash&gt;<br><br><span class="hljs-comment"># 下面的用法类似于 cherry-pick</span><br><span class="hljs-comment"># 恢复一系列 commit，不包括 &lt;a_hash&gt;</span><br>$ git revert -n &lt;a_hash&gt;..&lt;b_hash&gt;<br><br><span class="hljs-comment"># 恢复一系列 commit，包括 &lt;a_hash&gt;</span><br>$ git revert -n &lt;a_hash&gt;^..&lt;b_hash&gt;<br></code></pre></td></tr></table></figure>
 
 <p>由于 <code>revert</code> 也被视作是一次更新，因此 Git 会要求补充对此次恢复操作的描述信息。此外，一条 <code>revert commit</code> 对应一条 <code>commit</code> ，如果一次性恢复了多条 <code>commit</code>，则在 <code>git log</code> 上也会增加对应数目的 <code>revert commit</code> 。</p>
-<h3 id="6-1-Revert-中的祖父悖论-？"><a href="#6-1-Revert-中的祖父悖论-？" class="headerlink" title="6.1 Revert 中的祖父悖论 ？"></a>6.1 Revert 中的祖父悖论 ？</h3><p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_reset.gif" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_reset</span></p>
+<h3 id="6-1-Revert-中的祖父悖论-？"><a href="#6-1-Revert-中的祖父悖论-？" class="headerlink" title="6.1 Revert 中的祖父悖论 ？"></a>6.1 Revert 中的祖父悖论 ？</h3><p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wW7pl.gif" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Git Reset 逻辑</span></p>
 <p>相比于 <code>reset</code> 将 “整个时间线” 回退，<code>revert</code> 更像是回到某个时间点 ( 一次 <code>commit</code> ) 修改历史。</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\git_revert.gif" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">git_revert</span></p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/23/wWOK7.gif" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">Git Revert 逻辑</span></p>
 <p>比如我们曾经在过去的提交 <code>A</code> 中创建了一个名为 <code>future</code> 的文件，而后续的提交 <code>B</code> ，<code>C</code> 都对 <code>future</code> 文件进行了修改。现在如果恢复了提交 <code>A</code> ( 意味着 <code>future</code> 文件将消失 )，那么在 <code>B</code>，<code>C</code> 提交对 <code>future</code> 文件的修改势必受到牵连 —— Git Bash 显示分支状态从 <code>(xxx)</code> 变更为了 <code>(xxx|REVERTING)</code> 。</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># 123bfbd (HEAD -&gt; opps) add 2 in file &#x27;future&#x27;</span><br><span class="hljs-comment"># f56f502 add 1 in file &#x27;future&#x27;</span><br><span class="hljs-comment"># 4a0ce50 create a file &#x27;future&#x27;			</span><br><br>$ git revert 4a0ce50<br><span class="hljs-comment"># error: could not revert 4a0ce50... create a file &#x27;future&#x27;</span><br><span class="hljs-comment"># hint: after resolving the conflicts, mark the corrected paths</span><br><span class="hljs-comment"># hint: with &#x27;git add &lt;paths&gt;&#x27; or &#x27;git rm &lt;paths&gt;&#x27;</span><br><span class="hljs-comment"># hint: and commit the result with &#x27;git commit&#x27;</span><br></code></pre></td></tr></table></figure>
 
@@ -510,7 +510,7 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">ssh-keygen -t rsa -C <span class="hljs-string">&quot;anyString&quot;</span><br></code></pre></td></tr></table></figure>
 
 <p>这会在你的用户目录下创建一个 <code>.ssh</code> 文件夹，其中 <code>id_rsa.pub</code> 存放的是命令行生成的公钥。将该文件的内容提取出来，登录到 Github 官网，在个人设置中将其添加即可。</p>
-<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\github_ssh.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">github_ssh</span></p>
+<p><img    class="lazyload" data-original="C:\Users\liJunhu\Desktop\x学习笔记\images\github_ssh.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">在 GitHub 配置 SSH</span></p>
 <p>这一步隐含地将该 SSH 和你的远程库账号绑定了一起，因为只有你能够登录自己的账户并执行这一步操作。</p>
 <h2 id="9-参考文章"><a href="#9-参考文章" class="headerlink" title="9. 参考文章"></a>9. 参考文章</h2><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000011168654">Git常规配置与用法_个人文章 - SegmentFault 思否</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/shf4715/article/details/46810575">为Github账户设置SSH key_孙海峰的博客-CSDN博客</a></p>
