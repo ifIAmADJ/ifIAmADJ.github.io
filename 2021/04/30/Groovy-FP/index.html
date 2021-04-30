@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>如何使用 Groovy 优雅地 FP 编程 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="4. 闭包闭包的通俗解释，就是内部状态与外部隔离，仅通...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">如何使用 Groovy 优雅地 FP 编程</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/groovy_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">如何使用 Groovy 优雅地 FP 编程</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 30, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/04/30/Groovy-FP/" class="leancloud" data-flag-title="如何使用 Groovy 优雅地 FP 编程"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>21030</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="4-闭包"><a href="#4-闭包" class="headerlink" title="4. 闭包"></a>4. 闭包</h1><p>闭包的通俗解释，就是内部状态与外部隔离，仅通过参数列表和返回值与外界进行交互的<strong>高阶函数</strong>，用于保护内部的函数不受外界影响。其概念派生自 Lambda 表达式。对于 Java 这类 OOP 语言来说，”闭包” 的概念则被 “类” 所代替：闭包的局部变量变成了 “属性”，而内部函数变成了 “方法”。方法的结果往往取决于属性，而属性又通常是不对外开放的 ( <code>private </code> )。</p>
+<p>FP 的一些基本概念或术语，笔者其实主要是从 Scala 的角度切入的。详情见：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6886336268385550349">Scala 之：函数式编程之始</a></p>
+<h2 id="4-1-Groovy-中的闭包"><a href="#4-1-Groovy-中的闭包" class="headerlink" title="4.1 Groovy 中的闭包"></a>4.1 Groovy 中的闭包</h2><p>Groovy 允许我们以函数式风格使用闭包 ( 至少看起来是那样 ) 并在各处传递。换句话说，Groovy 也支持函数式编程 FP，并具备所有 FP 应当具备的特性。我们在 Java 中曾感慨过 Lambda 表达式的简洁，而在 Groovy 中，它已是家常便饭。假定我们想自定义一个对数组进行遍历操作的 <code>foreach</code> 函数，该函数对内部的元素操作取决于传入的闭包 <code>action</code>：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs groovy">nums = <span class="hljs-number">1.</span><span class="hljs-number">.10</span><br><br><span class="hljs-comment">// 这段代码完全没有声明任何类型，我好像在写 javaScript.......</span><br><span class="hljs-keyword">void</span> foreach(nums ,action)&#123;<br>    <span class="hljs-keyword">for</span>(i <span class="hljs-keyword">in</span> nums)&#123;<br>        <span class="hljs-comment">// 这个传入的 i 就是 i-&gt; print &quot;$&#123;i&#125;&quot; 当中的那个 i。</span><br>        action(i)<br>    &#125;<br>&#125;<br><br>foreach(nums,&#123;i -&gt; print <span class="hljs-string">&quot;$&#123;i&#125; &quot;</span>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>前面的文章曾提到过，如果参数列表的最后几个参数是闭包，可以选择性的将这些闭包移动到函数调用后面，英语老师管这种表达方法叫 “定语后置”。尤其是当闭包较长时，这种表述方式要更加优雅。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">//对那个数组进行 foreach 操作 | 怎么操作</span><br>foreach(nums) &#123;i -&gt; print <span class="hljs-string">&quot;$&#123;i&#125; &quot;</span>&#125;<br><br>foreach(nums) &#123;<br>	i-&gt;<br>	print i<br>	print <span class="hljs-string">&quot;当闭包很长时，这种写法看起来可读性更高&quot;</span><br>	print <span class="hljs-string">&quot;这个写法已经很接近平日所用的 for-each 循环了。&quot;</span><br>	print <span class="hljs-string">&quot;这就是闭包后置带来的惊喜。&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>甚至可以再抽象一点，将 <code>nums</code> 数组本身也看作是一个 <code>&#123;()-&gt;nums&#125;</code> 的闭包：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">static</span> foreach(nums,action)&#123;<br>    <span class="hljs-comment">// nums() 表示它是一个 ()-&gt;nums 的 supplyer.</span><br>    <span class="hljs-keyword">def</span> seq = nums()<br>    <span class="hljs-keyword">for</span>(i <span class="hljs-keyword">in</span> seq) &#123;action(i)&#125;<br>&#125;<br><span class="hljs-comment">// &#123;nums&#125; 实际上是 &#123;-&gt;nums&#125;，这里可以省略掉 -&gt; 箭头。</span><br>foreach &#123;nums&#125; &#123;i-&gt;print(<span class="hljs-string">&quot;$&#123;i&#125; &quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，我们隐约能感受到由 Groovy 创建出的 DSL 将是何其优雅而强大。其中，<code>foreach</code> 接收 <code>action</code> 闭包 ( 也可以称作是函数 )，因此 <code>foreach</code> 也被称作是<strong>高阶函数</strong> 。高阶函数的更直接解释是：一个接收函数，或者是返回另一个函数的函数。</p>
+<p>在 Java 中，一个 Lambda 表达式的写法是这样的：<code>(...) -&gt; &#123;...&#125;</code>，即便在没有任何参数的情况下，也得写成 <code>()-&gt;&#123;...&#125;</code> 的形式。而在 Groovy 中，闭包的参数不需要小括号括起来，形式上类似 <code>&#123; p1,p2 -&gt;...&#125;</code> 。</p>
+<p>当这个闭包不需要任何参数时，写法形如 <code>&#123; -&gt; ...&#125;</code>，或者是省略掉箭头符号而直接写成 <code>&#123;...&#125;</code> 。</p>
+<p>小小的特殊情况：如果闭包只需要一个参数，我们就可以在内部以 <code>it</code> 来称呼它，然后忽略掉参数命名和小箭头。比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// &#123;i -&gt; print&#123;&quot;$&#123;i&#125;&quot;&#125; =====&gt; &#123;print &quot;$&#123;it&#125;&quot;&#125;</span><br><span class="hljs-comment">// foreach nums, print it. </span><br>foreach &#123;nums&#125; &#123;print(<span class="hljs-string">&quot;$&#123;it&#125; &quot;</span>)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，如果闭包确实没有接收参数，但是写法却形如 <code>&#123;...&#125;</code>，那么 Groovy 还是会隐式地赋予这个闭包一个值为 <code>null</code> 的 <code>it</code> 参数。这会影响到程序在运行期对闭包的动态判断，见后文的动态闭包。</p>
+<p>闭包的参数可以声明严格的类型，比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy">foreach &#123;nums&#125; &#123;Integer i -&gt; print <span class="hljs-string">&quot;$&#123;i&#125; &quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-2-Execute-Around-Method-amp-AOP"><a href="#4-2-Execute-Around-Method-amp-AOP" class="headerlink" title="4.2  Execute Around Method &amp; AOP"></a>4.2  Execute Around Method &amp; AOP</h2><p>在 JVM 语言当中，只要我们能够将不需要的对象标记为不可达，那么它们就可以在适当的时机被 GC 回收。但是在 I/O 密集型任务中，我们希望 InputStream 和 OutputStream 在完成任务之后<strong>马上关闭</strong>，否则它们占据的文件句柄就仍然会在 GC 主动回收之前一直处于打开状态。</p>
+<p>这也是为什么 Java ( 以及其它语言的 ) I/O 工具要设计 <code>close()</code> 或者是 <code>destory()</code> 这样的方法。然而，偶尔我们可能过分专注于功能业务，而忘记主动地调用这些方法 ……</p>
+<p>这种琐碎的劳动不如交给程序来解决。假定所有需要主动关闭的资源都实现了 <code>MustClosed()</code> 接口：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">MustClosed</span> &#123;</span><br>    <span class="hljs-keyword">def</span> close()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后，定义一个高阶函数，它接收 <code>MustClosed</code> 的实现类，并保证总是在最后调用其 <code>close()</code> 方法关闭资源，无论在使用过程中是否发生异常。至于使用这个 <code>MustClosed</code> 资源的具体细节，将它封装到另一个闭包 <code>action</code> 当中。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// r 指 Resource,指必须要主动关闭的 I/O 型资源。</span><br><span class="hljs-keyword">def</span> <span class="hljs-keyword">static</span> safeUse(MustClosed r, action) &#123;<br>    <span class="hljs-keyword">try</span>&#123;<br>        action(r)<br>    &#125;<span class="hljs-keyword">catch</span> (Exception e)&#123;<br>        e.printStackTrace()<br>    &#125;<span class="hljs-keyword">finally</span>&#123;<br>        r.close()<br>        print <span class="hljs-string">&quot;$&#123;r.getClass().typeName&#125; 实例已经被关闭。&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>一个简单的测试：自定义一个 <code>MustClosed</code> 的简单实现，传入 <code>safeUse</code> 函数当中观察控制台的打印顺序：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy">MustClosed resource = [<br>        <span class="hljs-symbol">close:</span> &#123; println <span class="hljs-string">&quot;doing close()...&quot;</span> &#125;<br>] <span class="hljs-keyword">as</span> MustClosed<br><br><span class="hljs-keyword">def</span> action = &#123; MustClosed r -&gt;<br>    println <span class="hljs-string">&quot;use resource r to do something...&quot;</span><br>&#125;<br><br><span class="hljs-comment">// 演示了如何调用一个闭包变量</span><br>safeUse(re) &#123;action(re)&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">	等价于... 这里的 re 和 r 其实都指代一个引用。</span><br><span class="hljs-comment">	safeUse(re)&#123;</span><br><span class="hljs-comment">		MustClosed r -&gt;</span><br><span class="hljs-comment">			println &quot;use resource r to do something...&quot;</span><br><span class="hljs-comment">	&#125;	</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+<p>一个更加真实的测试：将 Java 提供的 <code>OutputStream</code> 视作是一个 <code>MustClosed</code> 的实现类传入进去，然后感受一下：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy">fos = <span class="hljs-keyword">new</span> FileOutputStream(<span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;README.md&quot;</span>))<br><br><span class="hljs-comment">// 依赖于 Groovy 的动态类型判断</span><br>safeUse(fos <span class="hljs-keyword">as</span> MustClosed)&#123;r -&gt; r.write(<span class="hljs-string">&quot;Groovy!&quot;</span>.bytes)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在，我们无需再手动关闭传入的各种 I/O 资源，<code>safeUse</code> 会帮助搞定一切。诸如这种闭包的使用风格就是 Execute Around Method ( 环绕执行 ) 模式。把思维再发散一些，假设我们在完成一系列业务之前和之后总是要进行一些重复处理，则可以利用这种模式设计出一个模板，只需要替换掉中间不一样的业务。</p>
+<p>这种方式有点似曾相识 …… 直觉是正确的。它的设计理念和 Spring 框架中的面向切面编程 AOP 没有什么不同，凡是支持 FP 的语言都可以通过环绕执行模式来实现切面化编程。</p>
+<h2 id="4-3-可利用闭包自动清理资源"><a href="#4-3-可利用闭包自动清理资源" class="headerlink" title="4.3 可利用闭包自动清理资源"></a>4.3 可利用闭包自动清理资源</h2><p>Groovy 鉴于 I/O 资源类工具的这些 “痛点” 给出了相当体面的实现：它在原有的 I/O 工具类的基础上做了一些包装，我们可以在 FileOutputStream / FileInputStream 工具中，直接调用 <code>withWriter</code> 或者 <code>withReader</code> ( 字符操作 )，<code>withStream</code> ( 字节操作 ) 方法，并直接以闭包的形式告知 FileOutputStream 或者是 FileInputStream 作为 Reader / Writer / Stream 处理数据，并免去原来的装饰者模式带来的一个副作用 —— 不断地创建包装对象。在执行完之后，I/O流会自行关闭。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy">f = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;README.md&quot;</span>)<br><span class="hljs-keyword">assert</span> f.exists()<br><br>fos = <span class="hljs-keyword">new</span> FileOutputStream(f)<br>String data = <span class="hljs-string">&quot;&quot;&quot;&#123;</span><br><span class="hljs-string">    status:200,</span><br><span class="hljs-string">    msg:&quot;ok&quot;</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-comment">// need no more fuxking close() and flush()</span><br>fos.withWriter &#123;<br>    <span class="hljs-comment">// 其实 w -&gt; w.write(data) 可以一次将长字符串全写进去。</span><br>    <span class="hljs-comment">// 这里主要是为了演示闭包的嵌套调用。</span><br>    w -&gt;<br>        data.eachLine &#123;<br>            w.write(<span class="hljs-string">&quot;$&#123;it&#125;\n&quot;</span>)<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>尤其是使用<strong>带缓冲的输出流</strong>时，我们再也不用担心因为忘记 <code>close()</code> 或者 <code>flush()</code> 而导致内容丢失的问题了。</p>
+<h2 id="4-4-闭包柯里化"><a href="#4-4-闭包柯里化" class="headerlink" title="4.4 闭包柯里化"></a>4.4 闭包柯里化</h2><p>凡是涉及函数式编程的语言都能进行柯里化 ( Curry ) 变换。我们对函数 ( 或称之闭包 ) 进行柯里化变换的的目的有二：要么是希望记忆 ( 缓存) 一些参数，要么是希望推迟执行某个闭包。举个例子，下面是一个平平无奇的表达式：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy">Closure&lt;Integer&gt; expr = &#123; x, y, z -&gt; (x + y) * z &#125;<br></code></pre></td></tr></table></figure>
+
+<p>假设在实际的运行当中，我们发现参数 <code>z</code> 相较 <code>x</code> 和 <code>y</code> 而言，它的值似乎不总是变化：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// z 不总是变化</span><br>expr(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>)<br>expr(<span class="hljs-number">1</span>,<span class="hljs-number">6</span>,<span class="hljs-number">3</span>)<br>expr(<span class="hljs-number">1</span>,<span class="hljs-number">5</span>,<span class="hljs-number">3</span>)<br>expr(<span class="hljs-number">5</span>,<span class="hljs-number">9</span>,<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+
+<p>因此，我们希望闭包 <code>expr</code> 在一段时间之内记住 <code>z</code> 的值，以此来避免枯燥的重复传参。于是 <code>expr</code> 首先被改写成了这个样子：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs groovy">Closure&lt;Closure&lt;Integer&gt;&gt; expr = &#123;<br>    z -&gt;<br>        <span class="hljs-comment">// 对于这个闭包而言，z 是自由变量。</span><br>        <span class="hljs-keyword">return</span> &#123; x, y -&gt;<br>            (x + y) * z<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在，<code>expr</code> 首先要求提供 <code>z</code>，然后再返回一个参数是 <code>x</code> 和 <code>y</code> 的子闭包，根据描述来看，赋值的过程显然是被拆分成了两步。同时，<code>expr</code> 演变成了一个高阶函数 ( 高阶闭包 ) 。如果将求值过程比作是开箱子，那么原本只需要一次开箱的取值操作变成了两次。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 之前:expr(2,3,3)</span><br><span class="hljs-comment">// 之后: </span><br><span class="hljs-keyword">def</span> result = expr(<span class="hljs-number">3</span>)(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+
+<p>事情变得更麻烦了吗？并不是如此。如果我们率先获取 <code>expr(3)</code> ，就能提前获取被保存的 <code>z</code>  的状态。因此在后续调用中，我们只管传入不同的 <code>x</code> 和 <code>y</code> 即可。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// (x + y) * 3</span><br><span class="hljs-keyword">def</span> memoried_z = expr <span class="hljs-number">3</span><br>memoried_z(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)  <span class="hljs-comment">// expr(2,3,3)</span><br>memoried_z(<span class="hljs-number">1</span>,<span class="hljs-number">6</span>)  <span class="hljs-comment">// expr(1,6,3)</span><br>memoried_z(<span class="hljs-number">1</span>,<span class="hljs-number">5</span>)  <span class="hljs-comment">// expr(1,5,3)</span><br>memoried_z(<span class="hljs-number">5</span>,<span class="hljs-number">9</span>)  <span class="hljs-comment">// expr(5,9,3)</span><br></code></pre></td></tr></table></figure>
+
+<p>对于更加深层次的柯里化函数而言，随着函数参数不断被记忆，后续的调用将会变得越来越简单，所需的参数越来越少。而传递的参数越是复杂，或者传参的条目越多，函数柯里化体现出的优势就会越大。在获得所有的参数之前，柯里化函数总是返回闭包，而非真正执行，因此我们也称柯里化函数被推迟调用了。</p>
+<h3 id="4-4-1-便捷的柯里化转换方法"><a href="#4-4-1-便捷的柯里化转换方法" class="headerlink" title="4.4.1 便捷的柯里化转换方法"></a>4.4.1 便捷的柯里化转换方法</h3><p>如果函数的功能再复杂一些，那么手动重构一个柯里化实现可能要花上一点时间 ( 更多的是思绪上的混乱 )。好在 Groovy 提供了一系列便捷的方法来代替我们完成柯里化转换。对于一个参数个数为 n 的函数，如果想将其前 k 个参数进行柯里化，可以调用<code>curry()</code> 方法来完成，其中 <code>0 &lt;= k &lt;= n</code>。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs groovy">expr = &#123;x, y, z -&gt; (x + y) * z&#125;<br><br><span class="hljs-comment">// 返回一个新的表达式： ( 3 + 2 ) * z =&gt; 5z</span><br>expr1 = expr.curry(<span class="hljs-number">3</span>,<span class="hljs-number">2</span>)<br><br><span class="hljs-comment">// 10</span><br>println expr1(<span class="hljs-number">2</span>)<br><br><span class="hljs-comment">// 返回一个新的表达式: (1 + 2) * 3 = 9</span><br>println expr.curry(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)()<br></code></pre></td></tr></table></figure>
+
+<p>如果要从后向前开始柯里化，则需使用 <code>rcurry()</code> 方法：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs groovy">expr = &#123;x, y, z -&gt; (x + y) * z&#125;<br><br><span class="hljs-comment">// expr = (x + 3) * 2</span><br>expr1 = expr.rcurry(<span class="hljs-number">3</span>,<span class="hljs-number">2</span>)<br><br><span class="hljs-comment">// 12</span><br>println expr1(<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+
+<p>如果要从前面的第 k 个参数开始柯里化，则需要使用 <code>ncurry()</code> 方法，其中 <code>0 &lt;= k &lt;= n</code>，当 <code>k = 0</code> 时，指从第一个参数开始柯里化，此时等价于 <code>curry()</code> 方法。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs groovy">expr = &#123;x,y,z -&gt; (x + y) * z&#125;<br><br><span class="hljs-comment">// expr1 = (x + 3) * 2</span><br>expr1 = expr.ncurry(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">2</span>)<br><br><span class="hljs-comment">// 10</span><br>println expr1(<span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-5-动态闭包"><a href="#4-5-动态闭包" class="headerlink" title="4.5 动态闭包"></a>4.5 动态闭包</h2><p>Groovy 可以在程序运行时动态地判断传入闭包的参数列表长度，甚至是参数类型，我们可以利用这个特性赋予程序动态决策的能力。比如：假定公司要根据营收额来统计交税额。我们想以闭包的形式将税额计算方法传递到一个高阶函数当中去计算。然而，这个闭包有可能不需要提供税率 ( 用户直接给出计算公式 )，也有可能需要 ( 用户仅提供计算方法，此时由高阶函数提供一个默认值)：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> tax(Double amount,Closure computer)&#123;<br>    <span class="hljs-keyword">switch</span> (computer.maximumNumberOfParameters)&#123;<br>        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span> : <span class="hljs-keyword">return</span> computer(amount)<br>        <span class="hljs-keyword">case</span> <span class="hljs-number">2</span> : <span class="hljs-keyword">return</span> computer(amount,<span class="hljs-number">15</span>)<br>        <span class="hljs-symbol">default:</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Exception(<span class="hljs-string">&quot;need 1 or 2 args.&quot;</span>)<br>    &#125;<br>&#125;<br><br><br><span class="hljs-comment">// 这个闭包传入了税率计算方式以及税率，只需要 1 个参数</span><br>println tax(<span class="hljs-number">14000.0</span>) &#123;<br>        amount -&gt; amount * <span class="hljs-number">0.13</span><br>&#125;<br><br><span class="hljs-comment">// 这个闭包不主动传入税率 rage，有 2 个参数</span><br>println tax(<span class="hljs-number">14000.0</span>) &#123;<br>    amount,rage -&gt; amount * (rage/<span class="hljs-number">100</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 Groovy 能够确定一个参数是闭包，那么可以访问其 <code>.maxinumNumberOfParameters</code> 属性来判断闭包传入时实际的参数个数。如果用户不提供税率，那么就直接按照用户的公式计算交税额。否则，由高阶函数给出一个默认税率并计算。</p>
+<p>除了动态判断参数的个数，还可以使用 <code>parameterTypes</code> 属性来动态获取参数的实际类型。比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> check(Closure cls)&#123;<br>    <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span><br>    <span class="hljs-keyword">for</span>(args <span class="hljs-keyword">in</span> cls.parameterTypes) &#123; println <span class="hljs-string">&quot;type[$&#123;i&#125;] = $&#123;args.typeName&#125;&quot;</span>;i++&#125;<br>    <span class="hljs-comment">//.. 什么也不做</span><br>&#125;<br><br><span class="hljs-comment">// type[1] = java.lang.String</span><br>check &#123;<br>    String i -&gt; <span class="hljs-comment">//.. 什么都不做</span><br>&#125;<br><br><span class="hljs-comment">// type[1] = java.lang,Integer</span><br>check &#123;<br>    Integer i -&gt; <span class="hljs-comment">//.. 还是什么也不做</span><br>&#125;<br><br><span class="hljs-comment">//type[1] = java.lang.Integer</span><br><span class="hljs-comment">//type[2] = java.lang.String</span><br>check &#123;<br>    Integer i , String s -&gt; <span class="hljs-comment">//.. 仍然什么也不做</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意，前文曾提到过，如果闭包不需要任何参数，那么形式上可以写为 <code>&#123;...&#125;</code> 或者是 <code>&#123; -&gt; ...&#125;</code>，两者的区别是：Groovy 仍然会为前者赋予一个隐含的参数 <code>it</code>，只不过这个值是 <code>null</code>。但对于后者，Groovy 则认为这个它是一个严格的无参数闭包。</p>
+<h2 id="4-6-闭包执行上下文与闭包委托"><a href="#4-6-闭包执行上下文与闭包委托" class="headerlink" title="4.6 闭包执行上下文与闭包委托"></a>4.6 闭包执行上下文与闭包委托</h2><p>假设这是一个闭包：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> closure = &#123;<br>	func()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>显然，如果没有其它的线索，那么就很难说 <code>func()</code> 调用是从哪来的。先把这个问题搁置在一边，我们有更重要的概念需要提及。</p>
+<p>Groovy 为每一个闭包都定义了三个属性：<code>thisObject</code>，<code>owner</code>，<code>delegate</code>。所有的闭包都和它所在类的实例相绑定，并且会被 Groovy 编译成一个内部类的实例。对于一般的闭包，<code>this == owner == delegate</code> ，比如说外部的 <code>out</code> 闭包。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Example_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> out = &#123;<br>        <span class="hljs-comment">// 这是相对而言的内部闭包。</span><br>        <span class="hljs-keyword">def</span> inner = &#123;&#125;<br>        <span class="hljs-comment">//------test of thisObject, owner, delegate----------//</span><br>        println out.thisObject.getClass().name		<span class="hljs-comment">//_Example_</span><br>        println out.owner.getClass().name			<span class="hljs-comment">//_Example_</span><br>        println out.delegate.getClass().name		<span class="hljs-comment">//_Example_</span><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">new</span> _Example_().out()<br></code></pre></td></tr></table></figure>
+
+<p>但对于一些特殊情况就有所不同了：第一种情况是闭包嵌套的情况。比如说 <code>out</code> 闭包内部定义的  <code>inner</code> 闭包。如果访问该 <code>inner</code> 闭包的 <code>owner</code> ，它将指向外部闭包 <code>out</code> 的实例。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Example_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> out = &#123;<br>        <span class="hljs-comment">// 这是相对而言的内部闭包。</span><br>        <span class="hljs-keyword">def</span> inner = &#123;&#125;<br><br>        <span class="hljs-comment">//------test of thisObject, owner, delegate----------//</span><br>        println out.thisObject.getClass().name		<span class="hljs-comment">//_Example_</span><br>        println out.thisObject.hashCode()           <span class="hljs-comment">// == inner.thisObject.hashCode</span><br>        println out.owner.getClass().name			<span class="hljs-comment">//_Example_</span><br>        println out.delegate.getClass().name		<span class="hljs-comment">//_Example_</span><br><br>        println inner.thisObject.getClass().name    <span class="hljs-comment">//_Example_</span><br>        println inner.thisObject.hashCode()         <span class="hljs-comment">// == out.thisObject.hashCode</span><br>        println inner.owner.getClass().name         <span class="hljs-comment">//_Example_$_closure1 (指外部闭包被编译的内部类)</span><br>        println inner.delegate.getClass().name      <span class="hljs-comment">//_Example_$_closure1 (指外部闭包被编译的内部类)</span><br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">new</span> _Example_().out()<br></code></pre></td></tr></table></figure>
+
+<p>在第二种特殊情况下，<code>delegate</code> 将不再指向 <code>owner</code>，那就是进行<strong>闭包委托</strong>的情形。用简单的话来概述它，就是闭包内部调用的一些方法，<strong>可能</strong>来自于另一个委托类的实例。声明如下：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// &quot;代理类&quot;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Proxy_</span>&#123;</span>&#125;<br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Example_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> out = &#123;<br>        <span class="hljs-keyword">def</span> inner = &#123;&#125;<br>        inner.delegate = <span class="hljs-keyword">new</span> _Proxy_()<br>        <br>        <span class="hljs-comment">// thisObject, owner, delegate 都不一样。</span><br>        println inner.thisObject.getClass().name<br>        println inner.owner.getClass().name<br>        println inner.delegate.getClass().name<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//_Example_</span><br><span class="hljs-comment">//_Example_$_closure1</span><br><span class="hljs-comment">//_Proxy_</span><br><span class="hljs-keyword">new</span> _Example_().out()<br></code></pre></td></tr></table></figure>
+
+<p>理解这三个闭包的基本属性之后，再去解释本节开头的那个问题就容易得多了：如果一个闭包内部使用的方法或变量在局部块内没有，那么 Groovy 优先在 <code>thisObject</code> 或者 <code>owner</code> 域查找；否则，试图从 <code>delegate</code> 那里查找；否则，就会报错返回。如果能在前两个域当中找到合适的内容，那么 Groovy 就绝对不会 “打扰” <code>delegate</code>。</p>
+<p>观察下面的完整代码。由于 <code>_Example_ </code> 类定义了 <code>func1</code> ，<code>out</code> 闭包定义了<code>func2</code>，因此即便是 <code>inner</code> 设置了闭包代理，Groovy 也没有进行路由。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Proxy_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> func1 = &#123; println <span class="hljs-string">&quot;this [func1] is from the instance of Class: _Proxy_&quot;</span> &#125;<br>    <span class="hljs-keyword">def</span> func2 = &#123; println <span class="hljs-string">&quot;this [func2] is still from the instance of Class: _Proxy_&quot;</span> &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Example_</span>&#123;</span><br><br>    <span class="hljs-keyword">def</span> func1 = &#123; println <span class="hljs-string">&quot;this [func1] is from the instance of Class:_Example_.&quot;</span>&#125;<br>    <span class="hljs-keyword">def</span> out = &#123;<br>        <span class="hljs-keyword">def</span> func2 = &#123; println <span class="hljs-string">&quot;this [func2] is from the instance of closure:out&quot;</span>&#125;<br>        <span class="hljs-keyword">def</span> inner = &#123;<br>            func1()<br>            func2()<br>        &#125;<br>        inner.delegate = <span class="hljs-keyword">new</span> _Proxy_()<br>        inner()<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//this [func1] is from the instance of Class:_Example_.</span><br><span class="hljs-comment">//this [func2] is from the instance of closure:out</span><br><span class="hljs-keyword">new</span> _Example_().out()<br></code></pre></td></tr></table></figure>
+
+<p>一旦注释掉 <code>_Example_</code> 内部的 <code>func1</code> 或者是 <code>func2</code> 闭包，Groovy 就会从 <code>_Proxy_</code> 那里尝试弥补缺失的内容，从而给出不同的运行结果。比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Proxy_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> func1 = &#123; println <span class="hljs-string">&quot;this [func1] is from the instance of Class: _Proxy_&quot;</span> &#125;<br>    <span class="hljs-keyword">def</span> func2 = &#123; println <span class="hljs-string">&quot;this [func2] is still from the instance of Class: _Proxy_&quot;</span> &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Example_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> out = &#123;<br>        <span class="hljs-keyword">def</span> inner = &#123;<br>            func1()<br>            func2()<br>        &#125;<br>        inner.delegate = <span class="hljs-keyword">new</span> _Proxy_()<br>        inner()<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//this [func1] is from the instance of Class: _Proxy_</span><br><span class="hljs-comment">//this [func2] is still from the instance of Class: _Proxy_</span><br><span class="hljs-keyword">new</span> _Example_().out()<br></code></pre></td></tr></table></figure>
+
+<p>另一种闭包委托的声明方式会令 Groovy 倒置查找顺序：即优先选择 <code>delegate</code> 的方法，其次才是 <code>owner</code> 或 <code>thisObejct</code>。具体做法是通过调用一个对象的 <code>.with</code> 方法 “外挂” 闭包。如下所示：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Proxy_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> func1 = &#123; println <span class="hljs-string">&quot;this [func1] is from the instance of Class: _Proxy_&quot;</span> &#125;<br>    <span class="hljs-keyword">def</span> func2 = &#123; println <span class="hljs-string">&quot;this [func2] is still from the instance of Class: _Proxy_&quot;</span> &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">_Example_</span>&#123;</span><br>    <span class="hljs-keyword">def</span> func1 = &#123; println <span class="hljs-string">&quot;this [func1] is from the instance of Class: _Example_&quot;</span> &#125;<br>    <span class="hljs-keyword">def</span> func2 = &#123; println <span class="hljs-string">&quot;this [func2] is still from the instance of Class: _Example_&quot;</span> &#125;<br>    <span class="hljs-keyword">def</span> out = &#123;<br>        <span class="hljs-keyword">def</span> inner = &#123;<br>            func1()<br>            func2()<br>        &#125;<br>        <span class="hljs-keyword">new</span> _Proxy_().with inner<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">//this [func1] is from the instance of Class: _Proxy_</span><br><span class="hljs-comment">//this [func2] is still from the instance of Class: _Proxy_</span><br><span class="hljs-keyword">new</span> _Example_().out()<br></code></pre></td></tr></table></figure>
+
+<p>注，<code>delegate</code> 在涉及 DSL 的方面会变得非常有用。</p>
+<h2 id="4-7-尾递归"><a href="#4-7-尾递归" class="headerlink" title="4.7 尾递归"></a>4.7 尾递归</h2><p>递归代码常常被认为是 “有品位但是不好驾驭” 的典型，和迭代相比，递归从表达上可能更加晦涩，因此令大部分程序员避之不及。令一个经常遇到的麻烦是：当递归的层次过深时，JVM 会招架不住而抛出一个 <code>StackOverFlowError</code> 。我们都知道，JVM 的每一个线程都使用一个栈空间来管理它调用的函数，并为每一个函数分配一个栈帧。如果这个栈一直处于 “只进不出” 的状态，那么 JVM 理论上就有驾崩的危险。</p>
+<p>解决栈溢出的思路却又很简单：只要让栈维持 “边进边出” 的状态就可以了。具体的做法是：将一般的递归函数改进成尾递归。尾递归的意思是：当调用下一个函数时，当前的调用直接将返回值传递给它，并且没有后续计算，线程也自然就认为没有必要保存当前调用的栈帧。</p>
+<p>用一个例子来说明或许更实在一点：n 的阶乘。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为什么这个方法不是尾递归？</span><br><span class="hljs-comment"> * 如果它的返回值是 n * factorial(n-1)，那么本次调用就需要等待下一次调用的 factorial(n-1) 来计算返回值。</span><br><span class="hljs-comment"> * 因此，假定 n == 3 , 那么线程就需要 3 层栈空间来解决它。</span><br><span class="hljs-comment"> * 假定 n 取了更大的值 , 那么 JVM 就会呻吟了。</span><br><span class="hljs-comment"> * @param n</span><br><span class="hljs-comment"> * @return</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">int</span> factorial(<span class="hljs-keyword">int</span> n)&#123;<br>   <span class="hljs-keyword">return</span> n &lt;= <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> :n * factorial(n<span class="hljs-number">-1</span>)<br>&#125;<br><br><span class="hljs-keyword">import</span> groovy.transform.TailRecursive<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 为什么这个方法是尾递归？</span><br><span class="hljs-comment"> * 无论是哪个分支，该递归函数总是返回一个数值或者发起一个新的调用，且当前调用没有需要等待的后续运算了。</span><br><span class="hljs-comment"> * 而递归过程的中间结果会不断地被装入 acc 参数中并传递。</span><br><span class="hljs-comment"> * 所以，在当前调用结束之后，它可以安全地 &quot;传宗接代且无后顾之忧&quot;。 </span><br><span class="hljs-comment"> * 无论 n 取何值，这个尾递归始终只占用 1 层栈空间。</span><br><span class="hljs-comment"> * 唯一不太方便的是，用户调用这个函数需要主动为 acc 传递一个初始值，而我们一般都靠包装函数来解决这个瑕疵。</span><br><span class="hljs-comment"> * @param n</span><br><span class="hljs-comment"> * @return</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@TailRecursive</span><br><span class="hljs-keyword">int</span> factorial_t(<span class="hljs-keyword">int</span> n,<span class="hljs-keyword">int</span> acc)&#123;<br>    <span class="hljs-keyword">return</span> n &lt;= <span class="hljs-number">1</span> ? acc : factorial_t(n<span class="hljs-number">-1</span>,acc * n)<br>&#125;<br><br><span class="hljs-comment">// good</span><br>println factorial_t(<span class="hljs-number">10000</span>,<span class="hljs-number">1</span>)<br><br><span class="hljs-comment">// bad, 99.99% 报错</span><br>println factorial(<span class="hljs-number">10000</span>)<br></code></pre></td></tr></table></figure>
+
+<p>其中，<code>@TailRecursive</code> 注解负责检查函数，如果它不是严格尾递归的，那么就会在编译器期间报错。闭包版本的尾递归则和函数版本不太一样，其尾递归需要借助 <code>trampoline</code> ( 意 “弹簧床” ) 方法来实现。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 对于递归闭包，我们必须先定义出一个变量作为它的名字，才能在闭包内部调用自身。</span><br><span class="hljs-keyword">def</span> f <br><br>f = &#123;<br>    i, BigInteger n -&gt; i &lt;= <span class="hljs-number">1</span> ? n : f.trampoline(i - <span class="hljs-number">1</span>, n * i)<br>&#125;.trampoline()<br><br>f(<span class="hljs-number">1000</span>)<br></code></pre></td></tr></table></figure>
+
+<p>另外，考虑到用户体验，不妨将闭包的 <code>acc</code> 参数设置为默认值 1 ( 因为它是最后一个参数 )，因此该参数对用户来说可以是透明的。需要指出的是，同等的算法逻辑和入参，函数的执行速度要比闭包快得多。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy">BigInteger factorial_func(<span class="hljs-keyword">int</span> i, BigInteger n) &#123;<br>    i &lt;= <span class="hljs-number">1</span> ? n : factorial_func(i - <span class="hljs-number">1</span>, n * i)<br>&#125;<br><br>factorial_closure = &#123;<br>    i, BigInteger n = <span class="hljs-number">1</span> -&gt; i &lt;= <span class="hljs-number">1</span> ? n : factorial_closure.trampoline(i - <span class="hljs-number">1</span>, n * i)<br>&#125;.trampoline()<br><br>l1 = System.currentTimeMillis()<br>println factorial_closure(<span class="hljs-number">1000</span>)<br><br><span class="hljs-comment">// 250 ~ 300 millis</span><br>println System.currentTimeMillis() - l1<br><br>l1 = System.currentTimeMillis()<br>println factorial_func(<span class="hljs-number">1000</span>, <span class="hljs-number">1</span> <span class="hljs-keyword">as</span> BigInteger)<br><br><span class="hljs-comment">// 4 ~ 10 millis</span><br>println System.currentTimeMillis() - l1<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-8-从钢条切割问题探讨递归优化"><a href="#4-8-从钢条切割问题探讨递归优化" class="headerlink" title="4.8 从钢条切割问题探讨递归优化"></a>4.8 从钢条切割问题探讨递归优化</h2><blockquote>
+<p>该问题参考自：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/tgycoder/p/4980655.html">动态规划-钢杆切割问题 - RunningSnail - 博客园 (cnblogs.com)</a></p>
+</blockquote>
+<p>假定我们是钢杆 ( 或者称钢条 ) 的卖家，不同长度的钢杆价位不同，**且钢杆长度和价格并不是线性相关的 ( 这就表明了整根卖不一定获利最大 ) **。现在给定一个长钢杆，我们希望对它做一些切割以获得最大利润。长度为 <code>n</code> 的钢杆，它的价格记作 <code>rodPrices[n]</code>  ：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">Integer<span class="hljs-comment">[]</span> rodPrices = <span class="hljs-comment">[0, 1, 3, 4, 5, 8, 9, 11, 12, 14, 15, 15, 16, 18, 19, 15, 20, 21, 22, 24, 25, 24, 26, 28, 29, 35, 37, 38, 39, 40]</span><br></code></pre></td></tr></table></figure>
+
+<p>比如，长度为 2 的钢杆，它的价格为 3，而长度为 5 的钢杆，它的价格仅为 8 ( 性价比似乎还 “提高” 了) 。此外，这里为了消除 0 下标的 “错位” 影响，令 <code>rodPrices[0] == 0</code> 。第一问：首先求长度为 27 的钢杆，它所能获得的最大利润。</p>
+<p>最朴素的想法是：穷举所有的切割方案并择优选取。一提及穷举，我们自然就会想到迭代，或者递归，或者<strong>两者兼具</strong>。</p>
+<p>进一步思考，每次将一段长杆 <code>l</code> 切割，都会产生两个短杆 <code>s1</code> ，<code>s2</code> 。设长度为 <code>n</code> 的钢杆的最大利润为 <code>max(n)</code>，那显然我们只要求出 <code>max(s1)</code> 和 <code>max(s2)</code>，那么就能推算出 <code>max(l) = max(s1) + max(p2)</code> 。那 <code>max(s1)</code>又该怎么求呢？它肯定又能分出更短的杆 <code>ss1</code> 和 <code>ss2</code> ，我们继续求 <code>max(ss1)</code> 和 <code>max(ss2)</code> 就好了 ……</p>
+<p>从这段描述中，我们能够提取出四个要点：</p>
+<ol>
+<li>大问题的目的是求最优解。</li>
+<li>大问题可以分解成若干小问题。</li>
+<li>大问题的最优解依赖于小问题的最优解。</li>
+<li>我们现在正 “自上而下” 地将大问题不断分解成小问题。</li>
+</ol>
+<p>因此，钢杆 ( 钢条 ) 切割问题本质上是一道<strong>动态规划</strong>题。在下面的叙述中，我们将 “求长度为 <code>length</code> 的钢杆的最大利润” 封装为一个函数 <code>rodCut(length)</code> 。</p>
+<p>设传进来长度为 <code>length</code> 的长杆，切割后的两杆其一为 <code>s1</code> ，长度记作 <code>i</code>；而另一个 <code>s2</code> 的长度则为 <code>length - i</code>。我们在一个<strong>迭代</strong>中动态平衡两杆的长度，且在每一次迭代内部，保留 <code>s1</code> 的长度不变，假设它的当前最优解就是 <code>max&#39;(s1)</code> 。以此为前提去对 <code>s2</code> 进行<strong>递归切割</strong>，即调用 <code>rodCut(s2)</code>。</p>
+<p>我们确信 <code>rodCut</code> 总能正确的返回 <code>max(s2)</code>，因此每次迭代的 <code>max&#39;(length) = max&#39;(s1) + rodCut(s2)</code> 。在迭代完成后，只需要从这些结果值中取出实际最大值作为当前 <code>rodCut(length)</code> 调用的返回值即可。</p>
+<p><img    class="lazyload" data-original="https://i.im5i.com/2021/04/30/wzxVQ.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="   ><span class="image-caption">表达式</span></p>
+<p>另外还有一个细节：如果在某一次迭代中  <code>s1 </code> 的长度 <code>i == length</code>，那么显然 <code>s2 == 0</code> 。这时表示不对长度 <code>length</code> 的杆进行切割，此时 <code>max(length) == rodPrices[length]</code> 。</p>
+<p>根据上述思路，我们迅速给出了第一版解决方案：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs groovy">Integer rodCut(Integer[] rodPrices, length) &#123;<br><br>    <span class="hljs-comment">// 虽然 length[0] 即为 0，但是我们想让调用短路返回，而不是继续执行。</span><br>    <span class="hljs-comment">// 这个 if 不可省略。</span><br>    <span class="hljs-keyword">if</span> (length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">def</span> max = <span class="hljs-number">-1</span><br><br>    <span class="hljs-comment">// &quot;左杆&quot; s1 的长度至少为 1，否则就没意义。</span><br>    <span class="hljs-comment">// 当 length = 1 时， length -1 = 0， 调用会进入临界条件。</span><br>    <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span>.length) &#123;<br>        <span class="hljs-keyword">def</span> p = rodPrices[i] + rodCut(rodPrices, length - i)<br>        <span class="hljs-keyword">if</span> (p &gt; max) max = p<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> max<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在提出一个新的要求：不仅要求出最大利润，还要给出详细的切割方案。比如：长度为 <code>27</code>  的杆，它的最大利润是 <code>43</code>，切割方案是：<code>[5,5,5,5,5,2]</code> ，数组内的每个元素是短杆的长度。</p>
+<p>此时不仅要在迭代过程中寻求最优解，还要在此记录每一次求得最优解时短杆的长度。出于这个目的，我们设计出了如下数据结构：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-meta">@Canonical</span><br><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Plan</span> &#123;</span><br>    Integer amount<br>    ArrayList splits<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Plan 表示一个切割方案，比如 <code>new Plan(amount: 4, splits:[1,2])</code> 表示这个切割方案中有长度为 1 和 2 的两个子杆，这个方案的总收入为 4。</p>
+<p><code>splits</code> 是线性表，用于记录短杆的长度。可以预见的是：长杆 Plan 的创建基于短杆 Plan，新的 <code>splits</code> 总是之前 Plan 的 <code>splits</code> 再插入一个新的元素，而链表能够从容地应对不断追加元素的场合，所以 <code>splits</code> 被设置为 ArrayList 类。</p>
+<p>第二版解决方案也出炉了：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-meta">@Newify</span>(Plan)<br><span class="hljs-keyword">def</span> rodCut(rodPrices, length) &#123;<br><br>    <span class="hljs-keyword">if</span> (length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">splits:</span> [])<br><br>    <span class="hljs-keyword">def</span> max = Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">-1</span>, <span class="hljs-attr">splits:</span> [])<br><br>    <span class="hljs-comment">// 至少切割成 (1,length-1)，否则没有意义。</span><br>    <span class="hljs-comment">// 当 length = 1 时， length - 1 = 0， 要考虑到边界条件。</span><br>    <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span>.length) &#123;<br>        <br>        <span class="hljs-comment">// left : 这里是 &quot;剩下的&quot; 意思。</span><br>        <span class="hljs-comment">// 获得 &quot;右杆&quot; s2 的最优 Plan</span><br>        <span class="hljs-keyword">def</span> leftRod = rodCut(rodPrices, length - i)<br><br>        <span class="hljs-comment">// 推算当前迭代中的 &quot;最优&quot; Plan = &quot;左杆&quot; Plan + &quot;右杆&quot; Plan</span><br>        <span class="hljs-keyword">def</span> try_ = Plan(<span class="hljs-attr">amount:</span> rodPrices[i] + leftRod.amount, <span class="hljs-attr">splits:</span> leftRod.splits + i)<br><br>        <span class="hljs-keyword">if</span> (try_.amount &gt; max.amount) max = try_<br>    &#125;<br><br>    <span class="hljs-comment">// 返回实际的长度 Length 的杆所对应的最优 Plan.</span><br>    <span class="hljs-keyword">return</span> max<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意，这里存在 Groovy 的语法糖：那就是 <code>leftRod.split + i</code>。这是一个操作符重载，实际上可理解为 <code>leftRod.splits.add(i)</code> 。该算法的 Groovy 闭包版本是：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> rodCuts<br><br>rodCut = &#123;<br>    rod_prices, length -&gt;<br>        <span class="hljs-keyword">if</span> (length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">splits:</span> [])<br>        <span class="hljs-keyword">def</span> max = <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">-1</span>, <span class="hljs-attr">splits:</span> [])<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span>.length) &#123;<br>            <span class="hljs-keyword">def</span> leftRod = rodCut(rodPrices, length - i)<br>            <span class="hljs-keyword">def</span> try_ = <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> rodPrices[i] + leftRod.amount, <span class="hljs-attr">splits:</span> leftRod.splits + i)<br>            <span class="hljs-keyword">if</span> (try_.amount &gt; max.amount) max = try_<br>        &#125;<br>        <span class="hljs-keyword">return</span> max<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-8-1-利用记忆化改进性能"><a href="#4-8-1-利用记忆化改进性能" class="headerlink" title="4.8.1 利用记忆化改进性能"></a>4.8.1 利用记忆化改进性能</h3><p>人们常说：过早的优化是万恶之源。因此在之前笔者刻意回避了 <code>rodCut</code> 函数的运行效率。运行第二版的函数 / 闭包，程序需要运行大约 1 ~ 2 分钟的时间才能给出答案。</p>
+<p>为什么会这样？我们其实还忽略了第五个要点：那就是将大问题分解为小问题时，应当避免对重复的小问题求解。比如：”将长为 10 的杆分为两个 5”  和 “将长为 8 的杆分成 3 和 5” 的两个情形都涉及到 “求杆长为 5 的最优解”。很不巧的是，在目前的递归过程中，<code>rodCut</code> 函数对传进来的 <code>length</code> 几乎来者不拒，却从来不检讨这个计算有无必要。</p>
+<p>一个简单却十分有效的办法是，在调用这个函数的同时，传入一个足够长的 <code>cache</code> 数组作为缓存。其中，<code>cache[n]</code> 存储了长为 <code>n</code> 的杆的最佳方案，但在最开始，所有位置都是 <code>null</code> 。不过每次在 <code>rodCut</code> 返回计算结果之前，都会顺带着将它写入到这个缓存的对应位置内。</p>
+<p>在后续的递归调用中，程序优先从查找缓存的对应位置：如果该位置非 <code>null</code>，则意味着当前调用能够立刻返回计算结果，而非重新计算。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> rodCuts_cached<br><br>rodCuts_cached = &#123;<br><br>    Integer[] rod_prices, Integer length, Plan[] cache -&gt;<br><br>        <span class="hljs-keyword">if</span> (cache[length] != <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> cache[length]<br>        <span class="hljs-keyword">if</span> (length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">splits:</span> [])<br>        <span class="hljs-keyword">def</span> max = <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">splits:</span> [])<br><br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span>.length) &#123;<br>            <span class="hljs-keyword">def</span> leftRod = rodCuts_cached(rod_prices, length - i, cache)<br>            <span class="hljs-keyword">def</span> try_ = <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> rod_prices[i] + leftRod.amount, <span class="hljs-attr">splits:</span> leftRod.splits + i)<br>            <span class="hljs-keyword">if</span> (try_.amount &gt; max.amount) &#123;<br>                max = try_<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 记录当前最优解。</span><br>        <span class="hljs-comment">// 注意，传入的 cache 是引用，这意味着任意一处递归都能够随时感知 cache 的变化。</span><br>        cache[length] = max<br>        <span class="hljs-keyword">return</span> max<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>依照这个思路，我们重新给出了第三版代码。在同等运行条件下，它的运算时间只相当于第二版的 1%。</p>
+<p>这个套路其实和之前 n 阶乘的优化思路非常相像，那就是想方设法保存中间结果来节省后续递归的工作量，无论从形式上是值传递一个计算结果，还是引用传递一块缓存。如果为这个套路起一个专业点的名字，那么它就是 <strong>记忆化</strong> ( Memoization ) 。</p>
+<h3 id="4-8-2-画龙点睛之-memoize"><a href="#4-8-2-画龙点睛之-memoize" class="headerlink" title="4.8.2 画龙点睛之 memoize()"></a>4.8.2 画龙点睛之 memoize()</h3><p>我们已经从实例中理解并体会了函数记忆化带来的性能飞跃，体贴的 Groovy 同样也更理解我们。在其它语言中，我们可能会为了实现缓存而手写一段逻辑代码 ( 像第三版代码那样 ) 。但至少在 Groovy 中，实际的工作量就是在原有闭包的基础之上再补充上一个 <code>momonize()</code> 方法调用。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> rodCuts<br>rodCut = &#123;<br>    rod_prices, length -&gt;<br>        <span class="hljs-keyword">if</span> (length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">splits:</span> [])<br>        <span class="hljs-keyword">def</span> max = <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> <span class="hljs-number">-1</span>, <span class="hljs-attr">splits:</span> [])<br>        <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> <span class="hljs-number">1.</span>.length) &#123;<br>            <span class="hljs-keyword">def</span> leftRod = rodCuts(rod_prices, length - i)<br>            <span class="hljs-keyword">def</span> try_ = <span class="hljs-keyword">new</span> Plan(<span class="hljs-attr">amount:</span> rodPrices[i] + leftRod.amount, <span class="hljs-attr">splits:</span> leftRod.splits + i)<br>            <span class="hljs-keyword">if</span> (try_.amount &gt; max.amount) max = try_<br>        &#125;<br>        <span class="hljs-keyword">return</span> max<br>&#125;.memoize()<br></code></pre></td></tr></table></figure>
+
+<p>Groovy 会为此创建一个自带缓存空间的闭包，然后就像我们所做的一样，闭包在递归自身时会优先从缓存中读取运算结果，除此之外，Groovy 还考虑到了一些线程安全的内容。由于机制大体相同，因此这一版的运行效率跟第三版代码几乎差不多，而区别是 “我们操心的活变得更少了”。</p>
+<p>根据天下没有免费的午餐定理，争取运算时间的代价将是牺牲或多或少的空间。如果问题的规模变得夸张一些，那么对空间的占用就无法忽略 ( 尤其是在本例中，Plan 还是一个携带链表的类 ) 。Groovy 将选择的权利交给了我们，因此 <code>memonized()</code> 还衍生出了 <code>memonizeAtMost()</code> 方法以及其它变种。当缓存达到临界状态时，Groovy 采取 LRU ( Least Last Used ) 策略对缓存内容进行替换。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/04/30/Groovy-FP/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;04&#x2F;30&#x2F;Groovy-FP&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;04&#x2F;30&#x2F;Groovy-FP&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2021/04/25/groovy%20%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B/">Groovy 动态类型<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E9%97%AD%E5%8C%85"><span class="toc-text">4. 闭包</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Groovy-%E4%B8%AD%E7%9A%84%E9%97%AD%E5%8C%85"><span class="toc-text">4.1 Groovy 中的闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Execute-Around-Method-amp-AOP"><span class="toc-text">4.2  Execute Around Method &amp; AOP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E5%8F%AF%E5%88%A9%E7%94%A8%E9%97%AD%E5%8C%85%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%E8%B5%84%E6%BA%90"><span class="toc-text">4.3 可利用闭包自动清理资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E9%97%AD%E5%8C%85%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="toc-text">4.4 闭包柯里化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-1-%E4%BE%BF%E6%8D%B7%E7%9A%84%E6%9F%AF%E9%87%8C%E5%8C%96%E8%BD%AC%E6%8D%A2%E6%96%B9%E6%B3%95"><span class="toc-text">4.4.1 便捷的柯里化转换方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E5%8A%A8%E6%80%81%E9%97%AD%E5%8C%85"><span class="toc-text">4.5 动态闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-%E9%97%AD%E5%8C%85%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8E%E9%97%AD%E5%8C%85%E5%A7%94%E6%89%98"><span class="toc-text">4.6 闭包执行上下文与闭包委托</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-7-%E5%B0%BE%E9%80%92%E5%BD%92"><span class="toc-text">4.7 尾递归</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-8-%E4%BB%8E%E9%92%A2%E6%9D%A1%E5%88%87%E5%89%B2%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8%E9%80%92%E5%BD%92%E4%BC%98%E5%8C%96"><span class="toc-text">4.8 从钢条切割问题探讨递归优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-8-1-%E5%88%A9%E7%94%A8%E8%AE%B0%E5%BF%86%E5%8C%96%E6%94%B9%E8%BF%9B%E6%80%A7%E8%83%BD"><span class="toc-text">4.8.1 利用记忆化改进性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-8-2-%E7%94%BB%E9%BE%99%E7%82%B9%E7%9D%9B%E4%B9%8B-memoize"><span class="toc-text">4.8.2 画龙点睛之 memoize()</span></a></li></ol></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
