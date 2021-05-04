@@ -271,7 +271,7 @@
       </tags>
   </entry>
   <entry>
-    <title>10 分钟从 Java 到 Groovy</title>
+    <title>5 分钟从 Java 到 Groovy</title>
     <url>/2021/04/23/Groovy/</url>
     <content><![CDATA[<h1 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h1><p><a href="https://groovy.apache.org/download.html">安装</a> Groovy 本身非常简单。对于 Windows 端的用户，将 SDK Bundle 压缩包解压到磁盘的任意路径下，然后像配置 Java 一样去配置 Groovy 的 GROOVY_PATH 和 PATH 变量，Groovy 就算安装完成了。至于 IDE 的选择，笔者仍然选择使用 IDEA IntelliJ，去 plugins 那里搜一搜 Groovy 的插件，然后安装即可。</p>
 <p>重点来了。笔者选择安装的版本是 GDK 3.0.8 ( 官方说这是最新的稳定发行版本)，它最高支持到 JDK 1.8 ，在更高的版本运行 Groovy 会报错[^1]。这不是我们因为操作疏忽引发的错误，这主要和 JDK 本身的变动有关系。如果要在高版本的 JDK  下运行 Groovy 脚本，则需要在项目中将缺失的依赖项补充上 ( 假设正在 Maven 项目中使用它 )：</p>
@@ -283,7 +283,7 @@
 <h1 id="2-Hello！初来乍到"><a href="#2-Hello！初来乍到" class="headerlink" title="2. Hello！初来乍到"></a>2. Hello！初来乍到</h1><p>首先，很难用 “编译型还是解释型” 来区分 Groovy 和 Java，因为两者都需要 <code>javac</code> or <code>groovyc</code> 将源码翻译成二进制码，然后交给 JVM 解释执行。这样看的话，Java 和 Groovy 应该都算 “编译兼解释型” 语言。两者的主要区别是：Java 是典型的静态语言 ( 所有的数据都在编译期间就被确定 )，而 Groovy 可以做到 “动态分发”，同时也支持静态编译。</p>
 <p>下面的细节有助于我们快速从 Java 过渡 Groovy。</p>
 <h2 id="2-1-Groovy-as-Script"><a href="#2-1-Groovy-as-Script" class="headerlink" title="2.1 Groovy as  Script"></a>2.1 Groovy as  Script</h2><p>得益于 Groovy 的简练语法（其实几乎只要是个新颖的编程语言就要比 Java 简洁得多，因此 “简洁” 其实不应该再算是 Groovy 的 Feature）和动态特性，使得 Groovy 可以轻松地和系统进程进行交互：</p>
-<figure class="highlight groovy"><table><tr><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 用 groovy 去执行 &quot;groovy -v&quot;.</span><br>println(<span class="hljs-string">&quot;groovy -v&quot;</span>.execute().text)<br></code></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 用 groovy 去执行 &quot;groovy -v&quot;.</span><br><span class="hljs-comment">// Windows 环境下需要带上 cmd /C 前缀。</span><br>println(<span class="hljs-string">&quot;cmd /C groovy -v&quot;</span>.execute().text)<br></code></pre></td></tr></table></figure>
 
 <p><code>execute()</code> 方法可以将这个字符串视作是一个<strong>命令</strong>交给系统去执行，<code>.text</code> 可以获取该命令在系统下的执行结果。下面演示了在 Linux 和 Windows 系统当中，如何通过 <code>.groovy</code> 脚本实现 “浏览当前目录（即执行者 <code>.groovy</code> 所在的那个目录下）的内容”：</p>
 <figure class="highlight groovy"><table><tr><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// Linux 系统</span><br>println(<span class="hljs-string">&quot;ls -l&quot;</span>)<br><br><span class="hljs-comment">// Windows 系统</span><br>println(<span class="hljs-string">&quot;cmd /C dir&quot;</span>)<br></code></pre></td></tr></table></figure>

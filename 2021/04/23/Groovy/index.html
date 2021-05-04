@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>10 分钟从 Java 到 Groovy - Mr.Li want to say</title>
+  <title>5 分钟从 Java 到 Groovy - Mr.Li want to say</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="google" content="notranslate" />
@@ -147,7 +147,7 @@
         <i class="iconfont iconsearch j-navbar-search"></i>
       
     </div>
-    <div class="center">10 分钟从 Java 到 Groovy</div>
+    <div class="center">5 分钟从 Java 到 Groovy</div>
     <div class="right">
       <i class="iconfont iconmenu j-navbar-menu"></i>
     </div>
@@ -191,15 +191,15 @@
     <section class="head">
   <img   class="lazyload" data-original="/images/md/groovy_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
   <div class="head-mask">
-    <h1 class="head-title">10 分钟从 Java 到 Groovy</h1>
+    <h1 class="head-title">5 分钟从 Java 到 Groovy</h1>
     <div class="head-info">
       <span class="post-info-item"><i class="iconfont iconcalendar"></i>April 23, 2021</span>
       
         <span class="post-info-item">
-          <i class="iconfont iconeye"></i><span id="/2021/04/23/Groovy/" class="leancloud" data-flag-title="10 分钟从 Java 到 Groovy"></span>
+          <i class="iconfont iconeye"></i><span id="/2021/04/23/Groovy/" class="leancloud" data-flag-title="5 分钟从 Java 到 Groovy"></span>
         </span>
       
-      <span class="post-info-item"><i class="iconfont iconfont-size"></i>17897</span>
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>17934</span>
     </div>
   </div>
 </section>
@@ -215,7 +215,7 @@
 <h1 id="2-Hello！初来乍到"><a href="#2-Hello！初来乍到" class="headerlink" title="2. Hello！初来乍到"></a>2. Hello！初来乍到</h1><p>首先，很难用 “编译型还是解释型” 来区分 Groovy 和 Java，因为两者都需要 <code>javac</code> or <code>groovyc</code> 将源码翻译成二进制码，然后交给 JVM 解释执行。这样看的话，Java 和 Groovy 应该都算 “编译兼解释型” 语言。两者的主要区别是：Java 是典型的静态语言 ( 所有的数据都在编译期间就被确定 )，而 Groovy 可以做到 “动态分发”，同时也支持静态编译。</p>
 <p>下面的细节有助于我们快速从 Java 过渡 Groovy。</p>
 <h2 id="2-1-Groovy-as-Script"><a href="#2-1-Groovy-as-Script" class="headerlink" title="2.1 Groovy as  Script"></a>2.1 Groovy as  Script</h2><p>得益于 Groovy 的简练语法（其实几乎只要是个新颖的编程语言就要比 Java 简洁得多，因此 “简洁” 其实不应该再算是 Groovy 的 Feature）和动态特性，使得 Groovy 可以轻松地和系统进程进行交互：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 用 groovy 去执行 &quot;groovy -v&quot;.</span><br>println(<span class="hljs-string">&quot;groovy -v&quot;</span>.execute().text)<br></code></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 用 groovy 去执行 &quot;groovy -v&quot;.</span><br><span class="hljs-comment">// Windows 环境下需要带上 cmd /C 前缀。</span><br>println(<span class="hljs-string">&quot;cmd /C groovy -v&quot;</span>.execute().text)<br></code></pre></td></tr></table></figure>
 
 <p><code>execute()</code> 方法可以将这个字符串视作是一个<strong>命令</strong>交给系统去执行，<code>.text</code> 可以获取该命令在系统下的执行结果。下面演示了在 Linux 和 Windows 系统当中，如何通过 <code>.groovy</code> 脚本实现 “浏览当前目录（即执行者 <code>.groovy</code> 所在的那个目录下）的内容”：</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// Linux 系统</span><br>println(<span class="hljs-string">&quot;ls -l&quot;</span>)<br><br><span class="hljs-comment">// Windows 系统</span><br>println(<span class="hljs-string">&quot;cmd /C dir&quot;</span>)<br></code></pre></td></tr></table></figure>
