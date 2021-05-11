@@ -1,0 +1,502 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Groovy 元对象协议 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="7. Groovy 元对象协议：前序编程中我们总是会听...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Groovy 元对象协议</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/groovy_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Groovy 元对象协议</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>May 11, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/05/11/Groovy-%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE/" class="leancloud" data-flag-title="Groovy 元对象协议"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>7111</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="7-Groovy-元对象协议：前序"><a href="#7-Groovy-元对象协议：前序" class="headerlink" title="7. Groovy 元对象协议：前序"></a>7. Groovy 元对象协议：前序</h1><p>编程中我们总是会听到 “元” ( Meta- ) 信息，或者 “元” 数据的一些说法，它们的通俗解释就是：描述信息的信息，或者是描述数据的数据。拿一张相片举例子，除了相片自身携带的图像信息以外，有关于它的印刷时间，拍摄时间，标签等都可以属于 “元信息”。在本篇文章中，信息本身就是 POJO / POGO 对象，而它的描述信息则是元方法 <code>MetaMethod</code> 和元属性 <code>MetaProperty</code>，后文统称两者为元信息。</p>
+<p>由此引申，元编程 ( Metaprogramming )，就是 “用于编写程序的程序”，简单来说，通过操纵，创建各种元信息来达到动态编程，或者是自动化编程的手段。一个例子就是：Grails/GORM 利用元编程的能力为数据查询动态合成类和方法。元编程依赖一种约定 —— 那就是元对象协议 Meta Object Protocol，简称 MOP。Groovy 的 MOP 本身很简单 —— 仅仅用一个 <code>groovy.lang.MetaObjectProtocol </code> 接口规范了如何获取元信息，设置元信息。我们真正的乐子在于如何基于 MOP 去做一些单靠 Java 实现不了或难以实现的功能。</p>
+<p>在 Java 当中，有关一个类的所有信息都已经在编译期间尘埃落定。我们常说 “Java 的动态反射” 也仅限于 “动态获取已有的静态信息”，而不能在运行时修改它的类型，或者赋予它全新的行为。但如果一个类是在运行期间基于各种元信息构建 ( 拼凑 ) 出来的呢？这就完全不一样了 —— 说得通俗点：我们想让它在运行时长什么样子，它就是什么样子。更多情况下，这将由用户传入的数据决定。</p>
+<p>本章首先介绍 MOP 最基本的内容，对于 POJO 或者 POGO，应该如何获取它们的元信息，然后在之后的章节去再介绍怎么动态操纵这些元信息。本章是学习以下内容的基础：</p>
+<ol>
+<li>利用 MOP 动态拦截方法</li>
+<li>利用 MOP 动态注入或合成方法</li>
+<li>利用 MOP 设计 DSL </li>
+<li>了解 Groovy 生成器</li>
+</ol>
+<h2 id="7-1-POGO-amp-POJO，MetaClass"><a href="#7-1-POGO-amp-POJO，MetaClass" class="headerlink" title="7.1 POGO &amp; POJO，MetaClass"></a>7.1 POGO &amp; POJO，MetaClass</h2><p>POJO ( Plain Old Java Object )，简单 Java 对象，代表没有额外类继承 ( 只继承于 <code>java.lang.Object</code> )，没有额外接口实现，也没有被其它框架侵入的 Java 对象。从广义上来讲，它指不受任何特定 Java 对象模型，约定，框架约束的 Java 对象；而正因为它不和任何详细的业务功能绑定，从狭义上来看，POJO 又可以代表那些只用于承载数据，仅设置了 <code>setter</code> 和 <code>getter</code> 方法的 Java 对象，因此 POJO 有时又会和 Entity，DTO 等概念混淆，本文的 POJO 指广义的概念。</p>
+<p>同理，在 Groovy 中，POGO 代表了普通的 Groovy 对象，它既是 <code>java.lang.Object</code> 的子类，又天然地实现了 <code>groovy.lang.GroovyObject</code> 接口；而 POJO 在这里可以是任何其它 JVM 语言实现的。下面是 <code>groovy.lang.GroovyObject</code> 接口的内容：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 来自 IDEA 的反编译内容。</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">GroovyObject</span> </span>&#123;<br>    <span class="hljs-meta">@Internal</span><br>    <span class="hljs-function"><span class="hljs-keyword">default</span> Object <span class="hljs-title">invokeMethod</span><span class="hljs-params">(String name, Object args)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getMetaClass().invokeMethod(<span class="hljs-keyword">this</span>, name, args);<br>    &#125;<br><br>    <span class="hljs-meta">@Internal</span><br>    <span class="hljs-function"><span class="hljs-keyword">default</span> Object <span class="hljs-title">getProperty</span><span class="hljs-params">(String propertyName)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getMetaClass().getProperty(<span class="hljs-keyword">this</span>, propertyName);<br>    &#125;<br><br>    <span class="hljs-meta">@Internal</span><br>    <span class="hljs-function"><span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setProperty</span><span class="hljs-params">(String propertyName, Object newValue)</span> </span>&#123;<br>        <span class="hljs-keyword">this</span>.getMetaClass().setProperty(<span class="hljs-keyword">this</span>, propertyName, newValue);<br>    &#125;<br>    <br>    <span class="hljs-function">MetaClass <span class="hljs-title">getMetaClass</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setMetaClass</span><span class="hljs-params">(MetaClass var1)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从方法名称来看，它们都和 元类型 <code>MetaClass</code> 紧密相关，看样子，想要了解并驾驭 Groovy 动态编程的能力，我们得先获取到这个 <code>MetaClass</code>。幸运的是，不论一个对象属于 POGO 还是 POJO，我们总通过 <code>.metaClass</code> 简单地提取出它们的元类型：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 该对象是一个 Java 实现</span><br><span class="hljs-keyword">def</span> pojo = <span class="hljs-keyword">new</span> POJO(<span class="hljs-number">10</span>)<br><br><span class="hljs-comment">// 该对象是一个 Groovy 实现</span><br><span class="hljs-keyword">def</span> pogo = <span class="hljs-keyword">new</span> POGO()<br><br><span class="hljs-comment">// 任何在 Groovy Script 中使用的类都可以使用 .metaClass ，这而与它的源 JVM 语言无关。</span><br><span class="hljs-comment">// 结合了之前 &quot;统一访问原则&quot; 的设计思想。</span><br>pogo.metaClass<br>pojo.metaClass<br></code></pre></td></tr></table></figure>
+
+<p>实际上，两者的 <code>metaClass</code> 的获取途径并不相同：对于 POJO，Groovy 维护用于获取 <code>MetaClass</code> 的一个 <code>MetaClassRegistry</code>。而对于 POGO ，其 <code>.metaClass</code> 指向接口中的 <code>setMetaClass</code> 方法 ( 这个语法糖在前文介绍 “统一访问原则” 时提到过 ) 。</p>
+<h2 id="7-2-基于-MetaClass-获取元信息"><a href="#7-2-基于-MetaClass-获取元信息" class="headerlink" title="7.2 基于 MetaClass 获取元信息"></a>7.2 基于 MetaClass 获取元信息</h2><p>无论是 POJO 还是 POGO，一旦获取了其 <code>MetaClass</code>，我们就能以类似 “Java 反射” 的形式在运行时获取这个类一切的元方法 <code>MetaMethod</code> 和元属性 <code>MetaProperty</code> ( 所以说访问修饰符在 Groovy 中 “形同虚设” )。</p>
+<p><strong>元方法</strong> ( Meta Method )，包含了实例方法和静态方法，因此对应的获取方法叫 <code>getMetaMethod()</code> ，<code>getStaticMetaMethod()</code>。如果要获取重载的方法列表，那么对应的方法则是 <code>getMetaMethods()</code> 和 <code>getStaticMetaMethods()</code> 。获取的元方法可以拿去调用。下面是一个简单的例子：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> pojo = <span class="hljs-keyword">new</span> POJO(<span class="hljs-number">10</span>)<br><span class="hljs-keyword">def</span> methodName = <span class="hljs-string">&quot;yawn&quot;</span><br><span class="hljs-keyword">def</span> staticMethodName = <span class="hljs-string">&quot;greet&quot;</span><br><br><span class="hljs-comment">// 获取实例方法 (元方法) 的一个 &quot;句柄&quot;。</span><br><span class="hljs-keyword">def</span> method = pojo.metaClass.getMetaMethod(methodName)<br><br><span class="hljs-comment">// 通过 invoke 方法绑定一个实例并调用。</span><br><span class="hljs-comment">// 如果调用的方法是空括号方法，那么可以只传进一个实例。</span><br>method.invoke(pojo)<br><br><span class="hljs-comment">// 如果获取的元方法需要参数列表，则需要以可变参数的形式提供这些参数类型 Class, 或者是对应类型的任意 Object。</span><br><span class="hljs-comment">// 这里存在方法重载，如果只传入 null, 那么 Groovy 会疑惑第二个参数是 Class[] 还是 Object[] 因而报错。</span><br><span class="hljs-comment">// null as Class[] 是避免歧义的做法。</span><br><span class="hljs-keyword">def</span> staticMethod =  pojo.metaClass.getStaticMetaMethod(staticMethodName,<span class="hljs-literal">null</span> <span class="hljs-keyword">as</span> Class[])<br>staticMethod.invoke(pojo)<br><br><span class="hljs-comment">// 下面演示了获取有参数列表的 &quot;静态&quot; 元方法的方式。</span><br><span class="hljs-keyword">def</span> staticMethodWithParam = pojo.metaClass.getStaticMetaMethod(staticMethodName,String.<span class="hljs-keyword">class</span>)<br><span class="hljs-comment">// 静态方法不需要绑定特定对象。</span><br>staticMethodWithParam.invoke(<span class="hljs-literal">null</span>,<span class="hljs-string">&quot;Tom&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>元属性</strong> ( Meta Property )，包含了实例属性和静态属性，对应的获取方法叫 <code>getMetaProperty</code>，<code>getStaticMetaProperty()</code>。假定我们只是想对某些元信息的 “存在性” 做检查，那么可以使用 <code>responseTo</code> ( 检查元方法，在之前我们曾用于对 “鸭子类型”  进行检查 ) 或者是 <code>hasProperty</code> ( 检查元属性 ) 。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> pojo = <span class="hljs-keyword">new</span> POJO(<span class="hljs-number">10</span>)<br><br><span class="hljs-keyword">def</span> methodName = <span class="hljs-string">&quot;SayHi&quot;</span><br><span class="hljs-keyword">def</span> propertyName = <span class="hljs-string">&quot;property&quot;</span><br><br>println( <span class="hljs-string">&quot;the pojo has the method $&#123;methodName&#125; ? $&#123;pojo.respondsTo(methodName)?&quot;</span>yes<span class="hljs-string">&quot;:&quot;</span>no<span class="hljs-string">&quot;&#125;&quot;</span>)<br>println( <span class="hljs-string">&quot;the pojo has the method $&#123;propertyName&#125; ? $&#123;pojo.hasProperty(propertyName)?&quot;</span>yes<span class="hljs-string">&quot;:&quot;</span>no<span class="hljs-string">&quot;&#125;&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-3-Groovy-调用方法的策略"><a href="#7-3-Groovy-调用方法的策略" class="headerlink" title="7.3 Groovy 调用方法的策略"></a>7.3 Groovy 调用方法的策略</h2><p>在调用一个方法时，Groovy 会根据这个对象是 POJO 还是 POGO 而采取不同的策略：如果一个对象是 POJO，Groovy 则会通过 <code>MetaClassRegistry</code> 获取 <code>MetaClass</code>，然后再将方法调用转发给它。换句话说，在 Groovy 中即便是想简单地调用一个 POJO 方法也会变得复杂起来，感兴趣的读者可以借助一些反编译工具去观察 ( 这可能也是 Groovy 运行效率不如 Java 的原因之一 )。同时 <strong>如果我们在 <code>MetaClass</code> 当中拦截或者注入了一些其它方法，那么它们的优先级都会高于 POJO 自身定义的方法。</strong></p>
+<p>如果对象是一个 POGO ，那么步骤可能要稍微更复杂一些，为了方便解释，这里举一个例子：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">POGO</span> &#123;</span><br>    <span class="hljs-comment">// POGO 的一个名为 greet 的方法，优先被调用</span><br>    <span class="hljs-keyword">def</span> greet()&#123;<br>        println <span class="hljs-string">&quot;greet by method&quot;</span><br>    &#125;<br>    <span class="hljs-comment">// POGO 的一个名为 greet 的闭包属性，由于同名方法已经存在，因此该闭包不会被优先调用</span><br>    <span class="hljs-comment">// 结合统一访问原则，以下写法会优先调用闭包： new POGO().greet, new POGO().getGreet().call()</span><br>    <span class="hljs-keyword">def</span> greet = &#123;<br>        println <span class="hljs-string">&quot;greet by closure&quot;</span><br>    &#125;<br>    <span class="hljs-comment">// 在同名方法不存在的情况下，Groovy 尝试去调用该闭包的 .call() 方法</span><br>    <span class="hljs-keyword">def</span> hi = &#123;<br>        println <span class="hljs-string">&quot;hi by closure&quot;</span><br>    &#125;<br>    <span class="hljs-comment">// 当发现方法不存在时的重载版 methodMiss() 方法</span><br>    <span class="hljs-keyword">def</span> methodMissing(String name, <span class="hljs-keyword">def</span> args) &#123;<br>        println <span class="hljs-string">&quot;a method $name doesn&#x27;t exist.&quot;</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>成功调用一个 POGO 方法的条件是：要么 POGO 类内部定义了这样的方法 ( 优先 )，要么定义了同名的闭包<strong>属性</strong> ( 其次 ) 。除此以外便认为是调用失败。失败又分两种情况：一种是我们主动定义 <code>methodMissing()</code> 方法 ( IDEA 可以通过 <code>alt</code> + <code>Insert</code> 快捷键生成 ) 决定如何处理，另一种让默认的 <code>methodMissing</code> 方法抛出异常 ( 就是我们通常见到的控制台报错 ) 。</p>
+<p>在学习方法注入之后，我们会了解到成功调用的第三个条件：那就是 POGO 实现了一个名为 <code>GroovyInterceptable</code> 的标记接口，然后一切方法调用优先被路由到它的 <code>invokeMethod()</code> 并成功调用 ( 优先级最高 )。本文先暂时不考虑这种情况。</p>
+<p>通过观察以下代码的运行结果，调用优先级一目了然：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 当方法和闭包属性同名时，这种写法优先选择前者。</span><br><span class="hljs-comment">// greet by method</span><br>pogo.greet()<br><br><span class="hljs-comment">// 注意，这种写法总是获取闭包属性，如果想要调用它后面还需要跟上 .call() 。</span><br>pogo.greet<br><br><span class="hljs-comment">// 没有可用方法时选择同名的闭包属性并调用 call 方法，或者说使用这个闭包属性 &quot;顶替&quot; 不存在的同名方法。</span><br><span class="hljs-comment">// hi by closure</span><br>pogo.hi()<br><br><span class="hljs-comment">// 调用确实不存在的方法或闭包属性，会被引导至 methodMissing 方法。</span><br><span class="hljs-comment">// 如果自身没有实现 methodMissing 方法，那么就会抛出异常。</span><br><span class="hljs-comment">// a method echo doesn&#x27;t exist.</span><br>pogo.echo()<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-4-动态访问对象"><a href="#7-4-动态访问对象" class="headerlink" title="7.4 动态访问对象"></a>7.4 动态访问对象</h2><p>我们之前已经介绍了一个动态访问对象属性的语法糖 —— 通过重载的 <code>getAt</code> 方法。这个属性完全可能是对象已有的，或者是我们通过操纵元属性添加的。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> pojo = <span class="hljs-keyword">new</span> POJO(<span class="hljs-number">10</span>)<br>println pojo[<span class="hljs-string">&quot;property&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+<p>下面介绍通过另一种方式：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy">println pojo.<span class="hljs-string">&quot;property&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>或者是通过 GString 引用的方式指代属性名：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> propertyName = <span class="hljs-string">&quot;property&quot;</span><br>println pojo.<span class="hljs-string">&quot;$&#123;propertyName&#125;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>同理，如果要动态调用方法，除了 <code>invokeMethod()</code> 之外，还可以写成：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> methodName = <span class="hljs-string">&quot;SayHi&quot;</span><br><span class="hljs-comment">// 等价于 pojo.SayHi()</span><br>println pojo.<span class="hljs-string">&quot;$&#123;methodName&#125;&quot;</span>()<br></code></pre></td></tr></table></figure>
+
+<p>此外，如果要查看 POGO 的所有属性 ( 包括 <code>class</code> 信息 )，可以通过 <code>.properties</code> ( <code>.getProperties()</code> 方法 ) 获取 Map 形式，或者是通过 <code>.metaPropertyValues</code> 获取 List 形式。这两个方法不是元对象协议的一部分，对 POJO 使用只能访问到 <code>class</code> 信息。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 获取一个 POGO 对象的所有属性。</span><br>pogo.properties<br><span class="hljs-comment">// 由于返回值是 Map，因此可以像 k-v 对那样 &quot;取值&quot;。</span><br>pogo.properties[<span class="hljs-string">&quot;property&quot;</span>]<br><br><span class="hljs-comment">// 或者拿到 for 循环里遍历：</span><br><span class="hljs-keyword">def</span> name,value<br>(name,value) = [<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;&quot;</span>]<br><span class="hljs-keyword">def</span> str = <span class="hljs-regexp">/property name &#123;$&#123;-&gt; name&#125;&#125;,value is &#123;$&#123;-&gt; value&#125;&#125;/</span><br>pogo.properties.each &#123;<br>    entry -&gt;<br>        name = entry.key<br>        value = entry.value<br>        println str<br>&#125;<br><br><span class="hljs-comment">// 获取链表形式</span><br><span class="hljs-comment">// getProperties() 方法本质上就是通过这个方法获取的，只不过额外包装了放入 Map 的过程。</span><br>pogo.metaPropertyValues.each &#123;println <span class="hljs-string">&quot;[$&#123;-&gt; it.value&#125;:$&#123;it.name&#125;]&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/05/11/Groovy-%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;05&#x2F;11&#x2F;Groovy-%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;05&#x2F;11&#x2F;Groovy-%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2021/05/08/Groovy-%E5%AF%B9-JDK-%E7%9A%84%E6%8B%93%E5%B1%95/">Groovy 对 JDK 的拓展<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#7-Groovy-%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE%EF%BC%9A%E5%89%8D%E5%BA%8F"><span class="toc-text">7. Groovy 元对象协议：前序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-POGO-amp-POJO%EF%BC%8CMetaClass"><span class="toc-text">7.1 POGO &amp; POJO，MetaClass</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-%E5%9F%BA%E4%BA%8E-MetaClass-%E8%8E%B7%E5%8F%96%E5%85%83%E4%BF%A1%E6%81%AF"><span class="toc-text">7.2 基于 MetaClass 获取元信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-3-Groovy-%E8%B0%83%E7%94%A8%E6%96%B9%E6%B3%95%E7%9A%84%E7%AD%96%E7%95%A5"><span class="toc-text">7.3 Groovy 调用方法的策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-4-%E5%8A%A8%E6%80%81%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1"><span class="toc-text">7.4 动态访问对象</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
