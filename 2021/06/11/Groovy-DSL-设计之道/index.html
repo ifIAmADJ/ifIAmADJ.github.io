@@ -1,0 +1,527 @@
+
+
+<!DOCTYPE html>
+<html lang="en" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Groovy DSL 设计之道 - Mr.Li want to say</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="9. 构建 DSLDSL，全称为 Domain Sep...">
+  <meta name="author" content="俊虎 李">
+  <link rel="icon" href="/images/icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/stun-logo.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/favicon-144x144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_r673sha78lq.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: '/images/theme/loading.gif'
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: false
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '我在开了灯的床头下，想问问自己的心啊。',
+          typing: true,
+          api: 'https://v2.jinrishici.com/one.json',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: true,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body class="lock-screen">
+  <div class="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+        <i class="iconfont iconqrcode j-navbar-qrcode"></i>
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Groovy DSL 设计之道</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+      <div id="qrcode-navbar"></div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 摄影</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/md/groovy_slogan.jpg" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Groovy DSL 设计之道</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>June 11, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/06/11/Groovy-DSL-%E8%AE%BE%E8%AE%A1%E4%B9%8B%E9%81%93/" class="leancloud" data-flag-title="Groovy DSL 设计之道"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>9109</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        <h1 id="9-构建-DSL"><a href="#9-构建-DSL" class="headerlink" title="9. 构建 DSL"></a>9. 构建 DSL</h1><p>DSL，全称为 Domain Sepcific Language，领域特定语言，它通常都是为了解决某一个问题而诞生的：比如 SQL 语句就是为了解决程序员和数据库之间的交互问题。DSL 足够精巧，富有表现力，且具备两个特点：上下文驱动，非常流畅 ( 当然，一个用起来流畅的 DSL 设计起来往往却十分复杂 )。</p>
+<p>DSL 分为两种类型：外部 DSL 或者是内部 DSL。外部DSL是从零开发的DSL，在词法分析、解析技术、解释、编译、代码生成等方面拥有独立的设施。开发外部DSL近似于从零开始实现一种拥有独特语法和语义的全新语言。构建工具 make、语法分析器生成工具 YACC、词法分析工具 LEX 等都是常见的外部 DSL。</p>
+<p>内部 DSL 相对来说代价要小些，因为它的构建没有脱离于宿主语言。但也正因如此，内部 DSL 的功能和语法都会受到宿主语言本身的限制。如何将内部 DSL 的语法巧妙映射到宿主语言的底层逻辑，并让内部 DSL 相较宿主语言在某方面更富有表达力是一件有趣的工作。</p>
+<p>一般来说，使用动态语言实现内部 DSL 都会比较容易一些，这些语言均能够提供很好的元编程能力和灵活的语法，比如 Ruby，Python 等等。笔者也曾了解过 Scala 如何通过解析器组合子的形式创建内部 DSL，虽然 Scala 是一门 JVM 的静态语言，但是它自身的抽象表达能力 ( 模式匹配，隐式类，型变 ) 和几乎完全自由的操作符重载实在是太 amazing 了。相对的，使用 Scala 设计内部 DSL 难度要高上不少。</p>
+<p>从容地设计内部 DSL 是 Groovy 的核心 Features 之一，它被标识在 Apache Groovy 的官网上：<a target="_blank" rel="noopener" href="http://groovy-lang.org/index.html">The Apache Groovy programming language (groovy-lang.org)</a>。创建内部 DSL 不仅需要在设计上付出一些努力，还需要使用很多聪明的技巧。比如本章会综合利用 Groovy 提供的这些特性：</p>
+<ol>
+<li>动态加载，拼接，执行 Groovy 脚本的灵活性。( Groovy as Script )</li>
+<li>使用分类或者 ExpandoMetaClass 在运行时为类注入方法。</li>
+<li>利用闭包委托和 <code>with</code> 方法提供上下文 Context。</li>
+<li>操作符重载。</li>
+<li>调用方法时，对括号 <code>()</code> 的简化。</li>
+</ol>
+<h2 id="9-1-命令链接特性"><a href="#9-1-命令链接特性" class="headerlink" title="9.1 命令链接特性"></a>9.1 命令链接特性</h2><p>我们很久以前就注意到，在 Groovy 中调用方法可以省略掉括号。比如：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy">println(<span class="hljs-string">&quot;hello,Groovy&quot;</span>)<br>println <span class="hljs-string">&quot;hello,Groovy&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>这种灵活的处理方式进而引申出了 Groovy 的命令链接特性。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">def</span> move(String dir)&#123;<br>    print <span class="hljs-string">&quot;move $dir &quot;</span><br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-keyword">def</span> turn(String dir)&#123;<br>    print <span class="hljs-string">&quot;turn $dir&quot;</span><br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><br><span class="hljs-keyword">def</span> jump(String speed,String dir)&#123;<br>    print <span class="hljs-string">&quot;jump $&#123;dir&#125; $&#123;speed&#125;&quot;</span><br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-comment">//move(&quot;forward&quot;).turn(&quot;right&quot;).turn(&quot;right&quot;).move(&quot;back&quot;)</span><br>move <span class="hljs-string">&quot;forward&quot;</span> turn <span class="hljs-string">&quot;right&quot;</span> turn <span class="hljs-string">&quot;right&quot;</span> move <span class="hljs-string">&quot;back&quot;</span> <span class="hljs-comment">// 1</span><br><br><span class="hljs-comment">//jump(&quot;fast&quot;,&quot;forward&quot;).move(&quot;back&quot;).move(&quot;forward&quot;)</span><br>jump <span class="hljs-string">&quot;fast&quot;</span>,<span class="hljs-string">&quot;forward&quot;</span> move <span class="hljs-string">&quot;back&quot;</span> move <span class="hljs-string">&quot;forward&quot;</span>      <span class="hljs-comment">// 2</span><br></code></pre></td></tr></table></figure>
+
+<p>第一条语句调用没有逗号。Groovy 首先会认为我们调用了一个 <code>move(&quot;forward&quot;)</code> 方法，该方法调用返回同样支持调用 <code>move</code>，<code>turn</code>，<code>jump</code>，等方法的对象实例自身 <code>this</code> 。随后，进一步调用它的 <code>turn(&quot;right&quot;)</code> 方法。以此类推，一条连贯的命令链接就出来了。</p>
+<p>第二条语句调用多了一个逗号，其原因是：<code>jump</code> 方法接收两个参数，代表跳跃的速度 <code>speed</code> 和跳跃的方向 <code>dir</code>。</p>
+<h2 id="9-2-利用闭包委托创建上下文"><a href="#9-2-利用闭包委托创建上下文" class="headerlink" title="9.2 利用闭包委托创建上下文"></a>9.2 利用闭包委托创建上下文</h2><blockquote>
+<p>有关闭包委托，或者是 <code>with</code> 方法的知识回顾可以参考 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6956793861570035742#heading-7">如何用 Groovy 闭包优雅地 FP 编程？ (juejin.cn)</a> 。</p>
+</blockquote>
+<p>设计上下文 ( Context ) 也是 DSL 的特点。比如：”Venti latte with two extra shots!” 。这是星巴克的 DSL，尽管我们全局都没有提到咖啡两字，但是服务员照样会为我们提供一份超大杯拿铁 —— 但是在蜜雪冰城可就不一定了。每种 DSL 都依附于各自的上下文环境，或者称上下文驱动。</p>
+<p>下面是一个订购 Pizza 的代码：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PizzaShop</span> &#123;</span><br>    <span class="hljs-keyword">def</span> setSize(String size)&#123;&#125;<br>    <span class="hljs-keyword">def</span> setAddress(String addr)&#123;&#125;<br>    <span class="hljs-keyword">def</span> setPayment(String cardId)&#123;&#125;<br>&#125;<br><br><span class="hljs-keyword">def</span> pizzaShop = <span class="hljs-keyword">new</span> PizzaShop()<br>pizzaShop.setSize(<span class="hljs-string">&quot;large&quot;</span>)<br>pizzaShop.setAddress(<span class="hljs-string">&quot;XXX street&quot;</span>)<br>pizzaShop.setPayment(<span class="hljs-string">&quot;WeChat&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>由于缺少上下文，<code>pizzaShop</code> 引用会被反复调用。在 Groovy 中，对于这样的方法可以使用 <code>with</code> 进行梳理：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy">pizzaShop.with &#123;<br>    setSize <span class="hljs-string">&quot;large&quot;</span><br>    setAddress <span class="hljs-string">&quot;XXX street&quot;</span><br>    setPayment <span class="hljs-string">&quot;WeChat&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>实例 <code>pizaaShop</code> 在此处充当了上下文，它使得代码风格变得更加紧凑了。</p>
+<p>另一个例子，用户不想主动创建一个 <code>PizzaShop</code> 实例 ( 因为创建一个实例或许需要很多的额外配置，假定我们遵循 “约定大于配置” 的原则 )，他们的目的仅仅是获得一个披萨。如果希望创建一个隐式的上下文对象，不妨试着利用 Groovy 闭包的委托功能：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 缺点是编写代码时，IntelliJ 无法对动态委托的闭包给出代码提示。</span><br>getPizza &#123;<br>    setSize <span class="hljs-string">&quot;large&quot;</span><br>    setAddress <span class="hljs-string">&quot;XXX street&quot;</span><br>    setPayment <span class="hljs-string">&quot;WeChat&quot;</span><br>&#125;<br><br><span class="hljs-keyword">def</span> getPizza(Closure closure)&#123;<br>    <span class="hljs-keyword">def</span> pizzaShop = <span class="hljs-keyword">new</span> PizzaShop()<br>    closure.delegate = pizzaShop<br>    closure.run()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="9-3-巧用-Groovy-脚本聚合和方法拦截"><a href="#9-3-巧用-Groovy-脚本聚合和方法拦截" class="headerlink" title="9.3 巧用 Groovy 脚本聚合和方法拦截"></a>9.3 巧用 Groovy 脚本聚合和方法拦截</h2><p>利用 Groovy DSL 的能力，我们还可以自行组织配置文件的格式，下面通过一个例子一步一步实现。每行配置需要两项：配置名和值。我们可以将它写成这样：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 把它看作是一项配置 -&gt; size = &quot;large&quot;, 以此类推。</span><br>size <span class="hljs-string">&quot;large&quot;</span>  	<br>payment <span class="hljs-string">&quot;WeChat&quot;</span><br>address <span class="hljs-string">&quot;XXXStreet&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>每行配置项在 Groovy 中可以视作是调用了 <code>k(v)</code> 方法 ( 比如配置项中的 <code>size &quot;large&quot;</code> 相当于调用了 <code>size(&quot;large&quot;)</code>)。为了避免报错，我们可能会想到提前实现和配置同名的方法：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 该 config 没有 def 关键字，表示它是个脚本内的全局变量。</span><br>config = [:]<br><span class="hljs-keyword">def</span> size(String size)&#123;<br>	config[<span class="hljs-string">&quot;size&quot;</span>] = size<br>&#125;<br><span class="hljs-comment">// 类似的还有 payment,address ...</span><br></code></pre></td></tr></table></figure>
+
+<p>假如设定的配置项非常多的话，要填充完这些方法可要好一阵时间。实际上，这对于 Groovy 来说根本没有必要。回顾前几章 MOP 的内容，我们只需要在 <code>methodMissing</code> 方法中将这些同名方法合成出来即可，如下面的代码块所示。同时，定义一个 <code>acceptOrder</code> “上下文”，它负责遍历 <code>config</code> 项的内容并输出到控制台：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs groovy">config = [:]<br><br><span class="hljs-keyword">def</span> methodMissing(String name,args)&#123;<br>	<span class="hljs-comment">// 拦截方法名 (代表了配置名)，作为 k 存储。</span><br>	<span class="hljs-comment">// 拦截参数值 (代表了配置项，可以是一个整体数组，可以是多项参数，取决于你如何设计)，作为 v 存储。</span><br>	config[name] = args<br>&#125;<br><br><span class="hljs-comment">// 充当隐式上下文的作用。</span><br><span class="hljs-keyword">def</span> acceptConfig(Closure closure)&#123;<br><br>    <span class="hljs-comment">// 这样，&quot;配置文件&quot; 中的 &quot;方法调用&quot; 会引导至当前脚本的 methodMissing() 方法。</span><br>    closure.delegate = <span class="hljs-built_in">this</span><br><br>    <span class="hljs-comment">// 只有调用闭包才能使脚本利用 methodMissing 方法读取到配置。</span><br>    closure()<br><br>    println <span class="hljs-string">&quot;加载配置:--------------------------&quot;</span><br>    config.each &#123;<br>        k,v -&gt;<br>            println(<span class="hljs-string">&quot;config[$k] = $v&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在当前脚本内部，关于配置项的使用大概是这样的：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs groovy">acceptConfig &#123;<br>    <span class="hljs-comment">// 这一部分配置内容可以分离到另一个 PizzaShopDSL.dsl 格式的文件中去。</span><br>    size <span class="hljs-string">&quot;large&quot;</span><br>    addr <span class="hljs-string">&quot;XXX street&quot;</span><br>    payment <span class="hljs-string">&quot;WeChat&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们不希望将配置的内容硬编码到源文件内部。因此，不妨将配置项的内容分离到另一个 <code>PizzaShopDSL.dsl</code> 的文本文件，然后将 <code>methodMissing</code>，<code>acceptConfig</code> 以及 <code>config</code> 属性分离到另一个 <code>LoadConfig.groovy</code> 脚本文件中去。</p>
+<p>这样的话，如果要在外部脚本文件中读取并使用配置，就要读取这两个文本文件，然后将它们拼接为一个完整的 Groovy 脚本并执行。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs groovy">String config = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;config.dsl&quot;</span>).text<br>String loadConfig = <span class="hljs-keyword">new</span> File(<span class="hljs-string">&quot;LoadConfig.groovy&quot;</span>).text<br><br><span class="hljs-keyword">def</span> script =<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">$&#123;loadConfig&#125;</span><br><span class="hljs-string">acceptConfig &#123;</span><br><span class="hljs-string">    $&#123;config&#125;</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-comment">// 执行拼接好的脚本</span><br><span class="hljs-keyword">new</span> GroovyShell().evaluate(script)<br></code></pre></td></tr></table></figure>
+
+<p>顺带一提，如果字符串形式的 Groovy 脚本内部使用到了 GString 表达式，比如 <code>$&#123;k&#125;</code>，需要将它转义为 <code>\$&#123;k&#125;</code> 。否则的话，Groovy 会从当前脚本中寻找 <code>k</code>，这是不符合语义的。</p>
+<p>另外，当前例子中的 <code>LoadConfig.groovy</code> 本质上也是文本。因此理论上也可以存储为 <code>txt</code> ，或者是其它文本格式，这并没有严肃的规定。注意，用于拼凑的代码块没有 <code>package</code> 声明。</p>
+<h2 id="9-4-对空括号方法的变通方案"><a href="#9-4-对空括号方法的变通方案" class="headerlink" title="9.4 对空括号方法的变通方案"></a>9.4 对空括号方法的变通方案</h2><p>在下面的例子中，Groovy 基于 DSL 设计了一个简单的计数器，其中用于清零的 <code>clear</code> 方法和用于输出到控制台的 <code>outLine</code> 方法不需要参数。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs groovy">count = (<span class="hljs-keyword">int</span>)<span class="hljs-number">0</span><br><br><span class="hljs-keyword">def</span> Add(<span class="hljs-keyword">int</span> i)&#123;<br>    count += i<br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-keyword">def</span> Sub(<span class="hljs-keyword">int</span> i)&#123;<br>    count -= i<br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-keyword">def</span> clear()&#123;<br>    count = <span class="hljs-number">0</span><br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-keyword">def</span> outLine()&#123;<br>    println count<br>    <span class="hljs-built_in">this</span><br>&#125;<br><br>Add <span class="hljs-number">1</span> Sub <span class="hljs-number">10</span> clear() Add <span class="hljs-number">5</span> outLine()<br></code></pre></td></tr></table></figure>
+
+<p>空括号 <code>()</code> 在连贯的 DSL 中显得格外扎眼。如果去掉了它们，Groovy 会认为我们在访问 <code>clear</code>，<code>outLine</code> 属性 ( 但很显然并没有 ) 而报错。前文曾提到，利用 Groovy 的统一访问原则，只需稍加改动，就能移除掉 <code>()</code> ：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs groovy">count = (<span class="hljs-keyword">int</span>)<span class="hljs-number">0</span><br><br><span class="hljs-keyword">def</span> Add(<span class="hljs-keyword">int</span> i)&#123;<br>    count += i<br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-keyword">def</span> Sub(<span class="hljs-keyword">int</span> i)&#123;<br>    count -= i<br>    <span class="hljs-built_in">this</span><br>&#125;<br><br><span class="hljs-comment">// 因为后续无法衔接其它操作，因此返回 this 也没有意义了。</span><br><span class="hljs-keyword">def</span> getClear()&#123;<br>    count = <span class="hljs-number">0</span><br>&#125;<br><br><span class="hljs-keyword">def</span> getOutline()&#123;<br>    println count<br>&#125;<br><br><span class="hljs-comment">// -9</span><br>Add <span class="hljs-number">1</span> Sub <span class="hljs-number">10</span> outline<br><br><span class="hljs-comment">// 3</span><br>Add <span class="hljs-number">12</span> outline<br><br>clear<br>outline<br></code></pre></td></tr></table></figure>
+
+<p>而这样做的缺陷是：在 “执行” 完 <code>clear</code> 或是 <code>outLine</code> 方法之后，想要继续做 <code>Add</code> 或者是 <code>Sub</code> 操作就必须另起一行。这个计数器其实很像 Java 的 Stream 流，<code>Add</code> 和 <code>Sub</code> 属于中间操作 ( 或者称转换操作 )，而 <code>outline</code> ，<code>clear</code> 则代表了终结操作 ( 或者称终止操作 )。不过，Java 流在执行终止操作之后会关闭，但我们的计数器并不会。</p>
+<p>一切中间操作都应当是纯函数，即返回结果只和外部输入参数有关，并仅通过返回值和外部交互，内部无任何副作用。而终止操作则相反：仅通过内部的副作用和外部交互 ( 典型的就是将结果输出到控制台，因为这相当于是做了一步 IO )，不通过外部的输入参数和返回值进行数据交互。</p>
+<p>如果一个方法同时满足这两种特征，那么它极易容易引起混乱；反之，如果一个方法既没有参数和返回值，也没有副作用，老实说，这样的方法没有任何的意义。这么一看，似乎每一段 DSL 的语句以一个终结操作来收尾也不是一件 “难以接收的事情” 了 ( 仁者见仁智者见智 )。</p>
+<h2 id="9-5-构建-DSL-的其它形式"><a href="#9-5-构建-DSL-的其它形式" class="headerlink" title="9.5 构建 DSL 的其它形式"></a>9.5 构建 DSL 的其它形式</h2><p>我们希望程序能够识别类似这样的一段语句：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-number">5</span> days ago at <span class="hljs-number">10</span>:<span class="hljs-number">30</span><br><span class="hljs-comment">// 即使一个人不懂 Groovy 语法，他也能一下了解这段代码的意思。</span><br><span class="hljs-comment">// 5.days.ago.at(10:30)</span><br></code></pre></td></tr></table></figure>
+
+<p>如果将这段表达式输出，那么程序就会正确地输出 5 天之前 ( 或者之后 ) 的日期，并且将时间设置在上午 10 点 30 分。很明显，我们要在既有的 <code>Integer</code> 类型的基础之上进行一些方法注入，因而下面给出两种实现方式：</p>
+<h3 id="9-6-利用分类实现-DSL"><a href="#9-6-利用分类实现-DSL" class="headerlink" title="9.6 利用分类实现 DSL"></a>9.6 利用分类实现 DSL</h3><p>第一种是利用之前讲过的分类来实现 ( 之前的章节中，用于在有限域对某个类进行代码增强，类似于 Scala 的隐式类 )：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DateUtil</span> &#123;</span><br><br>    <span class="hljs-comment">// days，没有实际意义，主要是为了保证上下文的语义连贯。</span><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">def</span> getDays(Integer self)&#123; self &#125;<br><br>    <span class="hljs-comment">// ago，返回 x 天前的日期</span><br>    <span class="hljs-keyword">static</span> Calendar getAgo(Integer self)&#123;<br>        <span class="hljs-keyword">def</span> date =Calendar.instance<br>        date.add(Calendar.DAY_OF_MONTH,-self)<br>        date<br>    &#125;<br><br>    <span class="hljs-comment">// after, 返回 x 天后的日期。</span><br>    <span class="hljs-keyword">static</span> Calendar getAfter(Integer self)&#123;<br>        <span class="hljs-keyword">def</span> date = Calendar.instance<br>        date.add(Calendar.DAY_OF_MONTH,self)<br>        date<br>    &#125;<br><br>    <span class="hljs-comment">// at, 可以设定具体的时间。</span><br>    <span class="hljs-keyword">static</span> Date at(Calendar self,Map&lt;Integer,Integer&gt; time)&#123;<br>        <span class="hljs-keyword">assert</span> time.size() == <span class="hljs-number">1</span><br>        <span class="hljs-keyword">def</span> timeEntry = time.find &#123;<span class="hljs-literal">true</span>&#125;<br>        self.set(Calendar.HOUR_OF_DAY,(Integer)timeEntry.key)<br>        self.set(Calendar.MINUTE,(Integer)timeEntry.value)<br>        self.set(Calendar.SECOND,<span class="hljs-number">0</span>)<br>        self.time<br>    &#125;<br>&#125;<br><br>use(DateUtil)&#123;<br>    println <span class="hljs-number">5.</span>days.ago.at(<span class="hljs-number">10</span>:<span class="hljs-number">30</span>)<br>    println <span class="hljs-number">10.</span>days.after.at(<span class="hljs-number">13</span>:<span class="hljs-number">30</span>)<br>    println <span class="hljs-number">10.</span>days.after.time<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在调用完 <code>10.days.ago</code> 之后，程序返回的将是一个 <code>Calendar</code> 类型单例。因此我们要将 <code>at</code> 方法注入到 <code>Calendar</code> 类型 ( 而不是 <code>Integer</code> 类型 )，并让它返回一个 <code>Date</code> 类型。为了能够让用户以 <code>HH:mm</code> 的自然写法表达时间，因此 <code>at</code> 方法有意被设计成了接收一个 Map。</p>
+<h3 id="9-7-通过方法注入实现-DSL"><a href="#9-7-通过方法注入实现-DSL" class="headerlink" title="9.7 通过方法注入实现 DSL"></a>9.7 通过方法注入实现 DSL</h3><p>这段代码块表达的意思大体相同，唯一不同的一点是：通过 ExpandoMetaClass 注入的方法能够在全局生效。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs groovy">Integer.metaClass &#123;<br>    <br>    getDays = &#123;<br>        -&gt; delegate<br>    &#125;<br><br>    getAgo = &#123;<br>        -&gt; delegate<br>        <span class="hljs-keyword">def</span> date = Calendar.instance<br>        date.add(Calendar.DAY_OF_MONTH,(Integer)delegate)<br>        <span class="hljs-keyword">return</span> date<br>    &#125;<br>&#125;<br><br>Calendar.metaClass.at = &#123;<br>    Map&lt;Integer,Integer&gt; time -&gt;<br>        <span class="hljs-keyword">assert</span> time.size() == <span class="hljs-number">1</span><br>        <span class="hljs-keyword">def</span> timeEntry = time.find &#123;<span class="hljs-literal">true</span>&#125;<br>        <span class="hljs-keyword">def</span> t = ((Calendar)delegate)<br>        t.set(Calendar.HOUR_OF_DAY,(<span class="hljs-keyword">int</span>)timeEntry.key)<br>        t.set(Calendar.MINUTE,(<span class="hljs-keyword">int</span>)timeEntry.value)<br>        t.set(Calendar.SECOND,<span class="hljs-number">0</span>)<br>        t.time<br>&#125;<br><br>println <span class="hljs-number">5.</span>days.ago.at(<span class="hljs-number">14</span>:<span class="hljs-number">30</span>)<br></code></pre></td></tr></table></figure>
+
+<p>现在，我们了解到在 Groovy 内部创建 DSL 是如此的容易。动态特性和可选类型对创建流畅的接口帮助很大；闭包委托有助于创建上下文；分类和 ExpandoMetaClass 对方法的注入和调用在这个例子中也被使用到。</p>
+<p>至此，对 Groovy 的学习和了解告一段落，在未来，笔者还会更新如何使用 Scala 实现 DSL 的设计。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>俊虎 李</li>
+    <li><strong>本文链接：</strong><a href="http://example.com/2021/06/11/Groovy-DSL-%E8%AE%BE%E8%AE%A1%E4%B9%8B%E9%81%93/index.html" title="http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;06&#x2F;11&#x2F;Groovy-DSL-%E8%AE%BE%E8%AE%A1%E4%B9%8B%E9%81%93&#x2F;index.html">http:&#x2F;&#x2F;example.com&#x2F;2021&#x2F;06&#x2F;11&#x2F;Groovy-DSL-%E8%AE%BE%E8%AE%A1%E4%B9%8B%E9%81%93&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2021/06/07/Groovy-%E7%BC%96%E8%AF%91%E6%97%B6%E5%85%83%E7%BC%96%E7%A8%8B/">Groovy 编译时元编程<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+        <section class="comments">
+  
+    <div class="btn" id="comments-btn">查看评论</div>
+  
+  
+<div id="valine"></div>
+<script defer src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+  window.onload = function () {
+    var loadValine = function () {
+      new Valine({
+        el: '#valine',
+        app_id: "lo31ya7dNEzOUP6eDXbzcCX0-gzGzoHsz",
+        app_key: "wqwR6SN2VWjAelsbnbJQQbl1",
+        placeholder: "雁过留痕",
+        avatar: "retro",
+        pageSize: "10",
+        lang: "zh-CN",
+      });
+    }
+    if ( true ) {
+      $("#comments-btn").on("click", function () {
+        $(this).hide();
+        loadValine();
+      });
+    } else {
+      loadValine();
+    }
+  };
+</script>
+
+</section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#9-%E6%9E%84%E5%BB%BA-DSL"><span class="toc-text">9. 构建 DSL</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-%E5%91%BD%E4%BB%A4%E9%93%BE%E6%8E%A5%E7%89%B9%E6%80%A7"><span class="toc-text">9.1 命令链接特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-%E5%88%A9%E7%94%A8%E9%97%AD%E5%8C%85%E5%A7%94%E6%89%98%E5%88%9B%E5%BB%BA%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-text">9.2 利用闭包委托创建上下文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-%E5%B7%A7%E7%94%A8-Groovy-%E8%84%9A%E6%9C%AC%E8%81%9A%E5%90%88%E5%92%8C%E6%96%B9%E6%B3%95%E6%8B%A6%E6%88%AA"><span class="toc-text">9.3 巧用 Groovy 脚本聚合和方法拦截</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-4-%E5%AF%B9%E7%A9%BA%E6%8B%AC%E5%8F%B7%E6%96%B9%E6%B3%95%E7%9A%84%E5%8F%98%E9%80%9A%E6%96%B9%E6%A1%88"><span class="toc-text">9.4 对空括号方法的变通方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-5-%E6%9E%84%E5%BB%BA-DSL-%E7%9A%84%E5%85%B6%E5%AE%83%E5%BD%A2%E5%BC%8F"><span class="toc-text">9.5 构建 DSL 的其它形式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-6-%E5%88%A9%E7%94%A8%E5%88%86%E7%B1%BB%E5%AE%9E%E7%8E%B0-DSL"><span class="toc-text">9.6 利用分类实现 DSL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-7-%E9%80%9A%E8%BF%87%E6%96%B9%E6%B3%95%E6%B3%A8%E5%85%A5%E5%AE%9E%E7%8E%B0-DSL"><span class="toc-text">9.7 通过方法注入实现 DSL</span></a></li></ol></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="mailto:376781642@qq.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'cm4TfuLppOBC3NTYFvId9VnS-gzGzoHsz',
+      appKey: '131vEEATPOGJzo5QMKYH06wu',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud").each(async (e) => {
+        const url = $(".leancloud").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud").eq(e).text(count ? count : '--');
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud").length === 1 ? $(".leancloud").attr('id').trim() : 'http://example.com';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    $(function () {
+      const Counter = AV.Object.extend("Counter");
+      addCount(Counter);
+      showCount(Counter);
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "cf1dbde1"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
